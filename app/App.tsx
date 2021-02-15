@@ -8,12 +8,13 @@ import AppNavigationContainer from "./containers"
 
 //Import store
 import store from "./redux/configure-store";
+import {navigationRef} from "./navigation/navigation";
 
 export default function App(): JSX.Element {
     return (
         <Provider store={store} >
             <SafeAreaProvider>
-                <NavigationContainer>
+                <NavigationContainer ref={navigationRef} >
                     <AppNavigationContainer/>
                 </NavigationContainer>
             </SafeAreaProvider>

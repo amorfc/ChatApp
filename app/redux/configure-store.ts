@@ -3,7 +3,7 @@ import { ThunkAction } from 'redux-thunk'
 
 //Reactotron Imp For Debug Purpose
 
-import rootReducer, {RootState} from "./root-reducers";
+import rootReducer, {RootStateType} from "./root-reducers";
 
 const middleware = getDefaultMiddleware({
     serializableCheck: false,
@@ -18,6 +18,6 @@ const store = configureStore({
 })
 
 export type AppDispatch = typeof store.dispatch
-export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>
+export type AppThunk = ThunkAction<void, RootStateType, unknown, Action<string>>
 
 export default store

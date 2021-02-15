@@ -1,9 +1,9 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
-import {useSelector} from "react-redux";
+import {View, StyleSheet, Text, Image, Button} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
 // import { I18nContext } from "../../config/i18n";
 
-import {RootState} from "../../redux/root-reducers";
+import {RootStateType} from "../../redux/root-reducers";
 
 
 const styles = StyleSheet.create({
@@ -30,12 +30,13 @@ const styles = StyleSheet.create({
 });
 
 export default function ChatsScreen() {
-
-    const authState = useSelector((state:RootState) => state.auth)
+    const dispatch = useDispatch()
+    const authState = useSelector((state:RootStateType) => state.auth)
 
     return (
         <View style={styles.mainContainer}>
             <Text>ChatsScreen+ {authState.firstname}</Text>
+            <Button title={"Osman"} onPress={()=>{}}/>
         </View>
     );
 }
