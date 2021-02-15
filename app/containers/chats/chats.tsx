@@ -1,6 +1,10 @@
 import * as React from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
+import {useSelector} from "react-redux";
 // import { I18nContext } from "../../config/i18n";
+
+import {RootState} from "../../redux/root-reducers";
+
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -26,9 +30,12 @@ const styles = StyleSheet.create({
 });
 
 export default function ChatsScreen() {
+
+    const authState = useSelector((state:RootState) => state.auth)
+
     return (
         <View style={styles.mainContainer}>
-            <Text>ChatsScreen</Text>
+            <Text>ChatsScreen+ {authState.firstname}</Text>
         </View>
     );
 }

@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 import {createStackNavigator} from "@react-navigation/stack"
+//import instead of below to react-navigation/bottom-tab at future
 import { createBottomTabNavigator } from "react-navigation-bottom-tabs-no-warnings";
 
 
