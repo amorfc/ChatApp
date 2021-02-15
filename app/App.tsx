@@ -1,11 +1,17 @@
+import "react-native-gesture-handler";
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import {SafeAreaProvider} from "react-native-safe-area-context"
+import AppNavigationContainer from "./containers"
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <AppNavigationContainer/>
+        </NavigationContainer>
+      </SafeAreaProvider>
   );
 }
 
