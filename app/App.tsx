@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import {SafeAreaProvider} from "react-native-safe-area-context"
 import AppNavigationContainer from "./containers"
 
-export default function App() {
+export default function App(): JSX.Element {
   return (
       <SafeAreaProvider>
         <NavigationContainer>

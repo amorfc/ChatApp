@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 import {createStackNavigator} from "@react-navigation/stack"
+import { createBottomTabNavigator } from "react-navigation-bottom-tabs-no-warnings";
 
 
 //Import Screens
@@ -12,7 +13,8 @@ import ChatsScreen from "./chats/chats";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
-const HomeStack = createStackNavigator()
+const SettingsStack = createStackNavigator()
+const HomeTab = createBottomTabNavigator()
 
 function ChatsTab() {
     return (
@@ -22,23 +24,31 @@ function ChatsTab() {
     )
 }
 
-function HomeScreen() {
-    return (
-        <HomeStack.Navigator>
-            <HomeStack.Screen name="ChatsTab" component={ChatsTab}/>
-            <HomeStack.Screen name="SettingsScreen" component={SettingsScreen} />
-        </HomeStack.Navigator>
+function SettingsTab(){
+    return(
+        <SettingsStack.Navigator>
+            <SettingsStack.Screen name="SettingsScreen" component={SettingsScreen}/>
+        </SettingsStack.Navigator>
     )
 }
 
-export default function RootNavigationContainer(props: any) {
+function HomeScreen() {
+    return (
+        <HomeTab.Navigator>
+            <HomeTab.Screen name="ChatsTab" component={ChatsTab}/>
+            <HomeTab.Screen name="SettingsScreen" component={SettingsTab} />
+        </HomeTab.Navigator>
+    )
+}
+
+export default function RootNavigationContainer(props: any): JSX.Element {
     return (
         <MainStack.Navigator>
-            <MainStack.Screen name="HomeScreen" component={HomeScreen}/>
+            <MainStack.Screen name="HomeScreen" component={HomeScreen} options={{headerShown:false}}/>
 
-            <MainStack.Screen name="LoginScreen" component={LoginScreen}/>
-            <MainStack.Screen name="SignUpScreen" component={SignUpScreen}/>
-            <MainStack.Screen name="WelcomeScreen" component={WelcomeScreen}/>
+            <MainStack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown:false}} />
+            <MainStack.Screen name="SignUpScreen" component={SignUpScreen} options={{headerShown:false}}/>
+            <MainStack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{headerShown:false}}/>
         </MainStack.Navigator>
     )
 }
