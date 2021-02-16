@@ -1,18 +1,25 @@
 import * as React from "react";
-import { TextInput, StyleSheet, View } from "react-native";
+import {TextInput, StyleSheet, View} from "react-native";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons"
 import {useState} from "react";
 import PropTypes from "prop-types"
 
 const styles = StyleSheet.create({
-    container:{
-        flexDirection:"row",
-        borderWidth:1,
-        borderRadius:18,
-        borderColor:"gray",
-        alignItems:"center"
+    container: {
+        flexDirection: "row",
+        borderWidth: 1,
+        borderRadius: 18,
+        borderColor: "gray",
+        alignItems: "center",
+        justifyContent: "center",
     },
-    textInput:{
+    iconContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    }
+    ,
+    textInput: {
         padding: 5,
         flex: 1,
         paddingVertical: 8,
@@ -23,13 +30,17 @@ const styles = StyleSheet.create({
     icon: {
         position: "relative",
         top: 5,
+
     },
-    text:{
-        color:"black"
+    text: {
+        color: "black"
     }
 })
 
 const PasswordInputText = (props: any): JSX.Element => {
+
+    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value} = props
+
     const [initialFocus, setInitialFocus] = useState(false);
     const [eyeIcon, setEyeIcon] = useState("visibility-off");
     const [isPassword, setIsPassword] = useState(true);
@@ -42,22 +53,22 @@ const PasswordInputText = (props: any): JSX.Element => {
     return (
         <View style={styles.container}>
             <Ionicons
-                name={props.iconName}
-                size={props.iconSize}
-                color={props.iconColor}
+                name={iconName}
+                size={iconSize}
+                color={iconColor}
             />
             <TextInput
                 {...props}
                 style={styles.textInput}
                 secureTextEntry={isPassword}
-                value={initialFocus ? props.value : "Password"}
+                value={initialFocus ? value : "Password"}
                 onFocus={() => setInitialFocus(true)}
             />
             <MaterialIcons
                 style={styles.icon}
                 name={eyeIcon}
-                size={props.iconSize}
-                color={props.iconColor}
+                size={iconSize}
+                color={iconColor}
                 onPress={changePwdType}
             />
         </View>

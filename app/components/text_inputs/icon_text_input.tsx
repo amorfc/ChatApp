@@ -24,21 +24,24 @@ const styles = StyleSheet.create({
 })
 
 export default function component(props:any){
+
+    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText} = props
+
     return(
         <View style={styles.container} >
             <Ionicons
-                name={props.iconName}
-                size={props.iconSize}
-                color={props.iconColor}
+                name={iconName}
+                size={iconSize}
+                color={iconColor}
                 style={{paddingLeft:5}}
             />
             <TextInput
                 autoCapitalize={"none"}
                 style={styles.textInput}
-                secureTextEntry={props.secureTextEntry}
-                placeholder={props.placeholder}
+                secureTextEntry={secureTextEntry}
+                placeholder={placeholder}
                 placeholderTextColor={"gray"}
-                onChangeText={props.onChangeText}
+                onChangeText={onChangeText}
             />
         </View>
     )
