@@ -1,3 +1,16 @@
+import {UserModel} from "../../../models/UserModel";
+
+export type UserCredentials = {
+    email: string
+    password: string
+}
+
+export type User = {
+    firstname: string
+    lastname: string
+}
+
+export type NewUser = User & UserCredentials
 
 export type AuthError = {
     code:string,
@@ -13,4 +26,5 @@ export type AuthState = {
     signupHasError: boolean,
     signupErrorMessage: string | undefined,
     signupSuccess: boolean,
+    user:UserModel | null
 }

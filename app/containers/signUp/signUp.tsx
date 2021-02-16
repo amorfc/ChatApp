@@ -4,7 +4,13 @@ import {View, StyleSheet, Text, Image} from "react-native";
 
 //Redux
 import {AuthState} from "../../redux/features/auth/auth-types";
-import {changeEmail, changeFirstName, changeLastName, changePassword} from "../../redux/features/auth/auth-reducer";
+import {
+    changeEmail,
+    changeFirstName,
+    changeLastName,
+    changePassword,
+    signUpProcess
+} from "../../redux/features/auth/auth-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/root-reducers";
 
@@ -72,7 +78,7 @@ export default function SignUpScreen(): JSX.Element {
 
     return (
         <View style={styles.mainContainer}>
-            {signUpSuccessScreen()}
+            {/*{signUpSuccessScreen()}*/}
             <View style={styles.topContainer}>
                 <Text>SignUpScreen</Text>
             </View>
@@ -124,7 +130,7 @@ export default function SignUpScreen(): JSX.Element {
                     <View>
                         <PrimaryBtn
                             text={"Sign Up"}
-
+                            onPress={()=>{dispatch(signUpProcess(authState))}}
                         />
                     </View>
                 </View>
