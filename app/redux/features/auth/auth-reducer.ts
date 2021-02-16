@@ -6,7 +6,7 @@ import {navigate} from "../../../navigation/navigation";
 const initialState: AuthState = {
     firstname: "amorf",
     lastname: "",
-    email: "",
+    email: "fatihermetin@gmail.com",
     password: "",
     signupHasError: false,
     signupErrorMessage: undefined,
@@ -27,16 +27,20 @@ export const authSlice = createSlice({
 
         },
         changeEmail(state, {payload}: PayloadAction<string>) {
-
+            state.email = payload
         },
         changePassword(state, {payload}: PayloadAction<string>) {
-
+            state.password = payload
         },
     }
 })
 
 export const {
-    setAuthToken
+    setAuthToken,
+    changeFirstName,
+    changeLastName,
+    changePassword,
+    changeEmail,
 } = authSlice.actions
 
 export default authSlice.reducer
