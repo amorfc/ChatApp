@@ -45,11 +45,11 @@ function HomeScreen() {
 export default function RootNavigationContainer(props: any): JSX.Element {
     return (
         <MainStack.Navigator>
-            <MainStack.Screen name="HomeScreen" component={HomeScreen} options={{headerShown:false}}/>
+            {/*<MainStack.Screen name="HomeScreen" component={HomeScreen} options={{headerShown:false}}/>*/}
 
+            <MainStack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{headerShown:false}}/>
             <MainStack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown:false}} />
             <MainStack.Screen name="SignUpScreen" component={SignUpScreen} options={{headerShown:false}}/>
-            <MainStack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{headerShown:false}}/>
         </MainStack.Navigator>
     )
 }

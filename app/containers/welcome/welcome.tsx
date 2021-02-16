@@ -1,5 +1,6 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import {View, StyleSheet, Text, Image, Button} from "react-native";
+import {navigate} from "../../navigation/navigation";
 // import { I18nContext } from "../../config/i18n";
 
 const styles = StyleSheet.create({
@@ -26,9 +27,22 @@ const styles = StyleSheet.create({
 });
 
 export default function WelcomeScreen() {
+
+    function signInBtnPressed() {
+        navigate("LoginScreen",null)
+    }
+    function signUpBtnPressed() {
+        navigate("SignUpScreen",null)
+    }
     return (
         <View style={styles.mainContainer}>
-            <Text>WelcomeScreen</Text>
+            <View style={styles.topContainer} >
+                <Text>WelcomeScreen</Text>
+            </View>
+            <View style={styles.bottomContainer} >
+                <Button title={"SignIn"} onPress={()=>signInBtnPressed()} />
+                <Button title={"SignUp"} onPress={()=>signUpBtnPressed()} />
+            </View>
         </View>
     );
 }

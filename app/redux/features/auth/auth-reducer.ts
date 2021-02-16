@@ -17,7 +17,21 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setAuthToken(state, {payload}: PayloadAction<string>) {}
+        setAuthToken(state, {payload}: PayloadAction<string>) {
+
+        },
+        changeFirstName(state, {payload}: PayloadAction<string>) {
+
+        },
+        changeLastName(state, {payload}: PayloadAction<string>) {
+
+        },
+        changeEmail(state, {payload}: PayloadAction<string>) {
+
+        },
+        changePassword(state, {payload}: PayloadAction<string>) {
+
+        },
     }
 })
 
