@@ -3,8 +3,10 @@ import {View, StyleSheet, Text, Image, Button, TextInput} from "react-native";
 // import { I18nContext } from "../../config/i18n";
 
 //Components
-import IconTextInput from "../../components/icon_text_input"
-import HiddenIconTextInput from "../../components/hidden_text_input"
+import IconTextInput from "../../components/text_inputs/icon_text_input"
+import HiddenIconTextInput from "../../components/text_inputs/hidden_text_input"
+import PrimaryButton from "../../components/buttons/primary_btn"
+
 import {Ionicons} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AuthState} from "../../redux/features/auth/auth-types";
@@ -64,7 +66,7 @@ export default function LoginScreen() {
                         onChangeText={(text: string) => dispatch(changeEmail(text))}
                     />
                 </View>
-                <View>
+                <View style={{paddingBottom: 30}} >
                     <HiddenIconTextInput
                         iconName={"lock-closed"}
                         iconSize={22}
@@ -74,6 +76,18 @@ export default function LoginScreen() {
                         value={authState.password}
                         onChangeText={(text: string) => dispatch(changePassword(text))}
                     />
+                </View>
+                <View style={{paddingBottom: 20}}>
+                    <PrimaryButton
+                        text={"Login"}
+                        onPress={()=>{
+                            console.log("LoginButton Pressed")}}
+                    />
+                </View>
+                <View style={{ marginHorizontal: 8 }}>
+                    <Text style={{color:"darkgray"}} >
+                        Forgot Password?
+                    </Text>
                 </View>
             </View>
         </View>
