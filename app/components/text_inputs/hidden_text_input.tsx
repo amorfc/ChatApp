@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 
 const PasswordInputText = (props: any): JSX.Element => {
 
-    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value} = props
+    const {iconName, iconSize, iconColor, value} = props
 
     const [initialFocus, setInitialFocus] = useState(false);
     const [eyeIcon, setEyeIcon] = useState("visibility-off");
@@ -88,6 +88,8 @@ PasswordInputText.propTypes = {
     iconColor: PropTypes.string,
     iconName: PropTypes.string,
     onChangeText: PropTypes.func,
+    secureTextEntry: PropTypes.bool,
+
 };
 
 export default PasswordInputText;
