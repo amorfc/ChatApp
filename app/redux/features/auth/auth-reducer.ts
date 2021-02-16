@@ -21,10 +21,10 @@ export const authSlice = createSlice({
 
         },
         changeFirstName(state, {payload}: PayloadAction<string>) {
-
+            state.firstname = payload
         },
         changeLastName(state, {payload}: PayloadAction<string>) {
-
+            state.lastname = payload
         },
         changeEmail(state, {payload}: PayloadAction<string>) {
             state.email = payload

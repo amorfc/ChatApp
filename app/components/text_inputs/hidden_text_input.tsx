@@ -11,14 +11,7 @@ const styles = StyleSheet.create({
         borderRadius: 18,
         borderColor: "gray",
         alignItems: "center",
-        justifyContent: "center",
     },
-    iconContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-    }
-    ,
     textInput: {
         padding: 5,
         flex: 1,
