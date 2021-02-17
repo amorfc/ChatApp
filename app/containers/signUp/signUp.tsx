@@ -58,6 +58,59 @@ const styles = StyleSheet.create({
     }
 });
 
+const signUpFormScreen = (authState: AuthState)=>{
+
+    const dispatch = useDispatch();
+
+    return(
+        <><View style={styles.inputContainer}>
+            <IconTextInput
+                iconName={"person"}
+                iconSize={24}
+                iconColor={"darkgray"}
+                placeholder={"First Name"}
+                placeholderTextColor={"darkgray"}
+                value={authState.firstname}
+                onChangeText={(text: string) => dispatch(changeFirstName(text))}/>
+        </View><View style={styles.inputContainer}>
+            <IconTextInput
+                iconName={"person"}
+                iconSize={24}
+                iconColor={"darkgray"}
+                placeholder={"Last Name"}
+                placeholderTextColor={"darkgray"}
+                value={authState.lastname}
+                onChangeText={(text: string) => dispatch(changeLastName(text))}/>
+        </View><View style={styles.inputContainer}>
+            <IconTextInput
+                iconName={"at-circle-sharp"}
+                iconSize={24}
+                iconColor={"darkgray"}
+                placeholder={"Email"}
+                placeholderTextColor={"darkgray"}
+                value={authState.email}
+                onChangeText={(text: string) => dispatch(changeEmail(text))}/>
+        </View><View style={styles.inputContainer}>
+            <HiddenIconTextInput
+                iconName={"lock-closed"}
+                iconSize={24}
+                iconColor={"darkgray"}
+                placeholder={"Password"}
+                value={authState.password}
+                onChangeText={(text: string) => dispatch(changePassword(text))}/>
+        </View>
+            <View style={styles.buttonContainer}>
+                <View>
+                    <PrimaryBtn
+                        text={"Sign Up"}
+                        onPress={() => {
+                            dispatch(signUpProcess(authState));
+                        }}/>
+                </View>
+            </View></>
+    )
+}
+
 const signUpSuccessScreen = () => {
     return (
         <View>
@@ -78,62 +131,13 @@ export default function SignUpScreen(): JSX.Element {
 
     return (
         <View style={styles.mainContainer}>
-            {/*{signUpSuccessScreen()}*/}
             <View style={styles.topContainer}>
                 <Text>SignUpScreen</Text>
             </View>
             <View style={styles.bottomContainer}>
-                <View style={styles.inputContainer}>
-                    <IconTextInput
-                        iconName={"person"}
-                        iconSize={24}
-                        iconColor={"darkgray"}
-                        placeholder={"First Name"}
-                        placeholderTextColor={"darkgray"}
-                        value={authState.firstname}
-                        onChangeText={(text: string) => dispatch(changeFirstName(text))}
-                    />
-                </View>
-                <View style={styles.inputContainer}>
-                    <IconTextInput
-                        iconName={"person"}
-                        iconSize={24}
-                        iconColor={"darkgray"}
-                        placeholder={"Last Name"}
-                        placeholderTextColor={"darkgray"}
-                        value={authState.lastname}
-                        onChangeText={(text: string) => dispatch(changeLastName(text))}
-                    />
-                </View>
-                <View style={styles.inputContainer}>
-                    <IconTextInput
-                        iconName={"at-circle-sharp"}
-                        iconSize={24}
-                        iconColor={"darkgray"}
-                        placeholder={"Email"}
-                        placeholderTextColor={"darkgray"}
-                        value={authState.email}
-                        onChangeText={(text: string) => dispatch(changeEmail(text))}
-                    />
-                </View>
-                <View style={styles.inputContainer}>
-                    <HiddenIconTextInput
-                        iconName={"lock-closed"}
-                        iconSize={24}
-                        iconColor={"darkgray"}
-                        placeholder={"Password"}
-                        value={authState.password}
-                        onChangeText={(text: string) => dispatch(changePassword(text))}
-                    />
-                </View>
-                <View style={styles.buttonContainer}>
-                    <View>
-                        <PrimaryBtn
-                            text={"Sign Up"}
-                            onPress={()=>{dispatch(signUpProcess(authState))}}
-                        />
-                    </View>
-                </View>
+                {
+                    authState.signupSuccess ? signUpSuccessScreen():signUpFormScreen(authState)
+                }
             </View>
         </View>
     );
