@@ -13,6 +13,8 @@ import {AuthState} from "../../redux/features/auth/auth-types";
 import {RootStateType} from "../../redux/root-reducers";
 import {changeEmail, changePassword, clearSignUpForm, loginProcess} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
+import {navigate} from "../../navigation/navigation";
+import Loader from "../../components/loader/Loader";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -50,8 +52,13 @@ export default function LoginScreen() {
     const dispatch = useDispatch()
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
 
+    useEffect(()=>{
+        authState.loginSuccess? navigate("HomeScreen",null): null
+    },[authState.loginSuccess])
+
     return (
         <View style={styles.mainContainer}>
+            <Loader loading={authState.isAuthStatusLoading} />
             <View style={styles.topContainer}>
                 <Text>LoginScreen</Text>
             </View>

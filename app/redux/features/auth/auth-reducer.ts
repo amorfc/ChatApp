@@ -59,6 +59,10 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
     async (userCredentials: UserCredentials, thunkAPI: any) => {
 
         const {email, password} = userCredentials
+        // -------------
+        //Validation Could Happen Here
+
+        // -------------
 
         const loginReqBody = {
             "Username": email,
@@ -66,6 +70,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
         }
 
         try {
+            thunkAPI.dispatch(setIsAuthStatusLoading(true))
             //Login Request
             const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
 
@@ -105,28 +110,11 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
         } catch (e) {
             showMessage({
                 message: "Oops!",
-                description: `Something Went Wrong!!!`,
+                description: `Something Went Wrong!!! ${e}`,
                 type: "danger"
             })
-            console.log(e)
         }
-
-        // -------------
-        //Validation Could Happen Here
-
-        // -------------
-
-        //Server Request Time
-
-        //Async functions and try here
-
-        try {
-            //Do request and get response Anf Check response
-
-        } catch (e) {
-            //Catch if error here
-
-        }
+        thunkAPI.dispatch(setIsAuthStatusLoading(false))
     }
 )
 
@@ -188,6 +176,7 @@ export const authSlice = createSlice({
         },
         setLoginSuccess(state, {payload}: PayloadAction<UserModel>) {
             state.user = payload
+            state.loginSuccess = true
         },
         changeFirstName(state, {payload}: PayloadAction<string>) {
             state.firstname = payload
