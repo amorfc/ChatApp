@@ -3,7 +3,7 @@ import {AuthError, AuthState, NewUser, User, UserCredentials} from "./auth-types
 import {AxiosResponse} from "axios";
 import {auth_api_login, auth_api_signUp} from "./auth-api";
 import {AuthResponseDataType, UserModel} from "../../../models/auth-model";
-import {makePost} from "../../../services/http-service";
+import {showMessage} from "react-native-flash-message";
 
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
@@ -15,8 +15,6 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
 
         const {firstname, lastname, email, password} = newUser
-        console.log(`${firstname} , ${lastname}, ${email} , ${password}`)
-
         //Validation Could Happen Here
 
         // -------------
@@ -33,9 +31,21 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
             }
 
             const signUpResult = await auth_api_signUp(signUpRequestBody)
-
             if (signUpResult.status === 200) {
                 thunkAPI.dispatch(setSignupSuccess(signUpResult.data))
+                showMessage({
+                    message:"Welcome",
+                    description:"Welcome Happy Chatting",
+                    type:"success"
+                })
+            }else{
+                //Api response status not 200
+                //Error message will handle
+                showMessage({
+                    message:"Oops!!",
+                    description:"Something Went Wrong Try Again",
+                    type:"danger"
+                })
             }
         } catch (e) {
             console.log(e)

@@ -10,13 +10,18 @@ export const auth_api_signUp = async (signUpRequestBody: any): Promise<AxiosResp
             'Content-Type': 'application/json',
         }
     }
+    try{
 
-    const singUpResult: AxiosResponse<AuthResponseDataType> = await makePost(
-        url,
-        config,
-        signUpRequestBody
-    )
-    return singUpResult
+        const singUpResult: AxiosResponse<AuthResponseDataType> = await makePost(
+            url,
+            config,
+            signUpRequestBody
+        )
+        return singUpResult
+
+    }catch (e) {
+        return e
+    }
 }
 
 export const auth_api_login = async (loginReqBody:any): Promise<AxiosResponse<AuthResponseDataType>> => {

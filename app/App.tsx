@@ -9,6 +9,7 @@ import AppNavigationContainer from "./containers"
 //Import store
 import store from "./redux/configure-store";
 import {navigationRef} from "./navigation/navigation";
+import FlashMessage from "react-native-flash-message";
 
 export default function App(): JSX.Element {
     return (
@@ -18,6 +19,7 @@ export default function App(): JSX.Element {
                     <AppNavigationContainer/>
                 </NavigationContainer>
             </SafeAreaProvider>
+            <FlashMessage position={"top"} />
         </Provider>
     );
 }
