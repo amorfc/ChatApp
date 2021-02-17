@@ -32,25 +32,25 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
 
             const signUpResult = await auth_api_signUp(signUpRequestBody)
             if (signUpResult.status === 200) {
-                thunkAPI.dispatch(setSignupSuccess(signUpResult.data))
+                thunkAPI.dispatch(setSignupSuccess(true))
                 showMessage({
-                    message:"Welcome",
-                    description:"Welcome Happy Chatting",
-                    type:"success"
+                    message: "Welcome",
+                    description: "Welcome Happy Chatting",
+                    type: "success"
                 })
-            }else{
+            } else {
                 //Api response status not 200
                 //Error message will handle
                 showMessage({
-                    message:"Oops!!",
-                    description:"Something Went Wrong Try Again",
-                    type:"danger"
+                    message: "Oops!!",
+                    description: "Something Went Wrong Try Again",
+                    type: "danger"
                 })
             }
         } catch (e) {
             console.log(e)
         }
-            thunkAPI.dispatch(setIsAuthStatusLoading(false))
+        thunkAPI.dispatch(setIsAuthStatusLoading(false))
 
     })
 
@@ -136,12 +136,20 @@ export const authSlice = createSlice({
         setIsAuthStatusLoading(state, {payload}: PayloadAction<boolean>) {
             state.isAuthStatusLoading = payload
         },
+        clearSignUpForm(state, {payload}: PayloadAction<any>) {
+            state.firstname = ""
+            state.lastname = ""
+            state.email = ""
+            state.password = ""
+            state.signupSuccess = false
+        }
+        ,
         clearSignUpError(state, {payload}: PayloadAction<any>) {
             state.signupHasError = false
             state.signupErrorMessage = undefined
         },
-        setSignupSuccess(state, {payload}: PayloadAction<AuthResponseDataType>) {
-            state.signupSuccess = true
+        setSignupSuccess(state, {payload}: PayloadAction<boolean>) {
+            state.signupSuccess = payload
         },
         setAuthToken(state, {payload}: PayloadAction<string>) {
 
@@ -174,6 +182,7 @@ export const {
     changePassword,
     changeEmail,
     clearSignUpError,
+    clearSignUpForm,
 } = authSlice.actions
 
 export default authSlice.reducer

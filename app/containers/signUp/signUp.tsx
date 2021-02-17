@@ -9,6 +9,7 @@ import {
     changeFirstName,
     changeLastName,
     changePassword,
+    clearSignUpForm,
     signUpProcess
 } from "../../redux/features/auth/auth-reducer";
 import {useDispatch, useSelector} from "react-redux";
@@ -113,13 +114,19 @@ const signUpFormScreen = (authState: AuthState)=>{
 }
 
 const signUpSuccessScreen = () => {
+
+    const dispatch = useDispatch()
+
     return (
         <View>
             <Text style={styles.successText}>
                 Signup is successful, Please Login!
             </Text>
             <View style={styles.goToLoginContainer}>
-                <PrimaryBtn text={"Go to login"} onPress={() => navigate("LoginScreen", null)}/>
+                <PrimaryBtn text={"Go to login"} onPress={() => {
+                    dispatch(clearSignUpForm(null))
+                    navigate("LoginScreen", null)
+                }}/>
             </View>
         </View>
     )

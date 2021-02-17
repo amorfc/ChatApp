@@ -11,7 +11,8 @@ import {Ionicons} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AuthState} from "../../redux/features/auth/auth-types";
 import {RootStateType} from "../../redux/root-reducers";
-import {changeEmail, changePassword} from "../../redux/features/auth/auth-reducer";
+import {changeEmail, changePassword, clearSignUpForm} from "../../redux/features/auth/auth-reducer";
+import {useEffect} from "react";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -48,7 +49,7 @@ export default function LoginScreen() {
 
     const dispatch = useDispatch()
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
-
+    
     return (
         <View style={styles.mainContainer}>
             <View style={styles.topContainer}>
