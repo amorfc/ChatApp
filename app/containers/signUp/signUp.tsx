@@ -19,6 +19,7 @@ import HiddenIconTextInput from "../../components/text_inputs/hidden_text_input"
 import IconTextInput from "../../components/text_inputs/icon_text_input";
 import PrimaryBtn from "../../components/buttons/primary_btn";
 import {navigate} from "../../navigation/navigation";
+import Loader from "../../components/loader/Loader";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -131,6 +132,7 @@ export default function SignUpScreen(): JSX.Element {
 
     return (
         <View style={styles.mainContainer}>
+            <Loader loading={authState.isAuthStatusLoading} />
             <View style={styles.topContainer}>
                 <Text>SignUpScreen</Text>
             </View>

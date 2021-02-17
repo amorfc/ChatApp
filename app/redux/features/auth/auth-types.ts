@@ -26,5 +26,6 @@ export type AuthState = {
     signupHasError: boolean,
     signupErrorMessage: string | undefined,
     signupSuccess: boolean,
-    user:UserModel | null
+    isAuthStatusLoading:boolean
+    user:UserModel | null,
 }

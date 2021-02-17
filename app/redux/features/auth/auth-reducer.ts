@@ -9,6 +9,8 @@ import {AuthResponseDataType} from "../../../models/auth-model";
 
 export const signUpProcess = createAsyncThunk<any, NewUser, {rejectValue:AuthError}>(
     'auth/signUpProcess', async (newUser:NewUser, thunkAPI:any):Promise<void>=>{
+        thunkAPI.dispatch(clearSignUpError(null))
+        thunkAPI.dispatch(setIsAuthStatusLoading(true))
         //Delete All signUpErrors purpose of trying again
         // -------------
         const { firstname,lastname,email,password } = newUser
@@ -25,8 +27,11 @@ export const signUpProcess = createAsyncThunk<any, NewUser, {rejectValue:AuthErr
 
             if(signUpResult.status === 200){
                 thunkAPI.dispatch(setSignupSuccess(signUpResult.data))
+                thunkAPI.dispatch(setIsAuthStatusLoading(false))
+
             }
         }catch(e){
+            thunkAPI.dispatch(setIsAuthStatusLoading(false))
             console.log(e)
         }
         //Validation Could Happen Here
@@ -90,6 +95,7 @@ const initialState: AuthState = {
     signupHasError: false,
     signupErrorMessage: undefined,
     signupSuccess: false,
+    isAuthStatusLoading:false,
     user:null
 }
 
@@ -97,7 +103,10 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        clearSignUpError(state ,{payload}:PayloadAction<string>){
+        setIsAuthStatusLoading(state, {payload}:PayloadAction<boolean>){
+          state.isAuthStatusLoading = payload
+        },
+        clearSignUpError(state ,{payload}:PayloadAction<any>){
             state.signupHasError = false
             state.signupErrorMessage = undefined
         },
@@ -125,10 +134,12 @@ export const authSlice = createSlice({
 export const {
     setSignupSuccess,
     setAuthToken,
+    setIsAuthStatusLoading,
     changeFirstName,
     changeLastName,
     changePassword,
     changeEmail,
+    clearSignUpError,
 } = authSlice.actions
 
 export default authSlice.reducer
