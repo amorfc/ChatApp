@@ -1,6 +1,9 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit"
 import {AuthError, AuthState, NewUser, UserCredentials} from "./auth-types";
 import {navigate} from "../../../navigation/navigation";
+import axios, {AxiosResponse} from "axios";
+import {auth_api_signUp} from "./auth-api";
+import {AuthResponseDataType} from "../../../models/auth-model";
 
 
 
@@ -8,7 +11,24 @@ export const signUpProcess = createAsyncThunk<any, NewUser, {rejectValue:AuthErr
     'auth/signUpProcess', async (newUser:NewUser, thunkAPI:any):Promise<void>=>{
         //Delete All signUpErrors purpose of trying again
         // -------------
-        const { firstName,lastName,email,password } = newUser
+        const { firstname,lastname,email,password } = newUser
+        console.log(`${firstname} , ${lastname}, ${email} , ${password}`)
+
+        try{
+
+            const signUpRequestBody = {
+                "Username":firstname,
+                "Password":password
+            }
+
+            const signUpResult = await auth_api_signUp(signUpRequestBody)
+
+            if(signUpResult.status === 200){
+                thunkAPI.dispatch(setSignupSuccess(signUpResult.data))
+            }
+        }catch(e){
+            console.log(e)
+        }
         //Validation Could Happen Here
 
         // -------------
@@ -77,6 +97,13 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
+        clearSignUpError(state ,{payload}:PayloadAction<string>){
+            state.signupHasError = false
+            state.signupErrorMessage = undefined
+        },
+        setSignupSuccess(state, {payload}:PayloadAction<AuthResponseDataType>){
+            state.signupSuccess = true
+        },
         setAuthToken(state, {payload}: PayloadAction<string>) {
 
         },
@@ -92,13 +119,11 @@ export const authSlice = createSlice({
         changePassword(state, {payload}: PayloadAction<string>) {
             state.password = payload
         },
-        signUpProcess(state, {payload}: PayloadAction<string>) {
-            state.signupSuccess = true
-        }
     }
 })
 
 export const {
+    setSignupSuccess,
     setAuthToken,
     changeFirstName,
     changeLastName,
