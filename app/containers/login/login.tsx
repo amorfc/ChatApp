@@ -52,10 +52,6 @@ export default function LoginScreen() {
     const dispatch = useDispatch()
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
 
-    useEffect(()=>{
-        authState.loginSuccess? navigate("HomeScreen",null): null
-    },[authState.loginSuccess])
-
     return (
         <View style={styles.mainContainer}>
             <Loader loading={authState.isAuthStatusLoading} />

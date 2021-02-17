@@ -99,7 +99,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                             email: email
                         }
 
-                        thunkAPI.dispatch(setLoginSuccess(loginResult.data.user))
+                        thunkAPI.dispatch(setUser(loginResult.data.user))
                         showMessage({
                             message: "Welcome",
                             description: `Welcome ${email}`,
@@ -142,7 +142,6 @@ const initialState: AuthState = {
     //Login Information
     loginHasError: false,
     loginErrorMessage: undefined,
-    loginSuccess: false,
     //Loader Information
     isAuthStatusLoading: false,
     //Result Information
@@ -174,9 +173,8 @@ export const authSlice = createSlice({
         setAuthToken(state, {payload}: PayloadAction<string>) {
 
         },
-        setLoginSuccess(state, {payload}: PayloadAction<UserModel>) {
+        setUser(state, {payload}: PayloadAction<UserModel>) {
             state.user = payload
-            state.loginSuccess = true
         },
         changeFirstName(state, {payload}: PayloadAction<string>) {
             state.firstname = payload
@@ -194,7 +192,7 @@ export const authSlice = createSlice({
 })
 
 export const {
-    setLoginSuccess,
+    setUser,
     setSignupSuccess,
     setAuthToken,
     setIsAuthStatusLoading,

@@ -30,7 +30,6 @@ export type AuthState = {
 
     loginHasError: boolean,
     loginErrorMessage: string | undefined,
-    loginSuccess: boolean,
 
     isAuthStatusLoading:boolean
     user:UserModel | null,
