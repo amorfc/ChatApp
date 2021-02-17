@@ -1,14 +1,15 @@
 export type UserModel = {
-    firstName:string,
-    lastName:string,
-    email:string,
-    username:string
+    firstName:string | null,
+    lastName:string | null,
+    email:string | null,
+    username:string | null
 }
 
 export type AuthResponseData = {
     isAuthenticated:boolean,
     message:string,
-    token:string
+    token:string,
+    user:UserModel | null
 }
 
 
