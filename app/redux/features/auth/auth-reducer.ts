@@ -69,13 +69,45 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
             //Login Request
             const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
 
-            //creatingUserModel For Now
-            loginResult.data.user = {
-                email: email
-            }
+            //Check If Login Status 200
 
-            thunkAPI.dispatch(setLoginSuccess(loginResult.data.user))
+            if (loginResult.status === 200) {
+
+                //creatingUserModel For Now
+                switch (loginResult.data.message) {
+                    case "UserNotExists":
+                        showMessage({
+                            message:"Oops!!!",
+                            description:"User Not Exists Please Sign Up",
+                            type:"danger"
+                        })
+                        break;
+                    case "PasswordIsNotCorrect":
+                        showMessage({
+                            message:"Oops!!!",
+                            description:"Password Is Not Correct",
+                            type:"danger"
+                        })
+                        break;
+                    default:
+                        loginResult.data.user = {
+                            email: email
+                        }
+
+                        thunkAPI.dispatch(setLoginSuccess(loginResult.data.user))
+                        showMessage({
+                            message: "Welcome",
+                            description: `Welcome ${email}`,
+                            type: "success"
+                        })
+                }
+            }
         } catch (e) {
+            showMessage({
+                message: "Oops!",
+                description: `Something Went Wrong!!!`,
+                type: "danger"
+            })
             console.log(e)
         }
 

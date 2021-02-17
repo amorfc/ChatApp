@@ -11,7 +11,7 @@ import {Ionicons} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AuthState} from "../../redux/features/auth/auth-types";
 import {RootStateType} from "../../redux/root-reducers";
-import {changeEmail, changePassword, clearSignUpForm} from "../../redux/features/auth/auth-reducer";
+import {changeEmail, changePassword, clearSignUpForm, loginProcess} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
 
 const styles = StyleSheet.create({
@@ -49,7 +49,7 @@ export default function LoginScreen() {
 
     const dispatch = useDispatch()
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
-    
+
     return (
         <View style={styles.mainContainer}>
             <View style={styles.topContainer}>
@@ -67,7 +67,7 @@ export default function LoginScreen() {
                         onChangeText={(text: string) => dispatch(changeEmail(text))}
                     />
                 </View>
-                <View style={{paddingBottom: 30}} >
+                <View style={{paddingBottom: 30}}>
                     <HiddenIconTextInput
                         iconName={"lock-closed"}
                         iconSize={22}
@@ -81,12 +81,13 @@ export default function LoginScreen() {
                 <View style={{paddingBottom: 20}}>
                     <PrimaryButton
                         text={"Login"}
-                        onPress={()=>{
-                            console.log("LoginButton Pressed")}}
+                        onPress={() => {
+                            dispatch(loginProcess(authState))
+                        }}
                     />
                 </View>
-                <View style={{ marginHorizontal: 8 }}>
-                    <Text style={{color:"darkgray"}} >
+                <View style={{marginHorizontal: 8}}>
+                    <Text style={{color: "darkgray"}}>
                         Forgot Password?
                     </Text>
                 </View>

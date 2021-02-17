@@ -32,10 +32,15 @@ export const auth_api_login = async (loginReqBody:any): Promise<AxiosResponse<Au
         }
     }
 
-    const loginResult: AxiosResponse<AuthResponseDataType> = await makePost(
-        url,
-        config,
-        loginReqBody
-    )
-    return loginResult
+    try{
+        const loginResult: AxiosResponse<AuthResponseDataType> = await makePost(
+            url,
+            config,
+            loginReqBody
+        )
+        return loginResult
+
+    }catch (e) {
+        return e
+    }
 }
