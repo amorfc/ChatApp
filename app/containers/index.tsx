@@ -51,21 +51,8 @@ function HomeScreen() {
 
 export default function RootNavigationContainer(props: any): JSX.Element {
 
-    const [isAppInitiated, setIsAppInitiated] = useState(false)
 
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
-
-    //One time check if auth data available
-    useEffect(() => {
-        initI18n("tr")
-        store.dispatch(initAuth(null))
-        setIsAppInitiated(true)
-    }, [])
-
-
-    if (!isAppInitiated) {
-        return <></>
-    }
 
     return (
         <MainStack.Navigator>
