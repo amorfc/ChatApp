@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../redux/root-reducers";
 import {initAuth} from "../redux/features/auth/auth-reducer";
 import {useEffect, useState} from "react";
+import store from "../redux/configure-store";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
@@ -57,7 +58,7 @@ export default function RootNavigationContainer(props: any): JSX.Element {
     //One time check if auth data available
 
     useEffect(() => {
-        dispatch(initAuth(null))
+        store.dispatch(initAuth(null))
         setIsAppInitiated(true)
     }, [])
 
