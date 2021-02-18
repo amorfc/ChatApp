@@ -11,6 +11,8 @@ const I18nContext: I18nContextType = {
 const lang_en = {
     sign_up: "Sign Up",
     log_in: "Login",
+    log_out:"Logout",
+    log_out_message:"We Will Miss You %{name} :)",
     forgot_password: "Forgot Password ?",
     sign_up_success_message: "Signup is successful, Please Login!",
     go_to_login: "Go to Login",
@@ -29,6 +31,8 @@ const lang_en = {
 const lang_tr = {
     sign_up: "Kayıt Ol",
     log_in: "Giriş",
+    log_out:"Çıkış",
+    log_out_message:"Seni Özleyeceğiz %{name} :)",
     forgot_password: "Şifremi Unuttum ?",
     sign_up_success_message: "Kayıt başarılı Lütfen Giriş Yapınız",
     go_to_login: "Giriş",

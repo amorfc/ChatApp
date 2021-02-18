@@ -116,7 +116,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                         thunkAPI.dispatch(setAuthToken(loginResult.data.token))
                         showMessage({
                             message: "Welcome",
-                            description: I18nContext.polyglot?.t("welcome_name_message",{name:email}),
+                            description: I18nContext.polyglot?.t("welcome_name_message", {name: email}),
                             type: "success"
                         })
                 }
@@ -143,21 +143,45 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
             const authData: AuthResponseDataType = await LocalStorage.load({
                 key: "authData"
             })
-            await LocalStorage.remove({
-                key: "authData"
-            })
+
             //Set auth data to render target screens
             thunkAPI.dispatch(setUser(authData.user))
             thunkAPI.dispatch(setAuthToken(authData.token))
             showMessage({
                 message: "Welcome",
-                description: I18nContext.polyglot?.t("welcome_name_message",{name:authData.user.email}),
+                description: I18nContext.polyglot?.t("welcome_name_message", {name: authData.user.email}),
                 type: "success"
             })
         } catch (e) {
             console.log(e)
         }
     })
+
+export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError }>(
+    "auth/logoutProcess",
+    async (_: any, thunkAPI: any) => {
+
+        try{
+            const state = thunkAPI.getState()
+            console.log(state)
+            showMessage({
+                message:"Oops!!!",
+                description:I18nContext.polyglot?.t("log_out_message",{name:state.auth.user.email}),
+                type:"warning"
+            })
+            //Delete user from Global Redux State
+            thunkAPI.dispatch(setUser(null))
+            //Delete token from Local Storage
+            await LocalStorage.remove({
+                key: "authData"
+            })
+
+        }catch (e) {
+            console.log(e)
+        }
+
+    }
+)
 
 const initialState: AuthState = {
     //Form State
@@ -203,7 +227,7 @@ export const authSlice = createSlice({
         setAuthToken(state, {payload}: PayloadAction<string>) {
             GlobalConstants.authToken = payload
         },
-        setUser(state, {payload}: PayloadAction<UserModel>) {
+        setUser(state, {payload}: PayloadAction<UserModel | null>) {
             state.user = payload
         },
         changeFirstName(state, {payload}: PayloadAction<string>) {

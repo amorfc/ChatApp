@@ -1,5 +1,9 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import {View, StyleSheet, Text, Image} from "react-native";
+import PrimaryBtn from "../../components/buttons/primary_btn";
+import I18nContext from "../../config/i18n-polyglot";
+import {useDispatch} from "react-redux";
+import {loginProcess, logoutProcess} from "../../redux/features/auth/auth-reducer";
 // import { I18nContext } from "../../config/i18n";
 
 const styles = StyleSheet.create({
@@ -10,6 +14,10 @@ const styles = StyleSheet.create({
     },
     mainContainer: {
         flex: 1,
+        //for test
+        justifyContent: "center",
+        alignItems: "center",
+        ///
         backgroundColor: "white",
     },
     topContainer: {
@@ -26,9 +34,17 @@ const styles = StyleSheet.create({
 });
 
 export default function SettingsScreen() {
+
+    const dispatch = useDispatch()
+
     return (
         <View style={styles.mainContainer}>
             <Text>SettingsScreen</Text>
+            <PrimaryBtn
+                text={I18nContext.polyglot?.t("log_out")}
+                onPress={() => {
+                    dispatch(logoutProcess(null))
+                }} />
         </View>
     );
 }
