@@ -5,6 +5,8 @@ import {auth_api_login, auth_api_signUp} from "./auth-api";
 import {AuthResponseDataType, UserModel} from "../../../models/auth-model";
 import {showMessage} from "react-native-flash-message";
 
+//Storage import (AsyncStorage)
+import LocalStorage from "../../../config/storage"
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {
@@ -82,23 +84,32 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                 switch (loginResult.data.message) {
                     case "UserNotExists":
                         showMessage({
-                            message:"Oops!!!",
-                            description:"User Not Exists Please Sign Up",
-                            type:"danger"
+                            message: "Oops!!!",
+                            description: "User Not Exists Please Sign Up",
+                            type: "danger"
                         })
                         break;
                     case "PasswordIsNotCorrect":
                         showMessage({
-                            message:"Oops!!!",
-                            description:"Password Is Not Correct",
-                            type:"danger"
+                            message: "Oops!!!",
+                            description: "Password Is Not Correct",
+                            type: "danger"
                         })
                         break;
                     default:
+                        //User information must be added on this Object
+                        //There is a lot of work to be done
                         loginResult.data.user = {
                             email: email
                         }
 
+                        //Add updated Token to local storage
+                        await LocalStorage.save({
+                            key: "authData",
+                            data: loginResult.data
+                        })
+
+                        //Add user to Redux Global State
                         thunkAPI.dispatch(setUser(loginResult.data.user))
                         showMessage({
                             message: "Welcome",
@@ -118,14 +129,23 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
     }
 )
 
-const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
+
+export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
     'auth/initAuth',
     async (_: any, thunkAPI: any) => {
         //Check if any auth data in async storage if Token Not expired set User and Do Auth
+
         try {
+            //Get auth data if not expired
+            const authData: AuthResponseDataType = await LocalStorage.load({
+                key: "authData"
+            })
+            //Set auth data to render target screens
+            thunkAPI.dispatch(setUser(authData.user))
+            thunkAPI.dispatch(setAuthToken(authData.token))
 
         } catch (e) {
-
+            console.log(e)
         }
     })
 

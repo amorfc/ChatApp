@@ -12,8 +12,10 @@ import WelcomeScreen from "./welcome/welcome";
 import SettingsScreen from "./settings/settings";
 import ChatsScreen from "./chats/chats";
 import {AuthState} from "../redux/features/auth/auth-types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../redux/root-reducers";
+import {initAuth} from "../redux/features/auth/auth-reducer";
+import {useEffect, useState} from "react";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
@@ -47,7 +49,22 @@ function HomeScreen() {
 
 export default function RootNavigationContainer(props: any): JSX.Element {
 
+    const [isAppInitiated, setIsAppInitiated] = useState(false)
+
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
+    const dispatch = useDispatch()
+
+    //One time check if auth data available
+
+    useEffect(() => {
+        dispatch(initAuth(null))
+        setIsAppInitiated(true)
+    }, [])
+
+
+    if (!isAppInitiated) {
+        return <></>
+    }
 
     return (
         <MainStack.Navigator>
