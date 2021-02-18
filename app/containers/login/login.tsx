@@ -15,6 +15,7 @@ import {changeEmail, changePassword, clearSignUpForm, loginProcess} from "../../
 import {useEffect} from "react";
 import {navigate} from "../../navigation/navigation";
 import Loader from "../../components/loader/Loader";
+import I18nContext from "../../config/i18n-polyglot";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -75,7 +76,7 @@ export default function LoginScreen() {
                         iconName={"lock-closed"}
                         iconSize={22}
                         iconColor={"grey"}
-                        placeholder={"Password"}
+                        placeholder={I18nContext.polyglot?.t("password")}
                         secureTextEntry={true}
                         value={authState.password}
                         onChangeText={(text: string) => dispatch(changePassword(text))}
@@ -83,7 +84,7 @@ export default function LoginScreen() {
                 </View>
                 <View style={{paddingBottom: 20}}>
                     <PrimaryButton
-                        text={"Login"}
+                        text={I18nContext.polyglot?.t("log_in")}
                         onPress={() => {
                             dispatch(loginProcess(authState))
                         }}
@@ -91,7 +92,7 @@ export default function LoginScreen() {
                 </View>
                 <View style={{marginHorizontal: 8}}>
                     <Text style={{color: "darkgray"}}>
-                        Forgot Password?
+                        {I18nContext.polyglot?.t("forgot_password")}
                     </Text>
                 </View>
             </View>

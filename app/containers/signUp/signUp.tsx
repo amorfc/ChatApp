@@ -21,6 +21,7 @@ import IconTextInput from "../../components/text_inputs/icon_text_input";
 import PrimaryBtn from "../../components/buttons/primary_btn";
 import {navigate} from "../../navigation/navigation";
 import Loader from "../../components/loader/Loader";
+import I18nContext from "../../config/i18n-polyglot";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -70,7 +71,7 @@ const signUpFormScreen = (authState: AuthState)=>{
                 iconName={"person"}
                 iconSize={24}
                 iconColor={"darkgray"}
-                placeholder={"First Name"}
+                placeholder={I18nContext.polyglot?.t("first_name")}
                 placeholderTextColor={"darkgray"}
                 value={authState.firstname}
                 onChangeText={(text: string) => dispatch(changeFirstName(text))}/>
@@ -79,7 +80,7 @@ const signUpFormScreen = (authState: AuthState)=>{
                 iconName={"person"}
                 iconSize={24}
                 iconColor={"darkgray"}
-                placeholder={"Last Name"}
+                placeholder={I18nContext.polyglot?.t("last_name")}
                 placeholderTextColor={"darkgray"}
                 value={authState.lastname}
                 onChangeText={(text: string) => dispatch(changeLastName(text))}/>
@@ -97,14 +98,14 @@ const signUpFormScreen = (authState: AuthState)=>{
                 iconName={"lock-closed"}
                 iconSize={24}
                 iconColor={"darkgray"}
-                placeholder={"Password"}
+                placeholder={I18nContext.polyglot?.t("password")}
                 value={authState.password}
                 onChangeText={(text: string) => dispatch(changePassword(text))}/>
         </View>
             <View style={styles.buttonContainer}>
                 <View>
                     <PrimaryBtn
-                        text={"Sign Up"}
+                        text={I18nContext.polyglot?.t("sign_up")}
                         onPress={() => {
                             dispatch(signUpProcess(authState));
                         }}/>
@@ -120,10 +121,10 @@ const signUpSuccessScreen = () => {
     return (
         <View>
             <Text style={styles.successText}>
-                Signup is successful, Please Login!
+                {I18nContext.polyglot?.t("sign_up_success_message")}
             </Text>
             <View style={styles.goToLoginContainer}>
-                <PrimaryBtn text={"Go to login"} onPress={() => {
+                <PrimaryBtn text={I18nContext.polyglot?.t("go_to_login")} onPress={() => {
                     dispatch(clearSignUpForm(null))
                     navigate("LoginScreen", null)
                 }}/>

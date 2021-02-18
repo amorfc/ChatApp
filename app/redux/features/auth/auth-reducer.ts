@@ -8,6 +8,7 @@ import {showMessage} from "react-native-flash-message";
 //Storage import (AsyncStorage)
 import LocalStorage from "../../../config/storage"
 import {GlobalConstants} from "../../../config/global-constans";
+import I18nContext from "../../../config/i18n-polyglot";
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {
@@ -38,7 +39,7 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
                 thunkAPI.dispatch(setSignupSuccess(true))
                 showMessage({
                     message: "Welcome",
-                    description: "Welcome Happy Chatting",
+                    description: I18nContext.polyglot?.t("sign_up_success_message"),
                     type: "success"
                 })
             } else {
@@ -46,12 +47,12 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
                 //Error message will handle
                 showMessage({
                     message: "Oops!!",
-                    description: "Something Went Wrong Try Again",
+                    description: I18nContext.polyglot?.t("something_went_wrong"),
                     type: "danger"
                 })
             }
         } catch (e) {
-            console.log(e)
+            // console.log(e)
         }
         thunkAPI.dispatch(setIsAuthStatusLoading(false))
 
@@ -86,14 +87,14 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                     case "UserNotExists":
                         showMessage({
                             message: "Oops!!!",
-                            description: "User Not Exists Please Sign Up",
+                            description: I18nContext.polyglot?.t("user_not_exists_message"),
                             type: "danger"
                         })
                         break;
                     case "PasswordIsNotCorrect":
                         showMessage({
                             message: "Oops!!!",
-                            description: "Password Is Not Correct",
+                            description: I18nContext.polyglot?.t("password_is_not_correct_message"),
                             type: "danger"
                         })
                         break;
@@ -115,7 +116,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                         thunkAPI.dispatch(setAuthToken(loginResult.data.token))
                         showMessage({
                             message: "Welcome",
-                            description: `Welcome ${email}`,
+                            description: I18nContext.polyglot?.t("welcome_name_message",{name:email}),
                             type: "success"
                         })
                 }
@@ -123,7 +124,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
         } catch (e) {
             showMessage({
                 message: "Oops!",
-                description: `Something Went Wrong!!! ${e}`,
+                description: I18nContext.polyglot?.t("something_went_wrong"),
                 type: "danger"
             })
         }
@@ -148,7 +149,11 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
             //Set auth data to render target screens
             thunkAPI.dispatch(setUser(authData.user))
             thunkAPI.dispatch(setAuthToken(authData.token))
-
+            showMessage({
+                message: "Welcome",
+                description: I18nContext.polyglot?.t("welcome_name_message",{name:authData.user.email}),
+                type: "success"
+            })
         } catch (e) {
             console.log(e)
         }

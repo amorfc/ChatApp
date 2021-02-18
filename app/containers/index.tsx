@@ -17,6 +17,7 @@ import {RootStateType} from "../redux/root-reducers";
 import {initAuth} from "../redux/features/auth/auth-reducer";
 import {useEffect, useState} from "react";
 import store from "../redux/configure-store";
+import {initI18n} from "../config/i18n-polyglot";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
@@ -53,11 +54,10 @@ export default function RootNavigationContainer(props: any): JSX.Element {
     const [isAppInitiated, setIsAppInitiated] = useState(false)
 
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
-    const dispatch = useDispatch()
 
     //One time check if auth data available
-
     useEffect(() => {
+        initI18n("tr")
         store.dispatch(initAuth(null))
         setIsAppInitiated(true)
     }, [])
