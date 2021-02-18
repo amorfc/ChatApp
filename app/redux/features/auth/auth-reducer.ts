@@ -7,6 +7,7 @@ import {showMessage} from "react-native-flash-message";
 
 //Storage import (AsyncStorage)
 import LocalStorage from "../../../config/storage"
+import {GlobalConstants} from "../../../config/global-constans";
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {
@@ -111,6 +112,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
 
                         //Add user to Redux Global State
                         thunkAPI.dispatch(setUser(loginResult.data.user))
+                        thunkAPI.dispatch(setAuthToken(loginResult.data.token))
                         showMessage({
                             message: "Welcome",
                             description: `Welcome ${email}`,
@@ -138,6 +140,9 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
         try {
             //Get auth data if not expired
             const authData: AuthResponseDataType = await LocalStorage.load({
+                key: "authData"
+            })
+            await LocalStorage.remove({
                 key: "authData"
             })
             //Set auth data to render target screens
@@ -191,7 +196,7 @@ export const authSlice = createSlice({
             state.signupSuccess = payload
         },
         setAuthToken(state, {payload}: PayloadAction<string>) {
-
+            GlobalConstants.authToken = payload
         },
         setUser(state, {payload}: PayloadAction<UserModel>) {
             state.user = payload
