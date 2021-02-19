@@ -1,6 +1,5 @@
 import * as React from "react";
-import {View, StyleSheet, Text, Image} from "react-native";
-// import { I18nContext } from "../../config/i18n";
+import {View, StyleSheet, Text} from "react-native";
 
 //Redux
 import {AuthState} from "../../redux/features/auth/auth-types";
@@ -9,6 +8,7 @@ import {
     changeFirstName,
     changeLastName,
     changePassword,
+    changeUsername,
     clearSignUpForm,
     signUpProcess
 } from "../../redux/features/auth/auth-reducer";
@@ -19,8 +19,11 @@ import {RootStateType} from "../../redux/root-reducers";
 import HiddenIconTextInput from "../../components/text_inputs/hidden_text_input"
 import IconTextInput from "../../components/text_inputs/icon_text_input";
 import PrimaryBtn from "../../components/buttons/primary_btn";
-import {navigate} from "../../navigation/navigation";
 import Loader from "../../components/loader/Loader";
+
+//navigation ref
+import {navigate} from "../../navigation/navigation";
+//Polyglot Language Context
 import I18nContext from "../../config/i18n-polyglot";
 
 const styles = StyleSheet.create({
@@ -61,47 +64,51 @@ const styles = StyleSheet.create({
     }
 });
 
-const signUpFormScreen = (authState: AuthState)=>{
+const signUpFormScreen = (authState: AuthState) => {
 
     const dispatch = useDispatch();
 
-    return(
-        <><View style={styles.inputContainer}>
-            <IconTextInput
-                iconName={"person"}
-                iconSize={24}
-                iconColor={"darkgray"}
-                placeholder={I18nContext.polyglot?.t("first_name")}
-                placeholderTextColor={"darkgray"}
-                value={authState.firstname}
-                onChangeText={(text: string) => dispatch(changeFirstName(text))}/>
-        </View><View style={styles.inputContainer}>
-            <IconTextInput
-                iconName={"person"}
-                iconSize={24}
-                iconColor={"darkgray"}
-                placeholder={I18nContext.polyglot?.t("last_name")}
-                placeholderTextColor={"darkgray"}
-                value={authState.lastname}
-                onChangeText={(text: string) => dispatch(changeLastName(text))}/>
-        </View><View style={styles.inputContainer}>
-            <IconTextInput
-                iconName={"at-circle-sharp"}
-                iconSize={24}
-                iconColor={"darkgray"}
-                placeholder={"Email"}
-                placeholderTextColor={"darkgray"}
-                value={authState.email}
-                onChangeText={(text: string) => dispatch(changeEmail(text))}/>
-        </View><View style={styles.inputContainer}>
-            <HiddenIconTextInput
-                iconName={"lock-closed"}
-                iconSize={24}
-                iconColor={"darkgray"}
-                placeholder={I18nContext.polyglot?.t("password")}
-                value={authState.password}
-                onChangeText={(text: string) => dispatch(changePassword(text))}/>
-        </View>
+    return (
+        <>
+            {/*<View style={styles.inputContainer}>*/}
+            {/*    <IconTextInput*/}
+            {/*        iconName={"person"}*/}
+            {/*        iconSize={24}*/}
+            {/*        iconColor={"darkgray"}*/}
+            {/*        placeholder={I18nContext.polyglot?.t("first_name")}*/}
+            {/*        placeholderTextColor={"darkgray"}*/}
+            {/*        value={authState.firstname}*/}
+            {/*        onChangeText={(text: string) => dispatch(changeFirstName(text))}/>*/}
+            {/*</View>*/}
+            {/*<View style={styles.inputContainer}>*/}
+            {/*    <IconTextInput*/}
+            {/*        iconName={"person"}*/}
+            {/*        iconSize={24}*/}
+            {/*        iconColor={"darkgray"}*/}
+            {/*        placeholder={I18nContext.polyglot?.t("last_name")}*/}
+            {/*        placeholderTextColor={"darkgray"}*/}
+            {/*        value={authState.lastname}*/}
+            {/*        onChangeText={(text: string) => dispatch(changeLastName(text))}/>*/}
+            {/*</View>*/}
+            <View style={styles.inputContainer}>
+                <IconTextInput
+                    iconName={"at-circle-sharp"}
+                    iconSize={24}
+                    iconColor={"darkgray"}
+                    placeholder={I18nContext.polyglot?.t("user_name")}
+                    placeholderTextColor={"darkgray"}
+                    value={authState.username}
+                    onChangeText={(text: string) => dispatch(changeUsername(text))}/>
+            </View>
+            <View style={styles.inputContainer}>
+                <HiddenIconTextInput
+                    iconName={"lock-closed"}
+                    iconSize={24}
+                    iconColor={"darkgray"}
+                    placeholder={I18nContext.polyglot?.t("password")}
+                    value={authState.password}
+                    onChangeText={(text: string) => dispatch(changePassword(text))}/>
+            </View>
             <View style={styles.buttonContainer}>
                 <View>
                     <PrimaryBtn
@@ -140,13 +147,13 @@ export default function SignUpScreen(): JSX.Element {
 
     return (
         <View style={styles.mainContainer}>
-            <Loader loading={authState.isAuthStatusLoading} />
+            <Loader loading={authState.isAuthStatusLoading}/>
             <View style={styles.topContainer}>
                 <Text>SignUpScreen</Text>
             </View>
             <View style={styles.bottomContainer}>
                 {
-                    authState.signupSuccess ? signUpSuccessScreen():signUpFormScreen(authState)
+                    authState.signupSuccess ? signUpSuccessScreen() : signUpFormScreen(authState)
                 }
             </View>
         </View>

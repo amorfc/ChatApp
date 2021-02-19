@@ -5,7 +5,7 @@ import {UserCredentials} from "./auth-types";
 
 export const auth_api_signUp = async (signUpRequestBody: any): Promise<AxiosResponse<AuthResponseDataType>> => {
     //Local host causes an error for android
-    const url = "http://192.168.1.36:8038/api/Auth/SignUp"
+    const url = "http://192.168.1.44:8038/api/Auth/SignUp"
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export const auth_api_signUp = async (signUpRequestBody: any): Promise<AxiosResp
 }
 
 export const auth_api_login = async (loginReqBody:any): Promise<AxiosResponse<AuthResponseDataType>> => {
-    const url = "http://192.168.1.36:8038/api/Auth/Login"
+    const url = "http://192.168.1.44:8038/api/Auth/Login"
     const config = {
         headers: {
             'Content-Type': 'application/json'

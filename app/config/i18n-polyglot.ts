@@ -9,6 +9,7 @@ const I18nContext: I18nContextType = {
 }
 
 const lang_en = {
+    user_name:"Username",
     sign_up: "Sign Up",
     log_in: "Login",
     log_out:"Logout",
@@ -29,6 +30,7 @@ const lang_en = {
 }
 
 const lang_tr = {
+    user_name:"Kullanıcı Adı",
     sign_up: "Kayıt Ol",
     log_in: "Giriş",
     log_out:"Çıkış",

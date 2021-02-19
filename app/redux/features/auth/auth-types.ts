@@ -1,7 +1,7 @@
 import {UserModel} from "../../../models/auth-model";
 
 export type UserCredentials = {
-    email: string
+    username: string
     password: string
 }
 
@@ -22,6 +22,7 @@ export type AuthState = {
     firstname:string,
     lastname:string,
     email:string,
+    username:string,
     password:string,
 
     signupHasError: boolean,

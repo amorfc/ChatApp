@@ -18,7 +18,7 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
         //Loading State
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
 
-        const {firstname, lastname, email, password} = newUser
+        const {firstname, lastname, username, password} = newUser
         //Validation Could Happen Here
 
         // -------------
@@ -30,7 +30,7 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
             //Do request and get response Anf Check response
 
             const signUpRequestBody = {
-                "Username": firstname,
+                "Username": username,
                 "Password": password
             }
 
@@ -62,14 +62,14 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
     'auth/loginProcess',
     async (userCredentials: UserCredentials, thunkAPI: any) => {
 
-        const {email, password} = userCredentials
+        const {username, password} = userCredentials
         // -------------
         //Validation Could Happen Here
 
         // -------------
 
         const loginReqBody = {
-            "Username": email,
+            "Username": username,
             "Password": password
         }
 
@@ -102,7 +102,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                         //User information must be added on this Object
                         //There is a lot of work to be done
                         loginResult.data.user = {
-                            email: email
+                            username: username
                         }
 
                         //Add updated Token to local storage
@@ -116,7 +116,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                         thunkAPI.dispatch(setAuthToken(loginResult.data.token))
                         showMessage({
                             message: "Welcome",
-                            description: I18nContext.polyglot?.t("welcome_name_message", {name: email}),
+                            description: I18nContext.polyglot?.t("welcome_name_message", {name: username}),
                             type: "success"
                         })
                 }
@@ -149,7 +149,7 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
             thunkAPI.dispatch(setAuthToken(authData.token))
             showMessage({
                 message: "Welcome",
-                description: I18nContext.polyglot?.t("welcome_name_message", {name: authData.user.email}),
+                description: I18nContext.polyglot?.t("welcome_name_message", {name: authData.user.username}),
                 type: "success"
             })
         } catch (e) {
@@ -166,7 +166,7 @@ export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError
             console.log(state)
             showMessage({
                 message:"Oops!!!",
-                description:I18nContext.polyglot?.t("log_out_message",{name:state.auth.user.email}),
+                description:I18nContext.polyglot?.t("log_out_message",{name:state.auth.user.username}),
                 type:"warning"
             })
             //Delete user from Global Redux State
@@ -188,6 +188,7 @@ const initialState: AuthState = {
     firstname: "",
     lastname: "",
     email: "",
+    username:"",
     password: "",
     //signUp Information
     signupHasError: false,
@@ -242,6 +243,9 @@ export const authSlice = createSlice({
         changePassword(state, {payload}: PayloadAction<string>) {
             state.password = payload
         },
+        changeUsername(state, {payload}: PayloadAction<string>) {
+            state.username = payload
+        },
     }
 })
 
@@ -254,6 +258,7 @@ export const {
     changeLastName,
     changePassword,
     changeEmail,
+    changeUsername,
     clearSignUpError,
     clearSignUpForm,
 } = authSlice.actions
