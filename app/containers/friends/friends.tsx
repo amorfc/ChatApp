@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
     },
     topContainer: {
-        height: 100,
+        height: 70,
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
@@ -46,7 +46,7 @@ export default function FriendsScreen() {
         <View style={styles.mainContainer}>
             <Text>{authState.user?.username} Friends Screen</Text>
             <View style={styles.topContainer} >
-                <Text>Search And Add Friends Section</Text>
+                <Text>Search Section</Text>
             </View>
             <View style={styles.bottomContainer} >
                 <FriendsList friendsData={userState.friends} />
