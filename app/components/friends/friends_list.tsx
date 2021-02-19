@@ -4,6 +4,10 @@ import {Button, FlatList, StyleSheet, Text, View} from "react-native";
 //Components
 import SingleFriend from "./friend"
 import {UserModel} from "../../models/auth-model";
+import {useEffect} from "react";
+import {fetchAllFriends} from "../../redux/features/user/user-reducer";
+import {useDispatch, useSelector} from "react-redux";
+import {RootStateType} from "../../redux/root-reducers";
 
 const styles = StyleSheet.create({
     main_container:{
@@ -31,10 +35,18 @@ const FriendsListHeaderComponent = ():JSX.Element =>{
 
 const FriendsList = (props:any): JSX.Element => {
 
+
+    const userState = useSelector((state:RootStateType) => state.user)
+    const dispatch = useDispatch()
+
     const renderSingleFriend = (item: UserModel) => {
         return(
             <SingleFriend friend={item} />
         )
+    }
+
+    const refreshFriends = ()=>{
+            dispatch(fetchAllFriends(null))
     }
 
     return(
@@ -45,6 +57,8 @@ const FriendsList = (props:any): JSX.Element => {
                 keyExtractor={(item) => item.username}
                 ListHeaderComponent={FriendsListHeaderComponent}
                 ListHeaderComponentStyle={styles.friends_list_header_container}
+                refreshing={userState.isFriendsStatusLoading}
+                onRefresh={refreshFriends}
             />
         </View>
     )

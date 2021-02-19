@@ -19,6 +19,7 @@ import {useEffect, useState} from "react";
 import store from "../redux/configure-store";
 import {initI18n} from "../config/i18n-polyglot";
 import FriendsScreen from "./friends/friends";
+import {fetchAllFriends} from "../redux/features/user/user-reducer";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
@@ -34,8 +35,8 @@ function ChatsTab() {
     )
 }
 
-function FriendsTab(){
-    return(
+function FriendsTab() {
+    return (
         <FriendsStack.Navigator>
             <FriendsStack.Screen name="FriendsScreen" component={FriendsScreen}/>
         </FriendsStack.Navigator>
@@ -62,8 +63,12 @@ function HomeScreen() {
 
 export default function RootNavigationContainer(props: any): JSX.Element {
 
-
+    const dispatch = useDispatch()
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
+
+    useEffect(() => {
+        if(authState.user) dispatch(fetchAllFriends(null))
+    }, [authState.user])
 
     return (
         <MainStack.Navigator>

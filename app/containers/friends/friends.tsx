@@ -1,5 +1,5 @@
 import * as React from "react";
-import {View, StyleSheet, Text, Image, Button} from "react-native";
+import {View, StyleSheet, Text} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 // import { I18nContext } from "../../config/i18n";
 
@@ -9,6 +9,7 @@ import {RootStateType} from "../../redux/root-reducers";
 import FriendsList from "../../components/friends/friends_list";
 import {useEffect} from "react";
 import {fetchAllFriends} from "../../redux/features/user/user-reducer";
+import Loader from "../../components/loader/Loader";
 
 
 const styles = StyleSheet.create({
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor:"#00b8ae"
     },
     bottomContainer: {
         flex: 1,
@@ -33,18 +35,13 @@ const styles = StyleSheet.create({
 });
 
 export default function FriendsScreen() {
+
     const dispatch = useDispatch()
-
-    const authState = useSelector((state:RootStateType) => state.auth)
+    // const authState = useSelector((state:RootStateType) => state.auth)
     const userState = useSelector((state:RootStateType) => state.user)
-
-    useEffect(()=>{
-        dispatch(fetchAllFriends(null))
-    },[])
 
     return (
         <View style={styles.mainContainer}>
-            <Text>{authState.user?.username} Friends Screen</Text>
             <View style={styles.topContainer} >
                 <Text>Search Section</Text>
             </View>
