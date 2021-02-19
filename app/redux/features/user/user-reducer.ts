@@ -1,7 +1,20 @@
 import {UserState} from "./user-types";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {UserModel} from "../../../models/auth-model";
+import {fetchUserFriends} from "./user-api";
 
+
+export const fetchAllFriends = createAsyncThunk(
+    "user/fetchAllFriends",
+    async (_:any,thunkAPI:any)=>{
+        try{
+            const fetchedAllFriendsResult = await fetchUserFriends()
+            thunkAPI.dispatch(setFriends(fetchedAllFriendsResult.data))
+        }catch (e){
+            console.log(e)
+        }
+    }
+)
 
 const initialState: UserState = {
     friends:[],

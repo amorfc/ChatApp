@@ -18,9 +18,11 @@ import {initAuth} from "../redux/features/auth/auth-reducer";
 import {useEffect, useState} from "react";
 import store from "../redux/configure-store";
 import {initI18n} from "../config/i18n-polyglot";
+import FriendsScreen from "./friends/friends";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
+const FriendsStack = createStackNavigator()
 const SettingsStack = createStackNavigator()
 const HomeTab = createBottomTabNavigator()
 
@@ -29,6 +31,14 @@ function ChatsTab() {
         <ChatsStack.Navigator>
             <ChatsStack.Screen name="ChatsScreen" component={ChatsScreen}/>
         </ChatsStack.Navigator>
+    )
+}
+
+function FriendsTab(){
+    return(
+        <FriendsStack.Navigator>
+            <FriendsStack.Screen name="FriendsScreen" component={FriendsScreen}/>
+        </FriendsStack.Navigator>
     )
 }
 
@@ -44,6 +54,7 @@ function HomeScreen() {
     return (
         <HomeTab.Navigator>
             <HomeTab.Screen name="ChatsTab" component={ChatsTab}/>
+            <HomeTab.Screen name="FriendsTab" component={FriendsTab}/>
             <HomeTab.Screen name="SettingsScreen" component={SettingsTab}/>
         </HomeTab.Navigator>
     )
