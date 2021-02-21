@@ -54,8 +54,8 @@ function SettingsTab() {
 function HomeScreen() {
     return (
         <HomeTab.Navigator>
-            <HomeTab.Screen name="ChatsTab" component={ChatsTab}/>
             <HomeTab.Screen name="FriendsTab" component={FriendsTab}/>
+            <HomeTab.Screen name="ChatsTab" component={ChatsTab}/>
             <HomeTab.Screen name="SettingsScreen" component={SettingsTab}/>
         </HomeTab.Navigator>
     )

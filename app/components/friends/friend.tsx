@@ -1,5 +1,7 @@
 import * as React from "react"
 import {Image, StyleSheet, Text, View} from "react-native";
+import {UserModel} from "../../models/auth-model";
+import {User} from "../../redux/features/auth/auth-types";
 
 
 const styles = StyleSheet.create({
@@ -24,9 +26,9 @@ const styles = StyleSheet.create({
     },
 })
 
-const Friend = (props: any): JSX.Element => {
+const Friend = (props:any): JSX.Element => {
 
-    const {friend} = props
+    const friend:UserModel = props.friend
 
     return (
         <View style={styles.main_container}>
@@ -38,7 +40,7 @@ const Friend = (props: any): JSX.Element => {
                 }}/>
             </View>
             <View style={styles.info_container}>
-                <Text>{friend.username}</Text>
+                <Text>{friend.firstName} {friend.email}</Text>
                 <Text>last seen today at 15:41</Text>
             </View>
         </View>

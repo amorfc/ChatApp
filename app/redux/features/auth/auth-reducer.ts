@@ -79,7 +79,6 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
             const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
 
             //Check If Login Status 200
-
             if (loginResult.status === 200) {
 
                 //creatingUserModel For Now
@@ -120,6 +119,14 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                             type: "success"
                         })
                 }
+            }
+            else{
+                //Test Purpose
+                // // showMessage({
+                // //     message:"Error",
+                // //     description:`${loginResult.data.message}`
+                // })
+                console.log(loginResult)
             }
         } catch (e) {
             showMessage({
@@ -163,7 +170,7 @@ export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError
 
         try{
             const state = thunkAPI.getState()
-            console.log(state)
+
             showMessage({
                 message:"Oops!!!",
                 description:I18nContext.polyglot?.t("log_out_message",{name:state.auth.user.username}),

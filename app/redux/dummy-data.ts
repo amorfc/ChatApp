@@ -7,9 +7,9 @@ const createRandomFriend = (): UserModel => {
     const rndNumber = Math.random() * 1000
 
     return {
-        firstName: "",
-        lastName: "",
-        email: "",
+        firstName: "Fatih",
+        lastName: "Berlin",
+        email: "likya@gmail.com",
         username: rndNumber.toString()
     }
 }
