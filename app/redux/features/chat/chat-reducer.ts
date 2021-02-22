@@ -3,9 +3,10 @@ import {ChatStateType} from "./chat-types";
 import * as signalR from "@microsoft/signalr";
 import {chat_api_connection} from "./chat-api";
 import {GlobalConstants} from "../../../config/global-constans";
+import {useDispatch} from "react-redux";
 
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl("http://192.168.1.48:8038/messagehub",{
+export const connection = new signalR.HubConnectionBuilder()
+    .withUrl("http://192.168.1.38:8038/messagehub", {
         accessTokenFactory(): string | Promise<string> {
             console.log(GlobalConstants.authToken)
             return GlobalConstants.authToken
@@ -45,10 +46,33 @@ export const doConnection = createAsyncThunk(
     }
 )
 
+export const doSendMessage = createAsyncThunk(
+    'chat/doSendMessage',
+    async (message: string, thunkAPI: any) => {
+        await connection.invoke("SendPrivateMessage", {
+            Message: message,
+            ReceiverUser: "1111",
+        })
+        thunkAPI.dispatch(clearMessage(null))
+    }
+)
+
+//Receive Messages Handling
+// export const doReceiveMessage = createAsyncThunk(
+//     'chat/doReceiveMessage',
+//     async (_: any, thunkAPI: any) => {
+//         await connection.on("ReceiveMessage",(messageObject)=>{
+//             console.log(messageObject.content)
+//             thunkAPI.dispatch(setReceiveMessage(messageObject))
+//         })
+//     }
+// )
 
 
 const initialState: ChatStateType = {
-    isConnected: false
+    isConnected: false,
+    message: "",
+    allChatMessages: []
 }
 
 export const chatSlice = createSlice({
@@ -60,6 +84,15 @@ export const chatSlice = createSlice({
         },
         setSignalRConnectionFailure(state, {payload}: PayloadAction<any>) {
             state.isConnected = false
+        },
+        changeMessage(state, {payload}: PayloadAction<string>) {
+            state.message = payload
+        },
+        clearMessage(state, {payload}: PayloadAction<null>) {
+            state.message = ""
+        },
+        setReceiveMessage(state, {payload}: PayloadAction<any>) {
+            state.allChatMessages.push(payload)
         }
     }
 })
@@ -67,7 +100,10 @@ export const chatSlice = createSlice({
 
 export const {
     setSignalRConnectionFailure,
-    setSignalRConnectionSuccess
+    setSignalRConnectionSuccess,
+    changeMessage,
+    clearMessage,
+    setReceiveMessage
 } = chatSlice.actions
 
 

@@ -4,9 +4,18 @@ import {useDispatch, useSelector} from "react-redux";
 // import { I18nContext } from "../../config/i18n";
 
 import {RootStateType} from "../../redux/root-reducers";
-import {doConnection} from "../../redux/features/chat/chat-reducer";
+import {
+    changeMessage,
+    connection,
+    doConnection,
+    doReceiveMessage,
+    doSendMessage,
+    setReceiveMessage
+} from "../../redux/features/chat/chat-reducer";
 import IconTextInput from "../../components/text_inputs/icon_text_input";
 import {changeEmail} from "../../redux/features/auth/auth-reducer";
+import {useEffect} from "react";
+import PrimaryBtn from "../../components/buttons/primary_btn";
 
 
 const styles = StyleSheet.create({
@@ -43,12 +52,21 @@ const styles = StyleSheet.create({
 export default function ChatsScreen() {
     //HUB CONNECTION
     const dispatch = useDispatch()
-    dispatch(doConnection(null))
     const authState = useSelector((state: RootStateType) => state.auth)
+    const chatState = useSelector((state: RootStateType) => state.chat)
+
+    useEffect(()=>{
+        dispatch(doConnection(null))
+    },[])
+
+
+    const sendMessage = (message:string)=>{
+        dispatch(doSendMessage(message))
+    }
 
     return (
         <View style={styles.mainContainer}>
-            <Text>ChatsScreen+ {authState.firstname}</Text>
+            <Text>ChatsScreen {authState.user?.username}</Text>
             <Button title={"Osman"} onPress={() => {
             }}/>
             <View style={styles.middleContainer}>
@@ -61,9 +79,11 @@ export default function ChatsScreen() {
                     iconColor={"darkgray"}
                     placeholder={"Text"}
                     placeholderTextColor={"darkgray"}
-                    value={authState.email}
-                    onChangeText={(text: string) => dispatch(changeEmail(text))}/>
+                    value={chatState.message}
+                    onChangeText={(text: string) => dispatch(changeMessage(text)) }/>
+                    <PrimaryBtn  text={"Send"} onPress={()=>sendMessage(chatState.message)} />
             </View>
         </View>
     );
 }
+
