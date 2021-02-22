@@ -101,7 +101,8 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                         //User information must be added on this Object
                         //There is a lot of work to be done
                         loginResult.data.user = {
-                            username: username
+                            username: username,
+                            password:password
                         }
                         //Add updated Token to local storage
                         await LocalStorage.save({
@@ -149,15 +150,21 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
             const authData: AuthResponseDataType = await LocalStorage.load({
                 key: "authData"
             })
-
-            //Set auth data to render target screens
-            thunkAPI.dispatch(setUser(authData.user))
-            thunkAPI.dispatch(setAuthToken(authData.token))
-            showMessage({
-                message: "Welcome",
-                description: I18nContext.polyglot?.t("welcome_name_message", {name: authData.user.username}),
-                type: "success"
-            })
+            console.log(authData)
+            if(authData){
+                thunkAPI.dispatch(loginProcess(authData.user))
+            }
+            // console.log(authData)
+            // // const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(authData.data)
+            //
+            // //Set auth data to render target screens
+            // thunkAPI.dispatch(setUser(authData.user))
+            // thunkAPI.dispatch(setAuthToken(authData.token))
+            // showMessage({
+            //     message: "Welcome",
+            //     description: I18nContext.polyglot?.t("welcome_name_message", {name: authData.user.username}),
+            //     type: "success"
+            // })
         } catch (e) {
             console.log(e)
         }
