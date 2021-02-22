@@ -103,7 +103,6 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                         loginResult.data.user = {
                             username: username
                         }
-
                         //Add updated Token to local storage
                         await LocalStorage.save({
                             key: "authData",

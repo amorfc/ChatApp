@@ -20,6 +20,8 @@ import store from "../redux/configure-store";
 import {initI18n} from "../config/i18n-polyglot";
 import FriendsScreen from "./friends/friends";
 import {fetchAllFriends} from "../redux/features/user/user-reducer";
+import {doConnection} from "../redux/features/chat/chat-reducer";
+import {GlobalConstants} from "../config/global-constans";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
@@ -51,7 +53,7 @@ function SettingsTab() {
     )
 }
 
-function HomeScreen() {
+function HomeScreen():JSX.Element {
     return (
         <HomeTab.Navigator>
             <HomeTab.Screen name="FriendsTab" component={FriendsTab}/>
@@ -67,7 +69,9 @@ export default function RootNavigationContainer(props: any): JSX.Element {
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
 
     useEffect(() => {
-        if(authState.user) dispatch(fetchAllFriends(null))
+        if(authState.user) {
+            dispatch(fetchAllFriends(null))
+        }
     }, [authState.user])
 
     return (
