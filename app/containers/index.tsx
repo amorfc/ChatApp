@@ -12,11 +12,20 @@ import WelcomeScreen from "./welcome/welcome";
 import SettingsScreen from "./settings/settings";
 import ChatsScreen from "./chats/chats";
 import {AuthState} from "../redux/features/auth/auth-types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../redux/root-reducers";
+import {initAuth} from "../redux/features/auth/auth-reducer";
+import {useEffect, useState} from "react";
+import store from "../redux/configure-store";
+import {initI18n} from "../config/i18n-polyglot";
+import FriendsScreen from "./friends/friends";
+import {fetchAllFriends} from "../redux/features/user/user-reducer";
+import {doConnection} from "../redux/features/chat/chat-reducer";
+import {GlobalConstants} from "../config/global-constans";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
+const FriendsStack = createStackNavigator()
 const SettingsStack = createStackNavigator()
 const HomeTab = createBottomTabNavigator()
 
@@ -28,6 +37,14 @@ function ChatsTab() {
     )
 }
 
+function FriendsTab() {
+    return (
+        <FriendsStack.Navigator>
+            <FriendsStack.Screen name="FriendsScreen" component={FriendsScreen}/>
+        </FriendsStack.Navigator>
+    )
+}
+
 function SettingsTab() {
     return (
         <SettingsStack.Navigator>
@@ -36,9 +53,10 @@ function SettingsTab() {
     )
 }
 
-function HomeScreen() {
+function HomeScreen():JSX.Element {
     return (
         <HomeTab.Navigator>
+            <HomeTab.Screen name="FriendsTab" component={FriendsTab}/>
             <HomeTab.Screen name="ChatsTab" component={ChatsTab}/>
             <HomeTab.Screen name="SettingsScreen" component={SettingsTab}/>
         </HomeTab.Navigator>
@@ -47,7 +65,15 @@ function HomeScreen() {
 
 export default function RootNavigationContainer(props: any): JSX.Element {
 
+    const dispatch = useDispatch()
     const authState: AuthState = useSelector((state: RootStateType) => state.auth)
+
+    useEffect(() => {
+        if(authState.user) {
+            dispatch(fetchAllFriends(null))
+            dispatch(doConnection(null))
+        }
+    }, [authState.user])
 
     return (
         <MainStack.Navigator>

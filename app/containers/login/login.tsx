@@ -11,10 +11,11 @@ import {Ionicons} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AuthState} from "../../redux/features/auth/auth-types";
 import {RootStateType} from "../../redux/root-reducers";
-import {changeEmail, changePassword, clearSignUpForm, loginProcess} from "../../redux/features/auth/auth-reducer";
+import {changeEmail, changePassword, changeUsername, clearSignUpForm, loginProcess} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
 import {navigate} from "../../navigation/navigation";
 import Loader from "../../components/loader/Loader";
+import I18nContext from "../../config/i18n-polyglot";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -64,10 +65,10 @@ export default function LoginScreen() {
                         iconName={"at-circle-sharp"}
                         iconSize={24}
                         iconColor={"darkgray"}
-                        placeholder={"Email"}
+                        placeholder={"Username"}
                         placeholderTextColor={"darkgray"}
-                        value={authState.email}
-                        onChangeText={(text: string) => dispatch(changeEmail(text))}
+                        value={authState.username}
+                        onChangeText={(text: string) => dispatch(changeUsername(text))}
                     />
                 </View>
                 <View style={{paddingBottom: 30}}>
@@ -75,7 +76,7 @@ export default function LoginScreen() {
                         iconName={"lock-closed"}
                         iconSize={22}
                         iconColor={"grey"}
-                        placeholder={"Password"}
+                        placeholder={I18nContext.polyglot?.t("password")}
                         secureTextEntry={true}
                         value={authState.password}
                         onChangeText={(text: string) => dispatch(changePassword(text))}
@@ -83,7 +84,7 @@ export default function LoginScreen() {
                 </View>
                 <View style={{paddingBottom: 20}}>
                     <PrimaryButton
-                        text={"Login"}
+                        text={I18nContext.polyglot?.t("log_in")}
                         onPress={() => {
                             dispatch(loginProcess(authState))
                         }}
@@ -91,7 +92,7 @@ export default function LoginScreen() {
                 </View>
                 <View style={{marginHorizontal: 8}}>
                     <Text style={{color: "darkgray"}}>
-                        Forgot Password?
+                        {I18nContext.polyglot?.t("forgot_password")}
                     </Text>
                 </View>
             </View>

@@ -3,11 +3,14 @@ import {AuthResponseDataType} from "../../../models/auth-model";
 import {makePost} from "../../../services/http-service";
 import {UserCredentials} from "./auth-types";
 
+export const temp_env_backend_url = "192.168.31.62"
+
 export const auth_api_signUp = async (signUpRequestBody: any): Promise<AxiosResponse<AuthResponseDataType>> => {
-    const url = "http://localhost:8038/api/Auth/SignUp"
+    //Local host causes an error for android
+    const url = `http://${temp_env_backend_url}:8038/api/Auth/SignUp`
     const config = {
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
         }
     }
     try{
@@ -25,10 +28,10 @@ export const auth_api_signUp = async (signUpRequestBody: any): Promise<AxiosResp
 }
 
 export const auth_api_login = async (loginReqBody:any): Promise<AxiosResponse<AuthResponseDataType>> => {
-    const url = "http://localhost:8038/api/Auth/Login"
+    const url = `http://${temp_env_backend_url}:8038/api/Auth/Login`
     const config = {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json;charset=UTF-8'
         }
     }
 
