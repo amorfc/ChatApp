@@ -11,7 +11,7 @@ import {Ionicons} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AuthState} from "../../redux/features/auth/auth-types";
 import {RootStateType} from "../../redux/root-reducers";
-import {changeEmail, changePassword, clearSignUpForm, loginProcess} from "../../redux/features/auth/auth-reducer";
+import {changeEmail, changePassword, changeUsername, clearSignUpForm, loginProcess} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
 import {navigate} from "../../navigation/navigation";
 import Loader from "../../components/loader/Loader";
@@ -65,10 +65,10 @@ export default function LoginScreen() {
                         iconName={"at-circle-sharp"}
                         iconSize={24}
                         iconColor={"darkgray"}
-                        placeholder={"Email"}
+                        placeholder={"Username"}
                         placeholderTextColor={"darkgray"}
-                        value={authState.email}
-                        onChangeText={(text: string) => dispatch(changeEmail(text))}
+                        value={authState.username}
+                        onChangeText={(text: string) => dispatch(changeUsername(text))}
                     />
                 </View>
                 <View style={{paddingBottom: 30}}>

@@ -61,27 +61,26 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
 export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
     'auth/loginProcess',
     async (userCredentials: UserCredentials, thunkAPI: any) => {
-
         const {username, password} = userCredentials
         // -------------
         //Validation Could Happen Here
 
         // -------------
 
+        console.log(username)
         const loginReqBody = {
-            "Username": username,
-            "Password": password
+            Username: username,
+            Password: password
         }
 
         try {
             thunkAPI.dispatch(setIsAuthStatusLoading(true))
             //Login Request
             const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
-
+            console.log(loginResult)
             //Check If Login Status 200
             if (loginResult.status === 200) {
 
-                //creatingUserModel For Now
                 switch (loginResult.data.message) {
                     case "UserNotExists":
                         showMessage({
@@ -122,10 +121,10 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
             }
             else{
                 //Test Purpose
-                // // showMessage({
-                // //     message:"Error",
-                // //     description:`${loginResult.data.message}`
-                // })
+                showMessage({
+                    message:"Error",
+                    description:`${loginResult.data.message}`
+                })
                 console.log(loginResult)
             }
         } catch (e) {
@@ -150,7 +149,7 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
             const authData: AuthResponseDataType = await LocalStorage.load({
                 key: "authData"
             })
-            console.log(authData)
+
             if(authData){
                 thunkAPI.dispatch(loginProcess(authData.user))
             }

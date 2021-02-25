@@ -8,7 +8,7 @@ import {
     changeMessage,
     connection,
     doConnection,
-    doReceiveMessage,
+    // doReceiveMessage,
     doSendMessage,
     setReceiveMessage
 } from "../../redux/features/chat/chat-reducer";
@@ -66,15 +66,12 @@ export default function ChatsScreen() {
 
     return (
         <View style={styles.mainContainer}>
-            <Text>ChatsScreen {authState.user?.username}</Text>
-            <Button title={"Osman"} onPress={() => {
-            }}/>
             <View style={styles.middleContainer}>
-
+            <Text>ChatsScreen {authState.user?.username}</Text>
             </View>
             <View style={styles.bottomContainer} >
                 <IconTextInput
-                    iconName={"at-circle-sharp"}
+                    // iconName={"send-outline"}
                     iconSize={24}
                     iconColor={"darkgray"}
                     placeholder={"Text"}

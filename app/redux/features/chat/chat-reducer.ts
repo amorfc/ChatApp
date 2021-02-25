@@ -4,9 +4,10 @@ import * as signalR from "@microsoft/signalr";
 import {chat_api_connection} from "./chat-api";
 import {GlobalConstants} from "../../../config/global-constans";
 import {useDispatch} from "react-redux";
+import {temp_env_backend_url} from "../auth/auth-api";
 
 export const connection = new signalR.HubConnectionBuilder()
-    .withUrl("http://192.168.1.38:8038/messagehub", {
+    .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
         accessTokenFactory(): string | Promise<string> {
             console.log(GlobalConstants.authToken)
             return GlobalConstants.authToken
