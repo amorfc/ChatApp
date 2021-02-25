@@ -2,6 +2,7 @@ import * as React from "react";
 import {View, StyleSheet, Text, Image, Button} from "react-native";
 import {navigate} from "../../navigation/navigation";
 import PrimaryBtn from "../../components/buttons/primary_btn";
+import I18nContext from "../../config/i18n-polyglot";
 // import { I18nContext } from "../../config/i18n";
 
 const styles = StyleSheet.create({
@@ -45,13 +46,13 @@ export default function WelcomeScreen() {
             <View style={styles.bottomContainer}>
                 <View style={{paddingBottom:20}}>
                     <PrimaryBtn
-                        text={"Sign In"}
+                        text={I18nContext.polyglot?.t("log_in")}
                         onPress={signInBtnPressed}
                     />
                 </View>
                 <View style={{paddingBottom:20}} >
                     <PrimaryBtn
-                        text={"Sign Up"}
+                        text={I18nContext.polyglot?.t("sign_up")}
                         onPress={signUpBtnPressed}
                     />
                 </View>
