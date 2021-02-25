@@ -9,7 +9,6 @@ import {temp_env_backend_url} from "../auth/auth-api";
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
         accessTokenFactory(): string | Promise<string> {
-            console.log(GlobalConstants.authToken)
             return GlobalConstants.authToken
         }
     })
@@ -19,16 +18,12 @@ export const connection = new signalR.HubConnectionBuilder()
 
 async function start() {
     try {
-        console.log(GlobalConstants.authToken)
-
         await connection.start();
         console.log("SignalR Connected.");
     } catch (err) {
         console.log(err);
     }
-};
-
-connection.onclose(start);
+}
 
 // Start the connection.
 
@@ -97,6 +92,9 @@ export const chatSlice = createSlice({
         },
         setReceiveMessage(state, {payload}: PayloadAction<any>) {
             state.allChatMessages.push(payload)
+        },
+        closeSignalRConnection(state, {payload}:PayloadAction<null>){
+            state.isConnected = false
         }
     }
 })
@@ -107,7 +105,8 @@ export const {
     setSignalRConnectionSuccess,
     changeMessage,
     clearMessage,
-    setReceiveMessage
+    setReceiveMessage,
+    closeSignalRConnection
 } = chatSlice.actions
 
 

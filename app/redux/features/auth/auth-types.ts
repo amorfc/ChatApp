@@ -18,7 +18,7 @@ export type AuthError = {
     id:string
 }
 
-export type AuthState = {
+export type AuthStateType = {
     firstname:string,
     lastname:string,
     email:string,

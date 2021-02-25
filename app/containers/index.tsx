@@ -11,7 +11,7 @@ import SignUpScreen from "./signUp/signUp";
 import WelcomeScreen from "./welcome/welcome";
 import SettingsScreen from "./settings/settings";
 import ChatsScreen from "./chats/chats";
-import {AuthState} from "../redux/features/auth/auth-types";
+import {AuthStateType} from "../redux/features/auth/auth-types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../redux/root-reducers";
 import {initAuth} from "../redux/features/auth/auth-reducer";
@@ -19,9 +19,10 @@ import {useEffect, useState} from "react";
 import store from "../redux/configure-store";
 import {initI18n} from "../config/i18n-polyglot";
 import FriendsScreen from "./friends/friends";
-import {fetchAllFriends} from "../redux/features/user/user-reducer";
+import {fetchAllFriends, setUserConnection} from "../redux/features/user/user-reducer";
 import {doConnection} from "../redux/features/chat/chat-reducer";
 import {GlobalConstants} from "../config/global-constans";
+import {ChatStateType} from "../redux/features/chat/chat-types";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
@@ -66,12 +67,14 @@ function HomeScreen():JSX.Element {
 export default function RootNavigationContainer(props: any): JSX.Element {
 
     const dispatch = useDispatch()
-    const authState: AuthState = useSelector((state: RootStateType) => state.auth)
+    const authState: AuthStateType = useSelector((state: RootStateType) => state.auth)
+    const chatState: ChatStateType = useSelector((state: RootStateType) => state.chat)
 
     useEffect(() => {
         if(authState.user) {
+            dispatch(setUserConnection(true))
             dispatch(fetchAllFriends(null))
-            dispatch(doConnection(null))
+            !chatState.isConnected ? dispatch(doConnection(null)): null
         }
     }, [authState.user])
 

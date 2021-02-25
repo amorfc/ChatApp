@@ -43,6 +43,9 @@ export const userSlice = createSlice({
         },
         setFriendsStatusLoading(state, {payload}: PayloadAction<boolean>){
             state.isFriendsStatusLoading = payload
+        },
+        setUserConnection(state, {payload}:PayloadAction<boolean>){
+            state.isUserConnected = payload
         }
     }
 })
@@ -50,7 +53,8 @@ export const userSlice = createSlice({
 
 export const {
     setFriends,
-    setFriendsStatusLoading
+    setFriendsStatusLoading,
+    setUserConnection
 } = userSlice.actions
 
 export default userSlice.reducer
