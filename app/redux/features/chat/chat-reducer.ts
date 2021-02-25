@@ -5,6 +5,7 @@ import {chat_api_connection} from "./chat-api";
 import {GlobalConstants} from "../../../config/global-constans";
 import {useDispatch} from "react-redux";
 import {temp_env_backend_url} from "../auth/auth-api";
+import {MessageModel} from "../../../models/message-model";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -35,7 +36,7 @@ export const doConnection = createAsyncThunk(
         try {
             await start();
             connection.on("ReceiveMessage",(Message)=>{
-                console.log(Message)
+                thunkAPI.dispatch(addMessageToSelectedChat(Message))
             })
             thunkAPI.dispatch(setSignalRConnectionSuccess(null))
         } catch (e) {
@@ -44,6 +45,7 @@ export const doConnection = createAsyncThunk(
         }
     }
 )
+
 
 export const doSendMessage = createAsyncThunk(
     'chat/doSendMessage',
@@ -71,7 +73,7 @@ export const doSendMessage = createAsyncThunk(
 const initialState: ChatStateType = {
     isConnected: false,
     message: "",
-    allChatMessages: []
+    allMessagesForSelectedChat: []
 }
 
 export const chatSlice = createSlice({
@@ -91,10 +93,13 @@ export const chatSlice = createSlice({
             state.message = ""
         },
         setReceiveMessage(state, {payload}: PayloadAction<any>) {
-            state.allChatMessages.push(payload)
+            state.allMessagesForSelectedChat.push(payload)
         },
         closeSignalRConnection(state, {payload}:PayloadAction<null>){
             state.isConnected = false
+        },
+        addMessageToSelectedChat(state, {payload}:PayloadAction<MessageModel>){
+            state.allMessagesForSelectedChat.push(payload)
         }
     }
 })
@@ -106,7 +111,8 @@ export const {
     changeMessage,
     clearMessage,
     setReceiveMessage,
-    closeSignalRConnection
+    closeSignalRConnection,
+    addMessageToSelectedChat
 } = chatSlice.actions
 
 

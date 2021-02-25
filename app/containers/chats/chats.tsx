@@ -16,6 +16,8 @@ import IconTextInput from "../../components/text_inputs/icon_text_input";
 import {changeEmail} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
 import PrimaryBtn from "../../components/buttons/primary_btn";
+import {FlatList} from "react-native-gesture-handler";
+import {MessageModel} from "../../models/message-model";
 
 
 const styles = StyleSheet.create({
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     middleContainer: {
         flex: 1,
         paddingTop: 40,
-        paddingHorizontal: 32,
+        paddingHorizontal: 2,
     },
     bottomContainer: {
         flexDirection:"column",
@@ -65,6 +67,14 @@ export default function ChatsScreen() {
         <View style={styles.mainContainer}>
             <View style={styles.middleContainer}>
             <Text>ChatsScreen {authState.user?.username}</Text>
+                <FlatList
+                    data={chatState.allMessagesForSelectedChat}
+                    keyExtractor={(item => item.timeToSend)}
+                    renderItem={({item:message}:{item:MessageModel})=>{
+                    return(
+                        <Text>{JSON.stringify(message)}</Text>
+                    )
+                }}/>
             </View>
             <View style={styles.bottomContainer} >
                 <IconTextInput
