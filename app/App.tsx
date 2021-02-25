@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, {useEffect, useState} from 'react';
-import {Provider} from "react-redux";
+import {Provider, useDispatch} from "react-redux";
 import {StyleSheet, Text, View} from 'react-native';
 import {NavigationContainer} from "@react-navigation/native";
 import {SafeAreaProvider} from "react-native-safe-area-context"
@@ -14,7 +14,6 @@ import {initI18n} from "./config/i18n-polyglot";
 import {initAuth} from "./redux/features/auth/auth-reducer";
 
 export default function App(): JSX.Element {
-
     const [isAppInitiated, setIsAppInitiated] = useState(false)
 
     //One time check if auth data available

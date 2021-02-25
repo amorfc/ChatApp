@@ -55,9 +55,6 @@ export default function ChatsScreen() {
     const authState = useSelector((state: RootStateType) => state.auth)
     const chatState = useSelector((state: RootStateType) => state.chat)
 
-    useEffect(()=>{
-        dispatch(doConnection(null))
-    },[])
 
 
     const sendMessage = (message:string)=>{

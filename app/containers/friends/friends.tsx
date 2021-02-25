@@ -10,7 +10,6 @@ import FriendsList from "../../components/friends/friends_list";
 import {useEffect} from "react";
 import {fetchAllFriends} from "../../redux/features/user/user-reducer";
 import Loader from "../../components/loader/Loader";
-import {doConnection} from "../../redux/features/chat/chat-reducer";
 
 
 const styles = StyleSheet.create({

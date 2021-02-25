@@ -39,6 +39,9 @@ export const doConnection = createAsyncThunk(
         // const connection: HubConnection = chat_api_connection()
         try {
             await start();
+            connection.on("ReceiveMessage",(Message)=>{
+                console.log(Message)
+            })
             thunkAPI.dispatch(setSignalRConnectionSuccess(null))
         } catch (e) {
             console.log(e)

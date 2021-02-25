@@ -71,6 +71,7 @@ export default function RootNavigationContainer(props: any): JSX.Element {
     useEffect(() => {
         if(authState.user) {
             dispatch(fetchAllFriends(null))
+            dispatch(doConnection(null))
         }
     }, [authState.user])
 
