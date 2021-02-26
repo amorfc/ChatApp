@@ -1,4 +1,4 @@
-import {UserState} from "./user-types";
+import {UserStateType} from "./user-types";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {UserModel} from "../../../models/auth-model";
 import {fetchUserFriends} from "./user-api";
@@ -28,7 +28,7 @@ export const fetchAllFriends = createAsyncThunk(
     }
 )
 
-const initialState: UserState = {
+const initialState: UserStateType = {
     friends: [],
     isFriendsStatusLoading: false,
     isUserConnected: false

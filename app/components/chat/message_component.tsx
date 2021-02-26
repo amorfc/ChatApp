@@ -5,26 +5,27 @@ import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/root-reducers";
 import { Dimensions } from 'react-native';
 import {LocalDateComponent} from "./local_date_component";
+import {UserStateType} from "../../redux/features/user/user-types";
+import {AuthStateType} from "../../redux/features/auth/auth-types";
 
 
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: "rgba(97, 97, 97, 0.49)",
         minHeight: 10,
-        maxWidth:Dimensions.get("window").width*90/100,
-        marginVertical: 5,
-        borderRadius: 12
     },
     contentContainer: {
         flex:1,
         padding:10,
         flexDirection: "row",
+        backgroundColor: "rgba(97, 97, 97, 0.49)",
+        maxWidth:Dimensions.get("window").width*90/100,
+        marginVertical: 5,
+        borderRadius: 12
     },
     messageTextContainer: {
-        flex:8,
+        flex:7,
         paddingHorizontal:2,
-        backgroundColor:"red"
     },
     senderContainer: {
         paddingStart: 10,
@@ -40,17 +41,23 @@ const styles = StyleSheet.create({
     },
     dateContainer:{
         flex:1,
-        justifyContent:"flex-end",
-        backgroundColor:"yellow",
-        padding:2,
     }
 })
 
 
 export const MessageComponent = ({message: message}: { message: MessageModel }) => {
-    const userState = useSelector((state: RootStateType) => state.user)
+    const userState:UserStateType = useSelector((state: RootStateType) => state.user)
+    const authState:AuthStateType = useSelector((state: RootStateType) => state.auth)
+
+    const messageSideManager = ():object =>{
+        const side = authState.user?.username == message.senderUsername ? "flex-end":"flex-start"
+        return {
+            alignItems:side
+        }
+    }
+
     return (
-        <View style={styles.mainContainer}>
+        <View style={[styles.mainContainer,messageSideManager()]}>
             <View style={styles.contentContainer} >
                 <View style={styles.messageTextContainer}>
                     <Text style={styles.messageTextStyle}>
