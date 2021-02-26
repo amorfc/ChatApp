@@ -18,6 +18,8 @@ import {useEffect} from "react";
 import PrimaryBtn from "../../components/buttons/primary_btn";
 import {FlatList} from "react-native-gesture-handler";
 import {MessageModel} from "../../models/message-model";
+import {SenderMessageType} from "../../redux/features/chat/chat-types";
+import {MessageComponent} from "../../components/chat/message_component";
 
 
 const styles = StyleSheet.create({
@@ -60,8 +62,14 @@ export default function ChatsScreen() {
 
 
     const sendMessage = (message:string)=>{
-        dispatch(doSendMessage(message))
+        const Message:SenderMessageType = {
+            content: message,
+            messageType:chatState.chatType,
+            receiverName:"1111"
+        }
+        dispatch(doSendMessage(Message))
     }
+
 
     return (
         <View style={styles.mainContainer}>
@@ -70,11 +78,7 @@ export default function ChatsScreen() {
                 <FlatList
                     data={chatState.allMessagesForSelectedChat}
                     keyExtractor={(item => item.timeToSend)}
-                    renderItem={({item:message}:{item:MessageModel})=>{
-                    return(
-                        <Text>{JSON.stringify(message)}</Text>
-                    )
-                }}/>
+                    renderItem={({item:message}:{item:MessageModel})=><MessageComponent message={message}/>}/>
             </View>
             <View style={styles.bottomContainer} >
                 <IconTextInput
