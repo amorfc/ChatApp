@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ChatStateType} from "./chat-types";
+import {ChatStateType, SenderMessageType} from "./chat-types";
 import * as signalR from "@microsoft/signalr";
 import {chat_api_connection} from "./chat-api";
 import {GlobalConstants} from "../../../config/global-constans";
@@ -49,31 +49,21 @@ export const doConnection = createAsyncThunk(
 
 export const doSendMessage = createAsyncThunk(
     'chat/doSendMessage',
-    async (message: string, thunkAPI: any) => {
-        await connection.invoke("SendPrivateMessage", {
-            Message: message,
-            ReceiverUser: "1111",
+    async (Message: SenderMessageType, thunkAPI: any) => {
+        await connection.invoke(Message.messageType, {
+            Message: Message.content,
+            ReceiverUser: Message.receiverName,
         })
         thunkAPI.dispatch(clearMessage(null))
     }
 )
 
-//Receive Messages Handling
-// export const doReceiveMessage = createAsyncThunk(
-//     'chat/doReceiveMessage',
-//     async (_: any, thunkAPI: any) => {
-//         await connection.on("ReceiveMessage",(messageObject)=>{
-//             console.log(messageObject.content)
-//             thunkAPI.dispatch(setReceiveMessage(messageObject))
-//         })
-//     }
-// )
-
 
 const initialState: ChatStateType = {
     isConnected: false,
     message: "",
-    allMessagesForSelectedChat: []
+    allMessagesForSelectedChat: [],
+    chatType:"SendPrivateMessage"
 }
 
 export const chatSlice = createSlice({

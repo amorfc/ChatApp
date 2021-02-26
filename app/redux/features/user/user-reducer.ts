@@ -13,12 +13,12 @@ export const fetchAllFriends = createAsyncThunk(
         try {
             const fetchedAllFriendsResult = await fetchUserFriends()
             if (fetchedAllFriendsResult.status === 200) {
-                thunkAPI.dispatch(setFriends(fetchedAllFriendsResult.data))
-            }else{
+                fetchedAllFriendsResult.data.forEach(singleFriend => thunkAPI.dispatch(addFriends(singleFriend)))
+            } else {
                 showMessage({
-                    message:"Oops!!!",
-                    description:I18nContext.polyglot?.t("something_went_wrong"),
-                    type:"danger"
+                    message: "Oops!!!",
+                    description: I18nContext.polyglot?.t("something_went_wrong"),
+                    type: "danger"
                 })
             }
         } catch (e) {
@@ -30,7 +30,7 @@ export const fetchAllFriends = createAsyncThunk(
 
 const initialState: UserState = {
     friends: [],
-    isFriendsStatusLoading:false,
+    isFriendsStatusLoading: false,
     isUserConnected: false
 }
 
@@ -38,13 +38,13 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setFriends(state, {payload}: PayloadAction<Array<UserModel>>) {
-            state.friends = payload
+        addFriends(state, {payload}: PayloadAction<UserModel>) {
+            state.friends.push(payload)
         },
-        setFriendsStatusLoading(state, {payload}: PayloadAction<boolean>){
+        setFriendsStatusLoading(state, {payload}: PayloadAction<boolean>) {
             state.isFriendsStatusLoading = payload
         },
-        setUserConnection(state, {payload}:PayloadAction<boolean>){
+        setUserConnection(state, {payload}: PayloadAction<boolean>) {
             state.isUserConnected = payload
         }
     }
@@ -52,7 +52,7 @@ export const userSlice = createSlice({
 
 
 export const {
-    setFriends,
+    addFriends,
     setFriendsStatusLoading,
     setUserConnection
 } = userSlice.actions

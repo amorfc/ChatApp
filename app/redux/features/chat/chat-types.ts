@@ -5,4 +5,11 @@ export type ChatStateType = {
     isConnected:boolean,
     message:string,
     allMessagesForSelectedChat:Array<MessageModel>,
+    chatType:string
+}
+
+export type SenderMessageType = {
+    content:string,
+    messageType:string,
+    receiverName:string
 }

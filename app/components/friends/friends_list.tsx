@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
 
 })
 
-
 const FriendsListHeaderComponent = ():JSX.Element =>{
     return (
         <View>

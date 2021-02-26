@@ -199,7 +199,7 @@ export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError
     }
 )
 
-const initialState: AuthStateType = {
+const initialState: AuthStateType= {
     //Form State
     firstname: "",
     lastname: "",
@@ -218,7 +218,6 @@ const initialState: AuthStateType = {
     //Result Information
     user: null
 }
-
 export const authSlice = createSlice({
     name: "auth",
     initialState,
