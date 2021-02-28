@@ -2,6 +2,7 @@ import * as React from "react"
 import {Image, StyleSheet, Text, View} from "react-native";
 import {UserModel} from "../../models/auth-model";
 import {User} from "../../redux/features/auth/auth-types";
+import PopupMenu from "../pop_up_menu/PopupMenu";
 
 
 const styles = StyleSheet.create({
@@ -26,11 +27,12 @@ const styles = StyleSheet.create({
     },
 })
 
-const Friend = (props:any): JSX.Element => {
+const SingleFriend = (props:any) => {
 
-    const friend:UserModel = props.friend
+    const {friend} = props
 
     return (
+        <PopupMenu friend={friend} >
         <View style={styles.main_container}>
             <View style={styles.image_container}>
                 <Image
@@ -44,8 +46,9 @@ const Friend = (props:any): JSX.Element => {
                 <Text>last seen today at 15:41</Text>
             </View>
         </View>
+        </PopupMenu>
     )
 }
 
 
-export default Friend
+export default SingleFriend
