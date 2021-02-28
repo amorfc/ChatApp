@@ -38,11 +38,6 @@ const FriendsList = (props:any): JSX.Element => {
     const userState = useSelector((state:RootStateType) => state.user)
     const dispatch = useDispatch()
 
-    const renderSingleFriend = (item: UserModel) => {
-        return(
-            <SingleFriend friend={item} />
-        )
-    }
 
     const onRefreshFriends = ()=>{
             dispatch(refreshFriends(null))
@@ -52,7 +47,7 @@ const FriendsList = (props:any): JSX.Element => {
         <View style={styles.main_container} >
             <FlatList
                 data={props.friendsData}
-                renderItem={({item})=>renderSingleFriend(item)}
+                renderItem={({item})=><SingleFriend friend={item}/>}
                 keyExtractor={(item) => item.username}
                 ListHeaderComponent={FriendsListHeaderComponent}
                 ListHeaderComponentStyle={styles.friends_list_header_container}

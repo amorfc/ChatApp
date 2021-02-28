@@ -26,6 +26,7 @@ import {refreshFriends, setUserConnection} from "../redux/features/user/user-red
 import {doConnection} from "../redux/features/chat/chat-reducer";
 import {GlobalConstants} from "../config/global-constans";
 import ChatSplashScreen from "./ChatSplashScreen";
+import ActiveChatScreen from "./chats/active_chat";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
@@ -37,6 +38,7 @@ function ChatsTab() {
     return (
         <ChatsStack.Navigator>
             <ChatsStack.Screen name="ChatsScreen" component={ChatsScreen}options={{headerShown: false}}/>
+            <ChatsStack.Screen name="ActiveChatScreen" component={ActiveChatScreen}options={{headerShown: false}}/>
         </ChatsStack.Navigator>
     )
 }

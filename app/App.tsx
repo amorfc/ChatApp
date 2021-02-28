@@ -12,7 +12,8 @@ import { navigationRef } from "./navigation/navigation";
 import FlashMessage from "react-native-flash-message";
 import { initI18n } from "./config/i18n-polyglot";
 import { initAuth } from "./redux/features/auth/auth-reducer";
-import { DatabaseContextProvider } from "./context/DatabaseContext";
+
+import { MenuProvider } from "react-native-popup-menu";
 
 export default function App(): JSX.Element {
     const [isAppInitiated, setIsAppInitiated] = useState(false)
@@ -31,12 +32,14 @@ export default function App(): JSX.Element {
 
     return (
         <Provider store={store}>
-            <SafeAreaProvider>
-                <NavigationContainer ref={navigationRef}>
+            <MenuProvider>
+                <SafeAreaProvider>
+                    <NavigationContainer ref={navigationRef}>
                         <AppNavigationContainer />
                     </NavigationContainer>
                 </SafeAreaProvider>
-            <FlashMessage position={"top"}/>
+                <FlashMessage position={"top"} />
+            </MenuProvider>
         </Provider>
     );
 }
