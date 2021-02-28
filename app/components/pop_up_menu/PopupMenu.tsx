@@ -9,7 +9,7 @@ import {
 } from "react-native-popup-menu"
 import { useDispatch } from 'react-redux'
 import { navigate } from '../../navigation/navigation'
-import { createChat, setActiveChatFriend } from '../../redux/features/chat/chat-reducer'
+import { chatProcess, initChat, setActiveChatFriend } from '../../redux/features/chat/chat-reducer'
 import { Friend } from '../../types/Friend'
 import PopUpMenuOption from './pop_up_menu_option'
 
@@ -25,7 +25,6 @@ const PopupMenu = (props:any) => {
     const messageMenuClicked = (friend:Friend) => {
         //Navigate Chat Screen With Clicked Friend Parameter
         dispatch(setActiveChatFriend(friend))
-        dispatch(createChat(friend))
         navigate("ActiveChatScreen",null)
     }
     return (

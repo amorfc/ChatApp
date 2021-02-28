@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { addFriend, refreshFriends } from "../../redux/features/user/user-reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootStateType } from "../../redux/root-reducers";
+import { useState } from "react";
 
 const styles = StyleSheet.create({
     main_container: {
@@ -23,20 +24,21 @@ const styles = StyleSheet.create({
 })
 
 const FriendsListHeaderComponent = (): JSX.Element => {
-
+    const [counter, setcounter] = useState(0)
     const dispatch = useDispatch()
 
     return (
         <View>
             <Button title={"+ Add Friend"} onPress={() => {
                 console.log("Add Friend button Pressed")
+                setcounter(counter+1)
                 dispatch(addFriend({
                     friend_id:null,
                     has_active_chat:null,
                     firstName: "Soap",
                     lastName: "Vayztangir",
                     email: "fatihermetin@gmail.com",
-                    username: "yaso881"
+                    username: `YeniKullanici${counter}`
                 }))
             }} />
         </View>

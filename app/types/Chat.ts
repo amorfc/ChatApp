@@ -1,5 +1,7 @@
 import { Message } from "./Message";
 
 export interface Chat {
-    messages:Array<Message> | null
+    chat_id:number | null,
+    friend_id:number | null,
+    text:"",
 }
