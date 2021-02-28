@@ -6,6 +6,7 @@ import {GlobalConstants} from "../../../config/global-constans";
 import {useDispatch} from "react-redux";
 import {temp_env_backend_url} from "../auth/auth-api";
 import {MessageModel} from "../../../models/message-model";
+import { Friend } from "../../../types/Friend";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -61,6 +62,14 @@ export const doSendMessage = createAsyncThunk(
 
 const initialState: ChatStateType = {
     isConnected: false,
+    activeChatFriend:{
+        friend_id:null,
+        has_active_chat:0,
+        firstName:"default",
+        lastName:"default",
+        email:"default",
+        username:"default",
+    },
     message: "",
     allMessagesForSelectedChat: [],
     chatType:"SendPrivateMessage"
@@ -90,6 +99,9 @@ export const chatSlice = createSlice({
         },
         addMessageToSelectedChat(state, {payload}:PayloadAction<MessageModel>){
             state.allMessagesForSelectedChat.push(payload)
+        },
+        setActiveChatFriend(state, {payload}:PayloadAction<Friend>){
+            state.activeChatFriend = payload;
         }
     }
 })
@@ -102,7 +114,8 @@ export const {
     clearMessage,
     setReceiveMessage,
     closeSignalRConnection,
-    addMessageToSelectedChat
+    addMessageToSelectedChat,
+    setActiveChatFriend
 } = chatSlice.actions
 
 

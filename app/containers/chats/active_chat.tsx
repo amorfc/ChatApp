@@ -52,9 +52,10 @@ const styles = StyleSheet.create({
 const ActiveChatScreen = (props:any)=>{
     //HUB CONNECTION
     const dispatch = useDispatch()
-    const [friend,setFriend] = useState(props.route.params.friend)
-    const authState = useSelector((state: RootStateType) => state.auth)
     const chatState = useSelector((state: RootStateType) => state.chat)
+    const authState = useSelector((state: RootStateType) => state.auth)
+
+    const [friend,setFriend] = useState(chatState.activeChatFriend)
   
     useEffect(() =>{
         //Get Users Chat Messages
