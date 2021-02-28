@@ -22,7 +22,7 @@ import {useEffect, useState} from "react";
 import store from "../redux/configure-store";
 import {initI18n} from "../config/i18n-polyglot";
 import FriendsScreen from "./friends/friends";
-import {fetchAllFriends, setUserConnection} from "../redux/features/user/user-reducer";
+import {refreshFriends, setUserConnection} from "../redux/features/user/user-reducer";
 import {doConnection} from "../redux/features/chat/chat-reducer";
 import {GlobalConstants} from "../config/global-constans";
 import ChatSplashScreen from "./ChatSplashScreen";
@@ -76,7 +76,7 @@ export default function RootNavigationContainer(props: any): JSX.Element {
     useEffect(() => {
         if(authState.user) {
             dispatch(setUserConnection(true))
-            dispatch(fetchAllFriends(null))
+            dispatch(refreshFriends(null))
             !chatState.isConnected ? dispatch(doConnection(null)): null
         }
     }, [authState.user])

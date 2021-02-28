@@ -5,7 +5,7 @@ import {Button, FlatList, StyleSheet, Text, View} from "react-native";
 import SingleFriend from "./friend"
 import {UserModel} from "../../models/auth-model";
 import {useEffect} from "react";
-import {fetchAllFriends} from "../../redux/features/user/user-reducer";
+import {refreshFriends} from "../../redux/features/user/user-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/root-reducers";
 
@@ -44,8 +44,8 @@ const FriendsList = (props:any): JSX.Element => {
         )
     }
 
-    const refreshFriends = ()=>{
-            dispatch(fetchAllFriends(null))
+    const onRefreshFriends = ()=>{
+            dispatch(refreshFriends(null))
     }
 
     return(
@@ -57,7 +57,7 @@ const FriendsList = (props:any): JSX.Element => {
                 ListHeaderComponent={FriendsListHeaderComponent}
                 ListHeaderComponentStyle={styles.friends_list_header_container}
                 refreshing={userState.isFriendsStatusLoading}
-                onRefresh={refreshFriends}
+                onRefresh={onRefreshFriends}
             />
         </View>
     )

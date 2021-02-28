@@ -8,8 +8,9 @@ import {RootStateType} from "../../redux/root-reducers";
 //Components
 import FriendsList from "../../components/friends/friends_list";
 import {useEffect} from "react";
-import {fetchAllFriends} from "../../redux/features/user/user-reducer";
+import {fetchAllFriendsFromRemote} from "../../redux/features/user/user-reducer";
 import Loader from "../../components/loader/Loader";
+
 
 
 const styles = StyleSheet.create({
