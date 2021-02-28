@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {temp_env_backend_url} from "../auth/auth-api";
 import {MessageModel} from "../../../models/message-model";
 import { Friend } from "../../../types/Friend";
+import { sqliteDatabase } from "../../../database/Database";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -47,6 +48,16 @@ export const doConnection = createAsyncThunk(
     }
 )
 
+export const createChat = createAsyncThunk(
+    'chat/createChat',
+    async (friend: Friend,thunkAPI:any)=>{
+        try {
+            sqliteDatabase.createChat(friend)
+        } catch (error) {
+            
+        }
+    }
+)
 
 export const doSendMessage = createAsyncThunk(
     'chat/doSendMessage',

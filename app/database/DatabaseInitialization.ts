@@ -46,7 +46,7 @@ export class DatabaseInitialization {
   // Perform initial setup of the database tables
   private createTables(transaction: SQLite.Transaction) {
     // DANGER! For dev only
-    const dropAllTables = false;
+    const dropAllTables = true;
     if (dropAllTables) {
       transaction.executeSql("DROP TABLE IF EXISTS Friend;");
       transaction.executeSql("DROP TABLE IF EXISTS Chat;");
@@ -71,7 +71,8 @@ export class DatabaseInitialization {
         friend_id INTEGER,
         text TEXT,
         FOREIGN KEY ( friend_id ) REFERENCES Friend ( friend_id )
-      );
+        UNIQUE('friend_id') ON CONFLICT IGNORE
+        );
     `);
 
     // Version table

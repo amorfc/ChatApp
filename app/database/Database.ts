@@ -9,7 +9,7 @@ import { Message } from '../types/Message';
 export interface Database {
     //create
     createFriend(friend:Friend):Promise<void>;
-    // createChat(chat:Chat):Promise<void>;
+    createChat(friend:Friend):Promise<void>;
 
     //Read
     getAllFriend():Promise<Friend[]>;
@@ -23,6 +23,20 @@ async function createFriend(friend:Friend):Promise<void>{
         .then((db)=>db.executeSql("INSERT INTO Friend (username) VALUES(?);",[friend.username]))
         .then(([results])=>{
             console.log(`[db] Friend "${friend.username}" created successfully with id: ${results.insertId}`);
+        })
+        .catch((reason:any)=>{
+            Promise.reject(reason);
+        })
+}
+
+async function createChat(friend:Friend):Promise<void> {
+    return getDatabase()
+        .then(db=>{
+            db.executeSql("INSERT INTO Chat (friend_id) VALUES(?);",[friend.friend_id])
+            db.executeSql("UPDATE Friend SET has_active_chat = ? WHERE friend_id = ? ;",[1,friend.friend_id])
+        })
+        .then((a)=>{
+            console.warn(`art arda sql statemin ${a}`)
         })
         .catch((reason:any)=>{
             Promise.reject(reason);
@@ -116,6 +130,6 @@ function handleAppStateChange(nextAppState: AppStateStatus) {
 
   export const sqliteDatabase:Database = {
     createFriend,
-    // createChat
+    createChat,
     getAllFriend
   }

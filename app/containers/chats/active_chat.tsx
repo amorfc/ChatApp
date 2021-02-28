@@ -59,14 +59,14 @@ const ActiveChatScreen = (props:any)=>{
   
     useEffect(() =>{
         //Get Users Chat Messages
-
+             
     },[])
 
     const sendMessage = (message:string)=>{
         const Message:SenderMessageType = {
             content: message,
             messageType:chatState.chatType,
-            receiverName:"1111"
+            receiverName:friend.username
         }
         dispatch(doSendMessage(Message))
     }
