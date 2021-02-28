@@ -17,6 +17,7 @@ export interface Database {
     // getAllMessages():Promise<Message[]>;
     getSingleChat(friend: Friend): Promise<Chat>;
     getSingleFriend(friend: Friend): Promise<Friend>;
+    getAllChat():Promise<Chat[]>;
 }
 
 
@@ -62,7 +63,7 @@ async function getSingleFriend(friend: Friend): Promise<Friend> {
                 let friend: Friend = {
                     friend_id: 0,
                     username: "",
-                    has_active_chat: 0,
+                    has_active_chat: 11111,
                     firstName: "",
                     lastName: "",
                     email: ""
@@ -108,6 +109,28 @@ async function getAllFriend(): Promise<Friend[]> {
                 friendLists.push(friend)
             }
             return friendLists
+        })
+}
+async function getAllChat(): Promise<Chat[]> {
+    return getDatabase()
+        .then((db) => db.executeSql("SELECT * FROM Chat;"))
+        .then(([results]) => {
+            if (results === undefined) {
+                return []
+            }
+            const count = results.rows.length
+            const chatLists: Chat[] = []
+            for (let i = 0; i < count; i++) {
+                const row = results.rows.item(i);
+                const { chat_id, friend_id, text } = row
+                const chat = {
+                    chat_id,
+                    friend_id,
+                    text
+                }
+                chatLists.push(chat)
+            }
+            return chatLists
         })
 }
 
@@ -201,5 +224,6 @@ export const sqliteDatabase: Database = {
     createMessage,
     getAllFriend,
     getSingleChat,
-    getSingleFriend
+    getSingleFriend,
+    getAllChat,
 }

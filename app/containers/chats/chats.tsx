@@ -20,6 +20,8 @@ import {FlatList} from "react-native-gesture-handler";
 import {MessageModel} from "../../models/message-model";
 import {SenderMessageType} from "../../redux/features/chat/chat-types";
 import {MessageComponent} from "../../components/chat/message_component";
+import { fetchAllChats, getAllChats } from "../../redux/features/user/user-reducer";
+import ChatList from "../../components/chat/chats_list";
 
 
 const styles = StyleSheet.create({
@@ -56,41 +58,16 @@ const styles = StyleSheet.create({
 export default function ChatsScreen() {
     //HUB CONNECTION
     const dispatch = useDispatch()
-    const authState = useSelector((state: RootStateType) => state.auth)
+    const userState = useSelector((state: RootStateType) => state.user)
     const chatState = useSelector((state: RootStateType) => state.chat)
 
-
-
-    const sendMessage = (message:string)=>{
-        const Message:SenderMessageType = {
-            content: message,
-            messageType:chatState.chatType,
-            receiverName:"1111"
-        }
-        dispatch(doSendMessage(Message))
-    }
-
+    useEffect(() =>{
+        dispatch(fetchAllChats(null))
+    },[])
 
     return (
-        <View style={styles.mainContainer}>
-            <View style={styles.middleContainer}>
-            <Text>ChatsScreen {authState.user?.username}</Text>
-                <FlatList
-                    data={chatState.allMessagesForSelectedChat}
-                    keyExtractor={(item => item.timeToSend)}
-                    renderItem={({item:message}:{item:MessageModel})=><MessageComponent message={message}/>}/>
-            </View>
-            <View style={styles.bottomContainer} >
-                <IconTextInput
-                    // iconName={"send-outline"}
-                    iconSize={24}
-                    iconColor={"darkgray"}
-                    placeholder={"Text"}
-                    placeholderTextColor={"darkgray"}
-                    value={chatState.message}
-                    onChangeText={(text: string) => dispatch(changeMessage(text)) }/>
-                    <PrimaryBtn  text={"Send"} onPress={()=>sendMessage(chatState.message)} />
-            </View>
+        <View style={styles.mainContainer} >
+            <ChatList chatsData={userState.chats}  />
         </View>
     );
 }

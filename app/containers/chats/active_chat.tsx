@@ -8,6 +8,7 @@ import {
     changeMessage,
     chatProcess,
     doSendMessage,
+    fetchActiveChat,
 } from "../../redux/features/chat/chat-reducer";
 import IconTextInput from "../../components/text_inputs/icon_text_input";
 import PrimaryBtn from "../../components/buttons/primary_btn";
@@ -55,20 +56,18 @@ const ActiveChatScreen = (props: any) => {
     const dispatch = useDispatch()
     const chatState = useSelector((state: RootStateType) => state.chat)
     const authState = useSelector((state: RootStateType) => state.auth)
-
-    const [friend, setFriend] = useState(chatState.activeChatFriend)
+    const {activeChatFriend} = chatState
 
     useEffect(() => {
         //Get Users Chat Messages
-        setFriend(chatState.activeChatFriend)
-        dispatch(chatProcess(null))
-    }, [])
+        dispatch(fetchActiveChat(activeChatFriend))
+    },[])
 
     const sendMessage = (message: string) => {
         const Message: SenderMessageType = {
             content: message,
             messageType: chatState.chatType,
-            receiverName: friend.username
+            receiverName: chatState.activeChatFriend.username
         }
         dispatch(doSendMessage(Message))
     }
@@ -77,7 +76,7 @@ const ActiveChatScreen = (props: any) => {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.middleContainer}>
-                <Text>Chat with {friend.username}</Text>
+                <Text>Chat with {chatState.activeChatFriend.username}</Text>
                 {/* <FlatList
                     data={chatState.allMessagesForSelectedChat}
                     keyExtractor={(item => item.timeToSend)}

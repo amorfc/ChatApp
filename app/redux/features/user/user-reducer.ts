@@ -7,6 +7,7 @@ import I18nContext from "../../../config/i18n-polyglot";
 import { Friend } from "../../../types/Friend";
 import { sqliteDatabase } from "../../../database/Database";
 import { RootStateType } from "../../root-reducers";
+import { Chat } from "../../../types/Chat";
 
 
 export const addFriend = createAsyncThunk(
@@ -63,6 +64,20 @@ export const fetchAllFriendsFromRemote = createAsyncThunk(
     }
 )
 
+export const fetchAllChats = createAsyncThunk(
+    'user/getAllChats',
+    async (_: any,thunkAPI:any)=>{
+        try {
+            
+            const allChats = await sqliteDatabase.getAllChat()
+            thunkAPI.dispatch(setAllChats(allChats))
+
+        } catch (err) {
+            console.warn(err.message)
+        }
+    }
+)
+
 export const refreshFriends = createAsyncThunk(
     'user/refreshFriends',
     async (_: any, thunkAPI: any) => {
@@ -81,12 +96,13 @@ export const checkFriendsToPushReduxState = (newFriends: Friend[], thunkAPI: any
     newFriends.forEach((dbFriend: Friend) => {
         const thunkState = thunkAPI.getState()
         let result = thunkState.user.friends.find((reduxStateFriend: Friend) => dbFriend.username == reduxStateFriend.username)
-        result == undefined ? thunkAPI.dispatch(addFriends(dbFriend)) : console.log(`${dbFriend.username} is already exists in REDUX STATE`)
+        result == undefined ? thunkAPI.dispatch(addFriendToRedux(dbFriend)) : console.log(`${dbFriend.username} is already exists in REDUX STATE`)
     })
 }
 
 const initialState: UserStateType = {
     friends: [],
+    chats:[],
     isFriendsStatusLoading: false,
     isUserConnected: false
 }
@@ -95,7 +111,7 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        addFriends(state, { payload }: PayloadAction<Friend>) {
+        addFriendToRedux(state, { payload }: PayloadAction<Friend>) {
             state.friends.push(payload)
         },
         setFriendsStatusLoading(state, { payload }: PayloadAction<boolean>) {
@@ -103,13 +119,17 @@ export const userSlice = createSlice({
         },
         setUserConnection(state, { payload }: PayloadAction<boolean>) {
             state.isUserConnected = payload
+        },
+        setAllChats(state, { payload }:PayloadAction<Chat[]>){
+            state.chats = payload
         }
     }
 })
 
 
 export const {
-    addFriends,
+    addFriendToRedux,
+    setAllChats,
     setFriendsStatusLoading,
     setUserConnection
 } = userSlice.actions

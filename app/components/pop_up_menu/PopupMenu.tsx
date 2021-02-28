@@ -24,7 +24,8 @@ const PopupMenu = (props:any) => {
     }
     const messageMenuClicked = (friend:Friend) => {
         //Navigate Chat Screen With Clicked Friend Parameter
-        dispatch(setActiveChatFriend(friend))
+
+        dispatch(chatProcess(friend))
         navigate("ActiveChatScreen",null)
     }
     return (
