@@ -1,7 +1,8 @@
 import {UserModel} from "../../../models/auth-model";
+import { Friend } from "../../../types/Friend";
 
 export type UserStateType = {
-    friends:UserModel[],
+    friends:Friend[],
     isFriendsStatusLoading:boolean,
     isUserConnected:boolean
 }

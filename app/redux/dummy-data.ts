@@ -10,7 +10,8 @@ const createRandomFriend = (): UserModel => {
         firstName: "Fatih",
         lastName: "Berlin",
         email: "likya@gmail.com",
-        username: rndNumber.toString()
+        username: rndNumber.toString(),
+        password:"password"
     }
 }
 
@@ -35,7 +36,7 @@ export const getDummyFriendsData = (): Promise<AxiosResponse<Array<UserModel>>> 
                 }
 
                 resolve(axiosRes)
-            }, 2000)
+            },0)
         } catch (e) {
 
         }
