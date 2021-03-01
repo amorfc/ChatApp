@@ -43,6 +43,7 @@ const IconTextInput = (props: any): JSX.Element => {
                 secureTextEntry={secureTextEntry}
                 placeholder={placeholder}
                 placeholderTextColor={"gray"}
+                value={value}
                 onChangeText={onChangeText}
             />
         </View>

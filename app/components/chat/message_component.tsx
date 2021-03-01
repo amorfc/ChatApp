@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         flex:1,
         padding:10,
         flexDirection: "row",
-        backgroundColor: "rgba(97, 97, 97, 0.49)",
+        backgroundColor: "rgba(97, 97, 97, 0.80)",
         maxWidth:Dimensions.get("window").width*75/100,
         marginVertical: 5,
         borderRadius: 12
