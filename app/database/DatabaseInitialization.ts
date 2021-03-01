@@ -86,6 +86,7 @@ export class DatabaseInitialization {
         receiverUsername TEXT,
         id TEXT,
         FOREIGN KEY ( chat_id ) REFERENCES Chat ( chat_id )
+        UNIQUE('timeToSend') ON CONFLICT IGNORE
         );
     `);
 

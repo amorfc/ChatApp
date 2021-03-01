@@ -33,7 +33,7 @@ async function start() {
 // Start the connection.
 
 export const addMessageToDb = createAsyncThunk(
-    'chat/createMessage',
+    'chat/addMessageToDb',
     async (message: any, thunkAPI: any) => {
         const { content, senderUsername, receiverUsername, timeToSend, id } = message
         const globalState = thunkAPI.getState()
@@ -45,6 +45,7 @@ export const addMessageToDb = createAsyncThunk(
                 const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(receiverUsername)
                 const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend)
                 const newMessage: Message = {
+                    message_id:0,
                     content,
                     chat_id: targetChat.chat_id,
                     senderUsername,
@@ -54,11 +55,13 @@ export const addMessageToDb = createAsyncThunk(
                 }
 
                 await sqliteDatabase.createMessage(newMessage)
+                thunkAPI.dispatch(getChatMessagesFromDb(null))
 
             }else{
                 const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(senderUsername)
                 const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend)
                 const newMessage: Message = {
+                    message_id:0,
                     content,
                     chat_id: targetChat.chat_id,
                     senderUsername,
@@ -86,7 +89,6 @@ export const doConnection = createAsyncThunk(
             await start();
             connection.on("ReceiveMessage", (Message) => {
                 thunkAPI.dispatch(addMessageToDb(Message))
-                thunkAPI.dispatch(addMessageToSelectedChat(Message))
             })
             thunkAPI.dispatch(setSignalRConnectionSuccess(null))
         } catch (e) {
@@ -163,11 +165,18 @@ export const chatProcess = createAsyncThunk(
 
 export const getChatMessagesFromDb = createAsyncThunk(
     'chat/getChatMessagesFromDb',
-    async (chat: Chat, thunkAPI: any) => {
-        try {
-            // sqliteDatabase.createChat()
-        } catch (error) {
+    async (_:any, thunkAPI: any) => {
 
+        const globalState = thunkAPI.getState() 
+        const activeChat = globalState.chat.activeChat
+
+
+        try {
+            const allActiveChatMessages =  await sqliteDatabase.getAllMessages(activeChat)
+            thunkAPI.dispatch(setAllMessages(allActiveChatMessages))
+
+        } catch (error) {
+            console.error(error)
         }
     }
 )
@@ -226,16 +235,16 @@ export const chatSlice = createSlice({
         closeSignalRConnection(state, { payload }: PayloadAction<null>) {
             state.isConnected = false
         },
-        addMessageToSelectedChat(state, { payload }: PayloadAction<MessageModel>) {
-            state.allMessagesForSelectedChat.push(payload)
-        },
         setActiveChatFriend(state, { payload }: PayloadAction<Friend>) {
             state.activeChatFriend = payload;
         },
         setActiveChat(state, { payload }: PayloadAction<Chat>) {
             state.activeChat = payload
+        },
+        setAllMessages(state, { payload }:PayloadAction<Message[]>){
+            state.allMessagesForSelectedChat = payload
         }
-    }
+    },
 })
 
 
@@ -246,9 +255,9 @@ export const {
     clearMessage,
     setReceiveMessage,
     closeSignalRConnection,
-    addMessageToSelectedChat,
     setActiveChatFriend,
-    setActiveChat
+    setActiveChat,
+    setAllMessages
 } = chatSlice.actions
 
 

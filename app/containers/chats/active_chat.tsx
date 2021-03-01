@@ -77,10 +77,10 @@ const ActiveChatScreen = (props: any) => {
         <View style={styles.mainContainer}>
             <View style={styles.middleContainer}>
                 <Text>Chat with {chatState.activeChatFriend.username}</Text>
-                {/* <FlatList
+                <FlatList
                     data={chatState.allMessagesForSelectedChat}
                     keyExtractor={(item => item.timeToSend)}
-                    renderItem={({item:message}:{item:MessageModel})=><MessageComponent message={message}/>}/> */}
+                    renderItem={({item:message}:{item:MessageModel})=><MessageComponent message={message}/>}/>
             </View>
             <View style={styles.bottomContainer} >
                 <IconTextInput

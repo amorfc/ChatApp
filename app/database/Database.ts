@@ -14,10 +14,10 @@ export interface Database {
 
     //Read
     getAllFriend(): Promise<Friend[]>;
-    // getAllMessages():Promise<Message[]>;
+    getAllMessages(chat: Chat): Promise<Message[]>;
     getSingleChatWithFriendId(friend: Friend): Promise<Chat>;
     getSingleFriend(friend: Friend): Promise<Friend>;
-    getAllChat():Promise<Chat[]>;
+    getAllChat(): Promise<Chat[]>;
     getSingleFriendWithUsername(username: string): Promise<Friend>;
 }
 
@@ -47,10 +47,10 @@ async function createChat(newChat: Chat): Promise<void> {
 }
 
 async function createMessage(message: Message): Promise<void> {
-    const { chat_id,content, senderUsername, receiverUsername, timeToSend, id } = message
+    const { chat_id, content, senderUsername, receiverUsername, timeToSend, id } = message
 
     return getDatabase()
-        .then(db => db.executeSql("INSERT INTO Message (chat_id, content, senderUsername, receiverUsername, timeToSend, id) VALUES(?,?,?,?,?,?);", [chat_id,content, senderUsername, receiverUsername, timeToSend, id ]))
+        .then(db => db.executeSql("INSERT INTO Message (chat_id, content, senderUsername, receiverUsername, timeToSend, id) VALUES(?,?,?,?,?,?);", [chat_id, content, senderUsername, receiverUsername, timeToSend, id]))
         .then(([results]) => {
 
         })
@@ -114,6 +114,33 @@ async function getAllFriend(): Promise<Friend[]> {
             return friendLists
         })
 }
+
+async function getAllMessages(chat: Chat): Promise<Message[]> {
+    return getDatabase()
+        .then((db) => db.executeSql("SELECT * FROM Message WHERE chat_id = ?;", [chat.chat_id]))
+        .then(([results]) => {
+            if (results === undefined) {
+                return []
+            }
+            const count = results.rows.length
+            const messageList: Message[] = []
+            for (let i = 0; i < count; i++) {
+                const row = results.rows.item(i);
+                const { message_id, chat_id, content, senderUsername, receiverUsername, timeToSend, id } = row
+                const message: Message = {
+                    message_id,
+                    chat_id, content,
+                    senderUsername,
+                    receiverUsername,
+                    timeToSend,
+                    id
+                }
+                messageList.push(message)
+            }
+            return messageList
+        })
+}
+
 async function getAllChat(): Promise<Chat[]> {
     return getDatabase()
         .then((db) => db.executeSql("SELECT * FROM Chat;"))
@@ -164,7 +191,7 @@ async function getSingleChatWithFriendId(friend: Friend): Promise<Chat> {
 
 async function getSingleFriendWithUsername(username: string): Promise<Friend> {
     return getDatabase()
-        .then((db) => db.executeSql("SELECT * FROM Friend WHERE username = ?;",[username])
+        .then((db) => db.executeSql("SELECT * FROM Friend WHERE username = ?;", [username])
             .then(([results]) => {
                 let friend: Friend = {
                     friend_id: 0,
@@ -179,7 +206,6 @@ async function getSingleFriendWithUsername(username: string): Promise<Friend> {
                 }
 
                 const row = results.rows.item(0)
-                console.log(JSON.stringify(results))
                 const { friend_id, username, has_active_chat } = row
                 friend = {
                     friend_id,
@@ -260,6 +286,7 @@ export const sqliteDatabase: Database = {
     getAllFriend,
     getSingleChatWithFriendId,
     getSingleFriendWithUsername,
+    getAllMessages,
     getSingleFriend,
     getAllChat,
 }
