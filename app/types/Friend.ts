@@ -1,5 +1,5 @@
 export interface Friend {
-    friend_id:number | null,
+    friend_id:number,
     has_active_chat:number | null,
     firstName:string | null,
     lastName:string | null,

@@ -20,7 +20,7 @@ import {FlatList} from "react-native-gesture-handler";
 import {MessageModel} from "../../models/message-model";
 import {SenderMessageType} from "../../redux/features/chat/chat-types";
 import {MessageComponent} from "../../components/chat/message_component";
-import { fetchAllChats, getAllChats } from "../../redux/features/user/user-reducer";
+import { fetchAllChats, getAllChats, refreshChats } from "../../redux/features/user/user-reducer";
 import ChatList from "../../components/chat/chats_list";
 
 
@@ -55,16 +55,21 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function ChatsScreen() {
+export default function ChatsScreen(props:any) {
     //HUB CONNECTION
     const dispatch = useDispatch()
     const userState = useSelector((state: RootStateType) => state.user)
     const chatState = useSelector((state: RootStateType) => state.chat)
 
     useEffect(() =>{
-        dispatch(fetchAllChats(null))
-    },[])
-
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            dispatch(refreshChats(null))
+          });
+      
+          // Return the function to unsubscribe from the event so it gets removed on unmount
+          return unsubscribe;
+    },[props.navigation])
+    
     return (
         <View style={styles.mainContainer} >
             <ChatList chatsData={userState.chats}  />

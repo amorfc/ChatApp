@@ -15,9 +15,10 @@ export interface Database {
     //Read
     getAllFriend(): Promise<Friend[]>;
     // getAllMessages():Promise<Message[]>;
-    getSingleChat(friend: Friend): Promise<Chat>;
+    getSingleChatWithFriendId(friend: Friend): Promise<Chat>;
     getSingleFriend(friend: Friend): Promise<Friend>;
     getAllChat():Promise<Chat[]>;
+    getSingleFriendWithUsername(username: string): Promise<Friend>;
 }
 
 
@@ -46,8 +47,10 @@ async function createChat(newChat: Chat): Promise<void> {
 }
 
 async function createMessage(message: Message): Promise<void> {
+    const { chat_id,content, senderUsername, receiverUsername, timeToSend, id } = message
+
     return getDatabase()
-        .then(db => db.executeSql("INSERT INTO Message (friend_id) VALUES(?);", []))
+        .then(db => db.executeSql("INSERT INTO Message (chat_id, content, senderUsername, receiverUsername, timeToSend, id) VALUES(?,?,?,?,?,?);", [chat_id,content, senderUsername, receiverUsername, timeToSend, id ]))
         .then(([results]) => {
 
         })
@@ -134,12 +137,12 @@ async function getAllChat(): Promise<Chat[]> {
         })
 }
 
-async function getSingleChat(friend: Friend): Promise<Chat> {
+async function getSingleChatWithFriendId(friend: Friend): Promise<Chat> {
     return getDatabase()
         .then((db) => db.executeSql("SELECT * FROM Chat WHERE friend_id = ? ;", [friend.friend_id])
             .then(([results]) => {
                 let chat: Chat = {
-                    chat_id: null,
+                    chat_id: 0,
                     friend_id: null,
                     text: "",
                 }
@@ -155,6 +158,38 @@ async function getSingleChat(friend: Friend): Promise<Chat> {
                     text
                 }
                 return chat
+            })
+        )
+}
+
+async function getSingleFriendWithUsername(username: string): Promise<Friend> {
+    return getDatabase()
+        .then((db) => db.executeSql("SELECT * FROM Friend WHERE username = ?;",[username])
+            .then(([results]) => {
+                let friend: Friend = {
+                    friend_id: 0,
+                    username: "",
+                    has_active_chat: 11111,
+                    firstName: "",
+                    lastName: "",
+                    email: ""
+                }
+                if (results === undefined) {
+                    Promise.reject("Invalid")
+                }
+
+                const row = results.rows.item(0)
+                console.log(JSON.stringify(results))
+                const { friend_id, username, has_active_chat } = row
+                friend = {
+                    friend_id,
+                    username,
+                    has_active_chat,
+                    firstName: "",
+                    lastName: "",
+                    email: ""
+                }
+                return friend
             })
         )
 }
@@ -223,7 +258,8 @@ export const sqliteDatabase: Database = {
     createChat,
     createMessage,
     getAllFriend,
-    getSingleChat,
+    getSingleChatWithFriendId,
+    getSingleFriendWithUsername,
     getSingleFriend,
     getAllChat,
 }

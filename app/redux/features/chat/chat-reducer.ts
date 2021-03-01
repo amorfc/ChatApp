@@ -9,6 +9,7 @@ import { MessageModel } from "../../../models/message-model";
 import { Friend } from "../../../types/Friend";
 import { sqliteDatabase } from "../../../database/Database";
 import { Chat } from "../../../types/Chat";
+import { Message } from "../../../types/Message";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -31,6 +32,51 @@ async function start() {
 
 // Start the connection.
 
+export const addMessageToDb = createAsyncThunk(
+    'chat/createMessage',
+    async (message: any, thunkAPI: any) => {
+        const { content, senderUsername, receiverUsername, timeToSend, id } = message
+        const globalState = thunkAPI.getState()
+        const userUsername = globalState.auth.user.username
+        try {
+
+            if (message.receiverUsername !== userUsername) {
+                
+                const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(receiverUsername)
+                const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend)
+                const newMessage: Message = {
+                    content,
+                    chat_id: targetChat.chat_id,
+                    senderUsername,
+                    receiverUsername,
+                    timeToSend,
+                    id
+                }
+
+                await sqliteDatabase.createMessage(newMessage)
+
+            }else{
+                const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(senderUsername)
+                const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend)
+                const newMessage: Message = {
+                    content,
+                    chat_id: targetChat.chat_id,
+                    senderUsername,
+                    receiverUsername,
+                    timeToSend,
+                    id
+                }
+
+                await sqliteDatabase.createMessage(newMessage)
+            }
+
+
+        } catch (error) {
+            console.warn(error)
+        }
+    }
+)
+
 export const doConnection = createAsyncThunk(
     'chat/doConnection',
     async (_: any, thunkAPI: any) => {
@@ -39,6 +85,7 @@ export const doConnection = createAsyncThunk(
         try {
             await start();
             connection.on("ReceiveMessage", (Message) => {
+                thunkAPI.dispatch(addMessageToDb(Message))
                 thunkAPI.dispatch(addMessageToSelectedChat(Message))
             })
             thunkAPI.dispatch(setSignalRConnectionSuccess(null))
@@ -67,7 +114,7 @@ export const fetchActiveChat = createAsyncThunk(
     async (friend: Friend, thunkAPI: any) => {
         try {
 
-            const activeChat = await sqliteDatabase.getSingleChat(friend)
+            const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend)
             thunkAPI.dispatch(setActiveChat(activeChat))
 
         } catch (error) {
@@ -85,26 +132,26 @@ export const chatProcess = createAsyncThunk(
             if (friend.has_active_chat == 0) {
                 //Init Chat
                 const newChat: Chat = {
-                    chat_id: null,
+                    chat_id: 0,
                     friend_id: friend.friend_id,
                     text: ""
                 }
-    
+
                 await sqliteDatabase.createChat(newChat)
 
                 //First of all Create Chat To Make Friend Active Chat 1
-                const activeChat = await sqliteDatabase.getSingleChat(friend)
+                const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend)
                 thunkAPI.dispatch(setActiveChat(activeChat))
 
                 const friendRes: Friend = await sqliteDatabase.getSingleFriend(friend)
                 thunkAPI.dispatch(setActiveChatFriend(friendRes))
-                
+
             } else {
                 //Fetch Db Chat
-                
+
                 thunkAPI.dispatch(setActiveChatFriend(friend))
-                
-                const activeChat = await sqliteDatabase.getSingleChat(friend)
+
+                const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend)
                 thunkAPI.dispatch(setActiveChat(activeChat))
 
             }
@@ -140,7 +187,7 @@ export const doSendMessage = createAsyncThunk(
 const initialState: ChatStateType = {
     isConnected: false,
     activeChatFriend: {
-        friend_id: null,
+        friend_id: 0,
         has_active_chat: 0,
         firstName: "default",
         lastName: "default",
@@ -148,7 +195,7 @@ const initialState: ChatStateType = {
         username: "default",
     },
     activeChat: {
-        chat_id: null,
+        chat_id: 0,
         friend_id: null,
         text: ""
     },

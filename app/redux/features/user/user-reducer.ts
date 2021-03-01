@@ -15,7 +15,7 @@ export const addFriend = createAsyncThunk(
     async (newFriend: Friend, thunkAPI: any) => {
         try {
             await sqliteDatabase.createFriend({
-                friend_id: null,
+                friend_id: 0,
                 firstName: newFriend.firstName,
                 lastName: newFriend.lastName,
                 email: newFriend.email,
@@ -33,8 +33,8 @@ export const fetchAllFriendsFromDb = createAsyncThunk(
     async (_: any, thunkAPI: any) => {
         try {
             const friendsFromDb = await sqliteDatabase.getAllFriend()
-            console.log("fetchAllFriendsFromDb")
-            checkFriendsToPushReduxState(friendsFromDb, thunkAPI)
+            thunkAPI.dispatch(setAllFriends(friendsFromDb))
+            // checkFriendsToPushReduxState(friendsFromDb, thunkAPI)
         } catch (err) {
             console.warn(err.message)
         }
@@ -77,6 +77,22 @@ export const fetchAllChats = createAsyncThunk(
         }
     }
 )
+export const refreshChats = createAsyncThunk(
+    'user/refreshChats',
+    async (_:any, thunkAPI:any )=>{
+
+        thunkAPI.dispatch(setChatsStatusLoading(true))
+
+        try {
+            thunkAPI.dispatch(fetchAllChats(null))
+        } catch (error) {
+            console.warn(error)
+        }
+
+        thunkAPI.dispatch(setChatsStatusLoading(false))
+
+    }
+)
 
 export const refreshFriends = createAsyncThunk(
     'user/refreshFriends',
@@ -84,7 +100,7 @@ export const refreshFriends = createAsyncThunk(
         thunkAPI.dispatch(setFriendsStatusLoading(true))
         try {
             thunkAPI.dispatch(fetchAllFriendsFromDb(null))
-            thunkAPI.dispatch(fetchAllFriendsFromRemote(null))
+            // thunkAPI.dispatch(fetchAllFriendsFromRemote(null))
         } catch (err) {
             console.warn(err)
         }
@@ -92,18 +108,11 @@ export const refreshFriends = createAsyncThunk(
     }
 )
 
-export const checkFriendsToPushReduxState = (newFriends: Friend[], thunkAPI: any) => {
-    newFriends.forEach((dbFriend: Friend) => {
-        const thunkState = thunkAPI.getState()
-        let result = thunkState.user.friends.find((reduxStateFriend: Friend) => dbFriend.username == reduxStateFriend.username)
-        result == undefined ? thunkAPI.dispatch(addFriendToRedux(dbFriend)) : console.log(`${dbFriend.username} is already exists in REDUX STATE`)
-    })
-}
-
 const initialState: UserStateType = {
     friends: [],
     chats:[],
     isFriendsStatusLoading: false,
+    isChatsStatusLoading: false,
     isUserConnected: false
 }
 
@@ -111,11 +120,14 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        addFriendToRedux(state, { payload }: PayloadAction<Friend>) {
-            state.friends.push(payload)
+        setAllFriends(state, { payload }: PayloadAction<Friend[]>) {
+            state.friends = payload
         },
         setFriendsStatusLoading(state, { payload }: PayloadAction<boolean>) {
             state.isFriendsStatusLoading = payload
+        },
+        setChatsStatusLoading(state, {payload}:PayloadAction<boolean>){
+            state.isChatsStatusLoading = payload
         },
         setUserConnection(state, { payload }: PayloadAction<boolean>) {
             state.isUserConnected = payload
@@ -128,9 +140,10 @@ export const userSlice = createSlice({
 
 
 export const {
-    addFriendToRedux,
+    setAllFriends,
     setAllChats,
     setFriendsStatusLoading,
+    setChatsStatusLoading,
     setUserConnection
 } = userSlice.actions
 
