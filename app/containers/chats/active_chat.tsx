@@ -73,12 +73,15 @@ const ActiveChatScreen = (props: any) => {
     },[props.messages])
 
     const sendMessage = (message: string) => {
+        if(message.length>0){
+
         const Message: SenderMessageType = {
             content: message,
             messageType: chatState.chatType,
             receiverName: chatState.activeChatFriend.username
         }
-        dispatch(doSendMessage(Message))
+            dispatch(doSendMessage(Message))
+        }
     }
 
 
@@ -90,6 +93,8 @@ const ActiveChatScreen = (props: any) => {
                     data={chatState.allMessagesForSelectedChat}
                     keyExtractor={(item => item.timeToSend)}
                     renderItem={({item:message}:{item:MessageModel})=><MessageComponent message={message}/>}
+                    inverted
+                    contentContainerStyle={{ flexDirection: 'column-reverse' }}
                 />
             </View>
             <View style={styles.bottomContainer} >

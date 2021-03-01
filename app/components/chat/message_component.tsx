@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         padding:10,
         flexDirection: "row",
         backgroundColor: "rgba(97, 97, 97, 0.49)",
-        maxWidth:Dimensions.get("window").width*90/100,
+        maxWidth:Dimensions.get("window").width*75/100,
         marginVertical: 5,
         borderRadius: 12
     },
