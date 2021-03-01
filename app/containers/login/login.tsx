@@ -9,7 +9,7 @@ import PrimaryButton from "../../components/buttons/primary_btn"
 
 import {Ionicons} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
-import {AuthState} from "../../redux/features/auth/auth-types";
+import {AuthStateType} from "../../redux/features/auth/auth-types";
 import {RootStateType} from "../../redux/root-reducers";
 import {changeEmail, changePassword, changeUsername, clearSignUpForm, loginProcess} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 export default function LoginScreen() {
 
     const dispatch = useDispatch()
-    const authState: AuthState = useSelector((state: RootStateType) => state.auth)
+    const authState: AuthStateType = useSelector((state: RootStateType) => state.auth)
 
     return (
         <View style={styles.mainContainer}>

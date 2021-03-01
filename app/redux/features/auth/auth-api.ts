@@ -11,6 +11,7 @@ export const auth_api_signUp = async (signUpRequestBody: any): Promise<AxiosResp
     const config = {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
+            'Access-Control-Allow-Origin': '*'
         }
     }
     try{
@@ -31,7 +32,8 @@ export const auth_api_login = async (loginReqBody:any): Promise<AxiosResponse<Au
     const url = `http://${temp_env_backend_url}:8038/api/Auth/Login`
     const config = {
         headers: {
-            'Content-Type': 'application/json;charset=UTF-8'
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Access-Control-Allow-Origin': '*'
         }
     }
 

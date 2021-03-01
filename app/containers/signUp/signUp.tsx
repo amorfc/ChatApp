@@ -2,7 +2,7 @@ import * as React from "react";
 import {View, StyleSheet, Text} from "react-native";
 
 //Redux
-import {AuthState} from "../../redux/features/auth/auth-types";
+import {AuthStateType} from "../../redux/features/auth/auth-types";
 import {
     changeEmail,
     changeFirstName,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const signUpFormScreen = (authState: AuthState) => {
+const signUpFormScreen = (authState: AuthStateType) => {
 
     const dispatch = useDispatch();
 
@@ -143,7 +143,7 @@ const signUpSuccessScreen = () => {
 export default function SignUpScreen(): JSX.Element {
 
     const dispatch = useDispatch()
-    const authState: AuthState = useSelector((state: RootStateType) => state.auth)
+    const authState: AuthStateType = useSelector((state: RootStateType) => state.auth)
 
     return (
         <View style={styles.mainContainer}>

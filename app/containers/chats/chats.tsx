@@ -16,6 +16,12 @@ import IconTextInput from "../../components/text_inputs/icon_text_input";
 import {changeEmail} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
 import PrimaryBtn from "../../components/buttons/primary_btn";
+import {FlatList} from "react-native-gesture-handler";
+import {MessageModel} from "../../models/message-model";
+import {SenderMessageType} from "../../redux/features/chat/chat-types";
+import {MessageComponent} from "../../components/chat/message_component";
+import { refreshChats } from "../../redux/features/user/user-reducer";
+import ChatList from "../../components/chat/chats_list";
 
 
 const styles = StyleSheet.create({
@@ -37,7 +43,7 @@ const styles = StyleSheet.create({
     middleContainer: {
         flex: 1,
         paddingTop: 40,
-        paddingHorizontal: 32,
+        paddingHorizontal: 2,
     },
     bottomContainer: {
         flexDirection:"column",
@@ -49,34 +55,24 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function ChatsScreen() {
+export default function ChatsScreen(props:any) {
     //HUB CONNECTION
     const dispatch = useDispatch()
-    const authState = useSelector((state: RootStateType) => state.auth)
+    const userState = useSelector((state: RootStateType) => state.user)
     const chatState = useSelector((state: RootStateType) => state.chat)
 
+    useEffect(() =>{
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            dispatch(refreshChats(null))
+          });
 
-
-    const sendMessage = (message:string)=>{
-        dispatch(doSendMessage(message))
-    }
+          // Return the function to unsubscribe from the event so it gets removed on unmount
+          return unsubscribe;
+    },[props.navigation])
 
     return (
-        <View style={styles.mainContainer}>
-            <View style={styles.middleContainer}>
-            <Text>ChatsScreen {authState.user?.username}</Text>
-            </View>
-            <View style={styles.bottomContainer} >
-                <IconTextInput
-                    // iconName={"send-outline"}
-                    iconSize={24}
-                    iconColor={"darkgray"}
-                    placeholder={"Text"}
-                    placeholderTextColor={"darkgray"}
-                    value={chatState.message}
-                    onChangeText={(text: string) => dispatch(changeMessage(text)) }/>
-                    <PrimaryBtn  text={"Send"} onPress={()=>sendMessage(chatState.message)} />
-            </View>
+        <View style={styles.mainContainer} >
+            <ChatList chatsData={userState.chats}  />
         </View>
     );
 }

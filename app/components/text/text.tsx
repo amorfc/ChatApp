@@ -3,7 +3,7 @@ import {Text} from "react-native";
 import PropTypes from "prop-types";
 // import { ThemeContext } from "../../config/theming";
 
-const C42Text = (props: any): JSX.Element => {
+const ChatAppText = (props: any): JSX.Element => {
     // const theme = ThemeContext.useTheme(props.theme);
     const {fontWeight, size, padding} = props;
 
@@ -21,7 +21,7 @@ const C42Text = (props: any): JSX.Element => {
     );
 };
 
-C42Text.defaultProps = {
+ChatAppText.defaultProps = {
     size: 14,
     text: "",
     fontWeight: "normal",
@@ -29,7 +29,7 @@ C42Text.defaultProps = {
     theme: null
 };
 
-C42Text.propTypes = {
+ChatAppText.propTypes = {
     size: PropTypes.number,
     text: PropTypes.string,
     fontWeight: PropTypes.string,
@@ -37,4 +37,4 @@ C42Text.propTypes = {
     theme: PropTypes.object
 };
 
-export default C42Text;
+export default ChatAppText;

@@ -2,14 +2,16 @@ import * as React from "react"
 import {Pressable, StyleSheet, Text} from "react-native";
 import PropTypes from "prop-types"
 
-const PrimaryBtn = (props: any): JSX.Element => {
+const PrimaryBtn = (props: any) => {
 
-    const {text, onPress} = props
+    const {text, onPress, disabled} = props
 
     return (
         <Pressable
             style={[styles.primary_btn]}
-            onPress={onPress}>
+            onPress={onPress}
+            disabled={disabled}
+            >
             <Text>
                 {text}
             </Text>
@@ -34,7 +36,8 @@ const styles = StyleSheet.create({
 
 PrimaryBtn.propTypes = {
     text: PropTypes.string,
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    disabled: PropTypes.bool
 }
 
 

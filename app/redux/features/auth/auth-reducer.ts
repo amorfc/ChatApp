@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit"
-import {AuthError, AuthState, NewUser, User, UserCredentials} from "./auth-types";
+import {AuthError, AuthStateType, NewUser, User, UserCredentials} from "./auth-types";
 import {AxiosResponse} from "axios";
 import {auth_api_login, auth_api_signUp} from "./auth-api";
 import {AuthResponseDataType, UserModel} from "../../../models/auth-model";
@@ -9,6 +9,8 @@ import {showMessage} from "react-native-flash-message";
 import LocalStorage from "../../../config/storage"
 import {GlobalConstants} from "../../../config/global-constans";
 import I18nContext from "../../../config/i18n-polyglot";
+import { setUserConnection } from "../user/user-reducer";
+import {closeSignalRConnection, connection} from "../chat/chat-reducer";
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {
@@ -67,7 +69,6 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
 
         // -------------
 
-        console.log(username)
         const loginReqBody = {
             Username: username,
             Password: password
@@ -77,7 +78,6 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
             thunkAPI.dispatch(setIsAuthStatusLoading(true))
             //Login Request
             const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
-            console.log(loginResult)
             //Check If Login Status 200
             if (loginResult.status === 200) {
 
@@ -183,6 +183,10 @@ export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError
             })
             //Delete user from Global Redux State
             thunkAPI.dispatch(setUser(null))
+            thunkAPI.dispatch(setUserConnection(false))
+            await connection.stop()
+            await connection.off("ReceiveMessage")
+            thunkAPI.dispatch(closeSignalRConnection(null))
             //Delete token from Local Storage
             await LocalStorage.remove({
                 key: "authData"
@@ -195,7 +199,7 @@ export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError
     }
 )
 
-const initialState: AuthState = {
+const initialState: AuthStateType= {
     //Form State
     firstname: "",
     lastname: "",
@@ -214,7 +218,6 @@ const initialState: AuthState = {
     //Result Information
     user: null
 }
-
 export const authSlice = createSlice({
     name: "auth",
     initialState,
