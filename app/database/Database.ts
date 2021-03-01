@@ -117,7 +117,7 @@ async function getAllFriend(): Promise<Friend[]> {
 
 async function getAllMessages(chat: Chat): Promise<Message[]> {
     return getDatabase()
-        .then((db) => db.executeSql("SELECT * FROM Message WHERE chat_id = ?;", [chat.chat_id]))
+        .then((db) => db.executeSql("SELECT * FROM Message WHERE chat_id = ? ORDER BY timeToSend DESC;", [chat.chat_id]))
         .then(([results]) => {
             if (results === undefined) {
                 return []

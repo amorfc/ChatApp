@@ -1,15 +1,15 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatStateType, SenderMessageType } from "./chat-types";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {ChatStateType, SenderMessageType} from "./chat-types";
 import * as signalR from "@microsoft/signalr";
-import { chat_api_connection } from "./chat-api";
-import { GlobalConstants } from "../../../config/global-constans";
-import { useDispatch } from "react-redux";
-import { temp_env_backend_url } from "../auth/auth-api";
-import { MessageModel } from "../../../models/message-model";
-import { Friend } from "../../../types/Friend";
-import { sqliteDatabase } from "../../../database/Database";
-import { Chat } from "../../../types/Chat";
-import { Message } from "../../../types/Message";
+import {chat_api_connection} from "./chat-api";
+import {GlobalConstants} from "../../../config/global-constans";
+import {useDispatch} from "react-redux";
+import {temp_env_backend_url} from "../auth/auth-api";
+import {MessageModel} from "../../../models/message-model";
+import {Friend} from "../../../types/Friend";
+import {sqliteDatabase} from "../../../database/Database";
+import {Chat} from "../../../types/Chat";
+import {Message} from "../../../types/Message";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -35,42 +35,30 @@ async function start() {
 export const addMessageToDb = createAsyncThunk(
     'chat/addMessageToDb',
     async (message: any, thunkAPI: any) => {
-        const { content, senderUsername, receiverUsername, timeToSend, id } = message
+        const {content, senderUsername, receiverUsername, timeToSend, id} = message
         const globalState = thunkAPI.getState()
         const userUsername = globalState.auth.user.username
+        let targetFriend: Friend;
         try {
 
-            if (message.receiverUsername !== userUsername) {
+            targetFriend = message.receiverUsername !== userUsername ?
+                    await sqliteDatabase.getSingleFriendWithUsername(receiverUsername)
+                :
+                    await sqliteDatabase.getSingleFriendWithUsername(senderUsername)
 
-                const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(receiverUsername)
-                const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend.friend_id)
-                const newMessage: Message = {
-                    message_id:0,
-                    content,
-                    chat_id: targetChat.chat_id,
-                    senderUsername,
-                    receiverUsername,
-                    timeToSend,
-                    id
-                }
+            const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend.friend_id)
 
-                await sqliteDatabase.createMessage(newMessage)
-            }else{
-                const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(senderUsername)
-                const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend.friend_id)
-                const newMessage: Message = {
-                    message_id:0,
-                    content,
-                    chat_id: targetChat.chat_id,
-                    senderUsername,
-                    receiverUsername,
-                    timeToSend,
-                    id
-                }
-
-                await sqliteDatabase.createMessage(newMessage)
+            const newMessage: Message = {
+                message_id: 0,
+                content,
+                chat_id: targetChat.chat_id,
+                senderUsername,
+                receiverUsername,
+                timeToSend,
+                id
             }
 
+            await sqliteDatabase.createMessage(newMessage)
 
         } catch (error) {
             console.warn(error)
@@ -103,7 +91,6 @@ export const initChat = createAsyncThunk(
         try {
 
 
-
         } catch (error) {
 
         }
@@ -126,8 +113,7 @@ export const fetchActiveChat = createAsyncThunk(
 
 export const chatProcess = createAsyncThunk(
     'chat/chatProcess',
-    async (friend_id:number, thunkAPI: any) => {
-
+    async (friend_id: number, thunkAPI: any) => {
 
 
         try {
@@ -169,14 +155,14 @@ export const chatProcess = createAsyncThunk(
 
 export const getChatMessagesFromDb = createAsyncThunk(
     'chat/getChatMessagesFromDb',
-    async (_:any, thunkAPI: any) => {
+    async (_: any, thunkAPI: any) => {
 
         const globalState = thunkAPI.getState()
         const activeChat = globalState.chat.activeChat
 
 
         try {
-            const allActiveChatMessages =  await sqliteDatabase.getAllMessages(activeChat)
+            const allActiveChatMessages = await sqliteDatabase.getAllMessages(activeChat)
             thunkAPI.dispatch(setAllMessages(allActiveChatMessages))
 
         } catch (error) {
@@ -221,31 +207,31 @@ export const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
-        setSignalRConnectionSuccess(state, { payload }: PayloadAction<any>) {
+        setSignalRConnectionSuccess(state, {payload}: PayloadAction<any>) {
             state.isConnected = true
         },
-        setSignalRConnectionFailure(state, { payload }: PayloadAction<any>) {
+        setSignalRConnectionFailure(state, {payload}: PayloadAction<any>) {
             state.isConnected = false
         },
-        changeMessage(state, { payload }: PayloadAction<string>) {
+        changeMessage(state, {payload}: PayloadAction<string>) {
             state.message = payload
         },
-        clearMessage(state, { payload }: PayloadAction<null>) {
+        clearMessage(state, {payload}: PayloadAction<null>) {
             state.message = ""
         },
-        setReceiveMessage(state, { payload }: PayloadAction<any>) {
-            state.allMessagesForSelectedChat.push(payload)
+        setReceiveMessage(state, {payload}: PayloadAction<any>) {
+            state.allMessagesForSelectedChat.unshift(payload)
         },
-        closeSignalRConnection(state, { payload }: PayloadAction<null>) {
+        closeSignalRConnection(state, {payload}: PayloadAction<null>) {
             state.isConnected = false
         },
-        setActiveChatFriend(state, { payload }: PayloadAction<Friend>) {
+        setActiveChatFriend(state, {payload}: PayloadAction<Friend>) {
             state.activeChatFriend = payload;
         },
-        setActiveChat(state, { payload }: PayloadAction<Chat>) {
+        setActiveChat(state, {payload}: PayloadAction<Chat>) {
             state.activeChat = payload
         },
-        setAllMessages(state, { payload }:PayloadAction<Message[]>){
+        setAllMessages(state, {payload}: PayloadAction<Message[]>) {
             state.allMessagesForSelectedChat = payload
         }
     },

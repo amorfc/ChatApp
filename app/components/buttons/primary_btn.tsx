@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 PrimaryBtn.propTypes = {
     text: PropTypes.string,
     onPress: PropTypes.func,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
 }
 
 

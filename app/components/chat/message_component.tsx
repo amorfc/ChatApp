@@ -45,7 +45,10 @@ const styles = StyleSheet.create({
 })
 
 
-export const MessageComponent = ({message: message}: { message: MessageModel }) => {
+const MessageComponent = (props:any) => {
+    console.log("Message Component Rendering")
+    const {message} = props
+
     const userState:UserStateType = useSelector((state: RootStateType) => state.user)
     const authState:AuthStateType = useSelector((state: RootStateType) => state.auth)
 
@@ -74,5 +77,11 @@ export const MessageComponent = ({message: message}: { message: MessageModel }) 
         </View>
     )
 }
+
+interface IMessageComponentProps {
+    message:MessageModel
+}
+
+export default React.memo(MessageComponent)
 
 
