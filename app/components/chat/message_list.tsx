@@ -6,6 +6,7 @@ import MessageComponent from "./message_component";
 import PrimaryBtn from "../buttons/primary_btn";
 import {TouchableOpacity} from "react-native-gesture-handler";
 import {Ionicons} from "@expo/vector-icons";
+import IconButton from "../buttons/icon_button";
 
 const MessageList = (props: any) => {
 
@@ -37,13 +38,11 @@ const MessageList = (props: any) => {
             />
             {
                 scrollToEndButtonVisibility ? (
-                    <Pressable onPress={() => scrollToLastMessage()} style={styles.fab}>
-                        <Ionicons
-                            name={"chevron-down-outline"}
-                            size={22}
-                            color={"black"}
-                        />
-                    </Pressable>
+                    <IconButton onPress={() => scrollToLastMessage()}
+                                iconStyle={styles.fab}
+                                iconName={"chevron-down-outline"}
+                                iconSize={22}
+                                iconColor={"black"} />
                 ) : null
             }
         </View>
@@ -59,10 +58,6 @@ const styles = StyleSheet.create(
         },
         fab: {
             position: 'absolute',
-            width: 50,
-            height: 50,
-            alignItems: 'center',
-            justifyContent: 'center',
             right: 20,
             bottom: 60,
             backgroundColor: 'rgba(33, 33, 33, 0.50)',
