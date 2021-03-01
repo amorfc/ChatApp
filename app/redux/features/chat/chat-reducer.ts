@@ -55,8 +55,6 @@ export const addMessageToDb = createAsyncThunk(
                 }
 
                 await sqliteDatabase.createMessage(newMessage)
-                thunkAPI.dispatch(getChatMessagesFromDb(null))
-
             }else{
                 const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(senderUsername)
                 const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend)
@@ -89,6 +87,7 @@ export const doConnection = createAsyncThunk(
             await start();
             connection.on("ReceiveMessage", (Message) => {
                 thunkAPI.dispatch(addMessageToDb(Message))
+                thunkAPI.dispatch(setReceiveMessage(Message))
             })
             thunkAPI.dispatch(setSignalRConnectionSuccess(null))
         } catch (e) {

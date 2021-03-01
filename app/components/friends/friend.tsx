@@ -42,7 +42,7 @@ const SingleFriend = (props:any) => {
                 }}/>
             </View>
             <View style={styles.info_container}>
-                <Text>{friend.firstName} {friend.email}</Text>
+                <Text>{friend.username}</Text>
                 <Text>last seen today at 15:41</Text>
             </View>
         </View>

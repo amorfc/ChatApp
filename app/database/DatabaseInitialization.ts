@@ -46,7 +46,7 @@ export class DatabaseInitialization {
   // Perform initial setup of the database tables
   private createTables(transaction: SQLite.Transaction) {
     // DANGER! For dev only
-    const dropAllTables = true;
+    const dropAllTables = false;
     if (dropAllTables) {
       transaction.executeSql("DROP TABLE IF EXISTS Friend;");
       transaction.executeSql("DROP TABLE IF EXISTS Chat;");

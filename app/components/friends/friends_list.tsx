@@ -9,6 +9,7 @@ import { addFriend, refreshFriends } from "../../redux/features/user/user-reduce
 import { useDispatch, useSelector } from "react-redux";
 import { RootStateType } from "../../redux/root-reducers";
 import { useState } from "react";
+import { TextInput } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
     main_container: {
@@ -24,23 +25,48 @@ const styles = StyleSheet.create({
 })
 
 const FriendsListHeaderComponent = (): JSX.Element => {
+    const [isAddFriendActive, setisAddFriendActive] = useState(false)
+    const [friend, setFriend] = useState("")
     const [counter, setcounter] = useState(0)
     const dispatch = useDispatch()
+
+    const onChangeText = (text: string) => {
+        setFriend(text)
+    }
+
+    const addFriendPressed = () =>{
+        if(friend.length > 3){
+            dispatch(addFriend({
+                friend_id: 0,
+                has_active_chat: 0,
+                firstName: "Soap",
+                lastName: "Vayztangir",
+                email: "fatihermetin@gmail.com",
+                username: friend
+            }))
+        }
+    }
 
     return (
         <View>
             <Button title={"+ Add Friend"} onPress={() => {
-                console.log("Add Friend button Pressed")
-                setcounter(counter+1)
-                dispatch(addFriend({
-                    friend_id:null,
-                    has_active_chat:null,
-                    firstName: "Soap",
-                    lastName: "Vayztangir",
-                    email: "fatihermetin@gmail.com",
-                    username: `YeniKullanici${counter}`
-                }))
+                setisAddFriendActive(!isAddFriendActive)
             }} />
+            {isAddFriendActive ? (
+                <>
+                    <TextInput
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={text => onChangeText(text)}
+                        value={friend}
+                    />
+                    <Button
+                        onPress={addFriendPressed}
+                        title="Add Friend"
+                        color="#841584"
+                        accessibilityLabel="Learn more about this purple button"
+                    />
+                </>
+            ) : null}
         </View>
     )
 }

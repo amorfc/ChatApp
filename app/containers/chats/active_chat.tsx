@@ -9,6 +9,7 @@ import {
     chatProcess,
     doSendMessage,
     fetchActiveChat,
+    getChatMessagesFromDb,
 } from "../../redux/features/chat/chat-reducer";
 import IconTextInput from "../../components/text_inputs/icon_text_input";
 import PrimaryBtn from "../../components/buttons/primary_btn";
@@ -59,9 +60,15 @@ const ActiveChatScreen = (props: any) => {
     const {activeChatFriend} = chatState
 
     useEffect(() => {
-        //Get Users Chat Messages
         dispatch(fetchActiveChat(activeChatFriend))
-    },[])
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            dispatch(getChatMessagesFromDb(null))
+          });
+      
+          // Return the function to unsubscribe from the event so it gets removed on unmount
+          return unsubscribe;
+        //Get Users Chat Messages
+    },[props.messages])
 
     const sendMessage = (message: string) => {
         const Message: SenderMessageType = {
