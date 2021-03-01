@@ -22,7 +22,7 @@ const ChatList = (props:any) => {
             <FlatList
                 data={props.chatsData}
                 renderItem={({ item }) => <SingleChat chat={item} />}
-                keyExtractor={(item) => item.chat_id}
+                keyExtractor={(item) => item.chat_id.toString()}
                 refreshing={userState.isChatsStatusLoading}
                 onRefresh={onRefreshChats}
             />

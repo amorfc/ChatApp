@@ -17,7 +17,8 @@ import { FlatList } from "react-native-gesture-handler";
 import { MessageModel } from "../../models/message-model";
 import { SenderMessageType } from "../../redux/features/chat/chat-types";
 import { MessageComponent } from "../../components/chat/message_component";
-import { useEffect, useState } from "react";
+import {useEffect, useRef, useState} from "react";
+import {navigate} from "../../navigation/navigation";
 
 
 
@@ -60,11 +61,12 @@ const ActiveChatScreen = (props: any) => {
     const {activeChatFriend} = chatState
 
     useEffect(() => {
-        dispatch(fetchActiveChat(activeChatFriend))
+        // dispatch(fetchActiveChat(activeChatFriend))
         const unsubscribe = props.navigation.addListener('focus', () => {
             dispatch(getChatMessagesFromDb(null))
-          });
-      
+            navigate("ActiveChatScreen",null)
+        });
+
           // Return the function to unsubscribe from the event so it gets removed on unmount
           return unsubscribe;
         //Get Users Chat Messages
@@ -87,7 +89,8 @@ const ActiveChatScreen = (props: any) => {
                 <FlatList
                     data={chatState.allMessagesForSelectedChat}
                     keyExtractor={(item => item.timeToSend)}
-                    renderItem={({item:message}:{item:MessageModel})=><MessageComponent message={message}/>}/>
+                    renderItem={({item:message}:{item:MessageModel})=><MessageComponent message={message}/>}
+                />
             </View>
             <View style={styles.bottomContainer} >
                 <IconTextInput

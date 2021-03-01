@@ -41,9 +41,9 @@ export const addMessageToDb = createAsyncThunk(
         try {
 
             if (message.receiverUsername !== userUsername) {
-                
+
                 const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(receiverUsername)
-                const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend)
+                const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend.friend_id)
                 const newMessage: Message = {
                     message_id:0,
                     content,
@@ -57,7 +57,7 @@ export const addMessageToDb = createAsyncThunk(
                 await sqliteDatabase.createMessage(newMessage)
             }else{
                 const targetFriend: Friend = await sqliteDatabase.getSingleFriendWithUsername(senderUsername)
-                const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend)
+                const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend.friend_id)
                 const newMessage: Message = {
                     message_id:0,
                     content,
@@ -115,7 +115,7 @@ export const fetchActiveChat = createAsyncThunk(
     async (friend: Friend, thunkAPI: any) => {
         try {
 
-            const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend)
+            const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend.friend_id)
             thunkAPI.dispatch(setActiveChat(activeChat))
 
         } catch (error) {
@@ -126,35 +126,40 @@ export const fetchActiveChat = createAsyncThunk(
 
 export const chatProcess = createAsyncThunk(
     'chat/chatProcess',
-    async (friend: Friend, thunkAPI: any) => {
+    async (friend_id:number, thunkAPI: any) => {
+
+
 
         try {
+            const friendRes: Friend = await sqliteDatabase.getSingleFriendWithFriendId(friend_id)
 
-            if (friend.has_active_chat == 0) {
+
+            if (friendRes.has_active_chat == 0) {
                 //Init Chat
                 const newChat: Chat = {
                     chat_id: 0,
-                    friend_id: friend.friend_id,
+                    friend_id,
                     text: ""
                 }
 
                 await sqliteDatabase.createChat(newChat)
 
                 //First of all Create Chat To Make Friend Active Chat 1
-                const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend)
+                const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend_id)
                 thunkAPI.dispatch(setActiveChat(activeChat))
 
-                const friendRes: Friend = await sqliteDatabase.getSingleFriend(friend)
+                const friendRes: Friend = await sqliteDatabase.getSingleFriendWithFriendId(friend_id)
                 thunkAPI.dispatch(setActiveChatFriend(friendRes))
 
             } else {
                 //Fetch Db Chat
+                const friendRes: Friend = await sqliteDatabase.getSingleFriendWithFriendId(friend_id)
+                thunkAPI.dispatch(setActiveChatFriend(friendRes))
 
-                thunkAPI.dispatch(setActiveChatFriend(friend))
+                const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend_id)
 
-                const activeChat = await sqliteDatabase.getSingleChatWithFriendId(friend)
                 thunkAPI.dispatch(setActiveChat(activeChat))
-
+                thunkAPI.dispatch(getChatMessagesFromDb(null))
             }
         } catch (error) {
 
@@ -166,7 +171,7 @@ export const getChatMessagesFromDb = createAsyncThunk(
     'chat/getChatMessagesFromDb',
     async (_:any, thunkAPI: any) => {
 
-        const globalState = thunkAPI.getState() 
+        const globalState = thunkAPI.getState()
         const activeChat = globalState.chat.activeChat
 
 

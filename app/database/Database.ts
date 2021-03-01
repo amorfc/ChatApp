@@ -15,8 +15,8 @@ export interface Database {
     //Read
     getAllFriend(): Promise<Friend[]>;
     getAllMessages(chat: Chat): Promise<Message[]>;
-    getSingleChatWithFriendId(friend: Friend): Promise<Chat>;
-    getSingleFriend(friend: Friend): Promise<Friend>;
+    getSingleChatWithFriendId(friend_id: number): Promise<Chat>;
+    getSingleFriendWithFriendId(friend_id: number): Promise<Friend>;
     getAllChat(): Promise<Chat[]>;
     getSingleFriendWithUsername(username: string): Promise<Friend>;
 }
@@ -59,9 +59,9 @@ async function createMessage(message: Message): Promise<void> {
         })
 }
 
-async function getSingleFriend(friend: Friend): Promise<Friend> {
+async function getSingleFriendWithFriendId(friend_id: number): Promise<Friend> {
     return getDatabase()
-        .then((db) => db.executeSql("SELECT * FROM Friend WHERE friend_id = ? ;", [friend.friend_id])
+        .then((db) => db.executeSql("SELECT * FROM Friend WHERE friend_id = ? ;", [friend_id])
             .then(([results]) => {
                 let friend: Friend = {
                     friend_id: 0,
@@ -164,9 +164,9 @@ async function getAllChat(): Promise<Chat[]> {
         })
 }
 
-async function getSingleChatWithFriendId(friend: Friend): Promise<Chat> {
+async function getSingleChatWithFriendId(friend_id: number): Promise<Chat> {
     return getDatabase()
-        .then((db) => db.executeSql("SELECT * FROM Chat WHERE friend_id = ? ;", [friend.friend_id])
+        .then((db) => db.executeSql("SELECT * FROM Chat WHERE friend_id = ? ;", [friend_id])
             .then(([results]) => {
                 let chat: Chat = {
                     chat_id: 0,
@@ -287,6 +287,6 @@ export const sqliteDatabase: Database = {
     getSingleChatWithFriendId,
     getSingleFriendWithUsername,
     getAllMessages,
-    getSingleFriend,
+    getSingleFriendWithFriendId,
     getAllChat,
 }
