@@ -16,13 +16,12 @@ import ChatsScreen from "./chats/chats";
 import {AuthStateType} from "../redux/features/auth/auth-types";
 import {RootStateType} from "../redux/root-reducers";
 import {ChatStateType} from "../redux/features/chat/chat-types";
-import {initAuth} from "../redux/features/auth/auth-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import store from "../redux/configure-store";
 import {initI18n} from "../config/i18n-polyglot";
 import FriendsScreen from "./friends/friends";
-import {getAllChats, refreshFriends, setUserConnection} from "../redux/features/user/user-reducer";
+import {refreshFriends, setUserConnection} from "../redux/features/user/user-reducer";
 import {doConnection} from "../redux/features/chat/chat-reducer";
 import {GlobalConstants} from "../config/global-constans";
 import ChatSplashScreen from "./ChatSplashScreen";
@@ -37,8 +36,8 @@ const HomeTab = createMaterialTopTabNavigator()
 function ChatsTab() {
     return (
         <ChatsStack.Navigator>
-            <ChatsStack.Screen name="ChatsScreen" component={ChatsScreen}options={{headerShown: false}}/>
-            <ChatsStack.Screen name="ActiveChatScreen" component={ActiveChatScreen}options={{headerShown: false}}/>
+            <ChatsStack.Screen name="ChatsScreen" component={ChatsScreen} options={{headerShown: false}}/>
+            <ChatsStack.Screen name="ActiveChatScreen" component={ActiveChatScreen} options={{headerShown: false}}/>
         </ChatsStack.Navigator>
     )
 }
@@ -46,7 +45,7 @@ function ChatsTab() {
 function FriendsTab() {
     return (
         <FriendsStack.Navigator>
-            <FriendsStack.Screen name="FriendsScreen" component={FriendsScreen}options={{headerShown: false}}/>
+            <FriendsStack.Screen name="FriendsScreen" component={FriendsScreen} options={{headerShown: false}}/>
         </FriendsStack.Navigator>
     )
 }
