@@ -12,11 +12,13 @@ export default function ChatsScreen(props:any) {
     //HUB CONNECTION
     const dispatch = useDispatch()
     const userState = useSelector((state: RootStateType) => state.user)
-    const chatState = useSelector((state: RootStateType) => state.chat)
 
     useEffect(() =>{
+        console.log("Chats Resfreshing")
         dispatch(refreshChats(null))
     },[])
+
+    console.log("Chat Screen Rendering")
 
     return (
         <View style={styles.mainContainer} >

@@ -10,6 +10,7 @@ import {Friend} from "../../../types/Friend";
 import {sqliteDatabase} from "../../../database/Database";
 import {Chat} from "../../../types/Chat";
 import {Message} from "../../../types/Message";
+import {refreshChats} from "../user/user-reducer";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -136,7 +137,7 @@ export const chatProcess = createAsyncThunk(
 
                 const friendRes: Friend = await sqliteDatabase.getSingleFriendWithFriendId(friend_id)
                 thunkAPI.dispatch(setActiveChatFriend(friendRes))
-
+                thunkAPI.dispatch(refreshChats(null))
             } else {
                 //Fetch Db Chat
                 const friendRes: Friend = await sqliteDatabase.getSingleFriendWithFriendId(friend_id)

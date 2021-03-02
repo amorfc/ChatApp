@@ -34,7 +34,7 @@ const MessageList = (props: any) => {
                 onScroll={(e) => {
                     e.nativeEvent.contentOffset.y > 0 ? setScrollToEndButtonVisibility(true) : setScrollToEndButtonVisibility(false)
                 }}
-                initialNumToRender={15}
+                initialNumToRender={20}
             />
             {
                 scrollToEndButtonVisibility ? (

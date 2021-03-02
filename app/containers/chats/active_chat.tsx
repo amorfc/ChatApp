@@ -30,14 +30,12 @@ const ActiveChatScreen = (props: any) => {
 
 
     const chatState = useSelector((state: RootStateType) => state.chat)
-    const authState = useSelector((state: RootStateType) => state.auth)
-    const {activeChatFriend} = chatState
 
 
     useEffect(() => {
 
         console.log(chatState.activeChat.chat_id)
-        // dispatch(getChatMessagesFromDb(null))
+        dispatch(getChatMessagesFromDb(null))
 
         // Return the function to unsubscribe from the event so it gets removed on unmount
         return ()=>{
@@ -46,6 +44,7 @@ const ActiveChatScreen = (props: any) => {
         //Get Users Chat Messages
     }, [chatState.activeChat.chat_id])
 
+    console.log("Active Chat Screen Rendering")
 
     return (
         <ImageBackground

@@ -45,7 +45,7 @@ export default function FriendsScreen(props:any) {
         dispatch(refreshFriends(null))
 
     },[])
-
+    console.log("Friends Screen Rendering")
     return (
         <View style={styles.mainContainer}>
             <View style={styles.topContainer} >

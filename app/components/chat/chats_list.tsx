@@ -17,6 +17,8 @@ const ChatList = (props:any) => {
         dispatch(refreshChats(null))
     }
 
+    console.log("Chat List Rendering")
+
     return (
         <View style={styles.main_container} >
             <FlatList
