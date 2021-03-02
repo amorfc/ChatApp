@@ -45,8 +45,8 @@ const FriendsListHeaderComponent = (): JSX.Element => {
                 username: friend
             }))
         }
+        setFriend("")
     }
-
     return (
         <View>
             <Button title={"+ Add Friend"} onPress={() => {
@@ -82,6 +82,7 @@ const FriendsList = (props: any): JSX.Element => {
     const onRefreshFriends = () => {
         dispatch(refreshFriends(null))
     }
+    console.log("friendsList Rendering")
 
     return (
         <View style={styles.main_container} >

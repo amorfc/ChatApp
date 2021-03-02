@@ -4,24 +4,26 @@ import {useDispatch, useSelector} from "react-redux";
 // import { I18nContext } from "../../config/i18n";
 
 import {RootStateType} from "../../redux/root-reducers";
-import {
-    changeMessage,
-    connection,
-    doConnection,
-    // doReceiveMessage,
-    doSendMessage,
-    setReceiveMessage
-} from "../../redux/features/chat/chat-reducer";
-import IconTextInput from "../../components/text_inputs/icon_text_input";
-import {changeEmail} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
-import PrimaryBtn from "../../components/buttons/primary_btn";
-import {FlatList} from "react-native-gesture-handler";
-import {MessageModel} from "../../models/message-model";
-import {SenderMessageType} from "../../redux/features/chat/chat-types";
-import {MessageComponent} from "../../components/chat/message_component";
 import { refreshChats } from "../../redux/features/user/user-reducer";
 import ChatList from "../../components/chat/chats_list";
+
+export default function ChatsScreen(props:any) {
+    //HUB CONNECTION
+    const dispatch = useDispatch()
+    const userState = useSelector((state: RootStateType) => state.user)
+    const chatState = useSelector((state: RootStateType) => state.chat)
+
+    useEffect(() =>{
+        dispatch(refreshChats(null))
+    },[])
+
+    return (
+        <View style={styles.mainContainer} >
+            <ChatList chatsData={userState.chats}  />
+        </View>
+    );
+}
 
 
 const styles = StyleSheet.create({
@@ -54,26 +56,3 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
     },
 });
-
-export default function ChatsScreen(props:any) {
-    //HUB CONNECTION
-    const dispatch = useDispatch()
-    const userState = useSelector((state: RootStateType) => state.user)
-    const chatState = useSelector((state: RootStateType) => state.chat)
-
-    useEffect(() =>{
-        const unsubscribe = props.navigation.addListener('focus', () => {
-            dispatch(refreshChats(null))
-          });
-
-          // Return the function to unsubscribe from the event so it gets removed on unmount
-          return unsubscribe;
-    },[props.navigation])
-
-    return (
-        <View style={styles.mainContainer} >
-            <ChatList chatsData={userState.chats}  />
-        </View>
-    );
-}
-

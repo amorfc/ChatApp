@@ -33,17 +33,18 @@ const ActiveChatScreen = (props: any) => {
     const authState = useSelector((state: RootStateType) => state.auth)
     const {activeChatFriend} = chatState
 
+
     useEffect(() => {
 
-        dispatch(getChatMessagesFromDb(null))
-        const unsubscribe = props.navigation.addListener('focus', () => {
-            navigate("ActiveChatScreen", null)
-        });
+        console.log(chatState.activeChat.chat_id)
+        // dispatch(getChatMessagesFromDb(null))
 
         // Return the function to unsubscribe from the event so it gets removed on unmount
-        return unsubscribe;
+        return ()=>{
+            console.log("unmount")
+        };
         //Get Users Chat Messages
-    }, [])
+    }, [chatState.activeChat.chat_id])
 
 
     return (

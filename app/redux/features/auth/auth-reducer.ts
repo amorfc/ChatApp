@@ -20,7 +20,7 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
         //Loading State
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
 
-        const {firstname, lastname, username, password} = newUser
+        const {username, password} = newUser
         //Validation Could Happen Here
 
         // -------------
@@ -49,12 +49,13 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
                 //Error message will handle
                 showMessage({
                     message: "Oops!!",
-                    description: I18nContext.polyglot?.t("something_went_wrong"),
-                    type: "danger"
+                    description: I18nContext.polyglot?.t("this_username_already_taken_by_another_user"),
+                    type: "warning",
+                    duration:5000
                 })
             }
         } catch (e) {
-            // console.log(e)
+            console.log(e)
         }
         thunkAPI.dispatch(setIsAuthStatusLoading(false))
 
@@ -79,47 +80,37 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
             //Login Request
             const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
             //Check If Login Status 200
-            if (loginResult.status === 200) {
+            console.log(loginResult)
 
-                switch (loginResult.data.message) {
-                    case "UserNotExists":
-                        showMessage({
-                            message: "Oops!!!",
-                            description: I18nContext.polyglot?.t("user_not_exists_message"),
-                            type: "danger"
-                        })
-                        break;
-                    case "PasswordIsNotCorrect":
-                        showMessage({
-                            message: "Oops!!!",
-                            description: I18nContext.polyglot?.t("password_is_not_correct_message"),
-                            type: "danger"
-                        })
-                        break;
-                    default:
-                        //User information must be added on this Object
-                        //There is a lot of work to be done
-                        loginResult.data.user = {
-                            username: username,
-                            password:password
-                        }
-                        //Add updated Token to local storage
-                        await LocalStorage.save({
-                            key: "authData",
-                            data: loginResult.data
-                        })
-
-                        //Add user to Redux Global State
-                        thunkAPI.dispatch(setUser(loginResult.data.user))
-                        thunkAPI.dispatch(setAuthToken(loginResult.data.token))
-                        showMessage({
-                            message: "Welcome",
-                            description: I18nContext.polyglot?.t("welcome_name_message", {name: username}),
-                            type: "success"
-                        })
+            if(loginResult.data.isAuthenticated){
+                //User Authenticated
+                //User information must be added on this Object
+                //There is a lot of work to be done
+                loginResult.data.user = {
+                    username: username,
+                    password:password
                 }
-            }
-            else{
+                //Add updated Token to local storage
+                await LocalStorage.save({
+                    key: "authData",
+                    data: loginResult.data
+                })
+
+                //Add user to Redux Global State
+                thunkAPI.dispatch(setUser(loginResult.data.user))
+                thunkAPI.dispatch(setAuthToken(loginResult.data.token))
+                showMessage({
+                    message: "Welcome",
+                    description: I18nContext.polyglot?.t("welcome_name_message", {name: username}),
+                    type: "success"
+                })
+            }else if(loginResult.status === 200){
+                showMessage({
+                    message: "Oops!!!",
+                    description: I18nContext.polyglot?.t(loginResult.data.message),
+                    type: "danger"
+                })
+            }else{
                 //Test Purpose
                 showMessage({
                     message:"Error",
@@ -153,17 +144,6 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
             if(authData){
                 thunkAPI.dispatch(loginProcess(authData.user))
             }
-            // console.log(authData)
-            // // const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(authData.data)
-            //
-            // //Set auth data to render target screens
-            // thunkAPI.dispatch(setUser(authData.user))
-            // thunkAPI.dispatch(setAuthToken(authData.token))
-            // showMessage({
-            //     message: "Welcome",
-            //     description: I18nContext.polyglot?.t("welcome_name_message", {name: authData.user.username}),
-            //     type: "success"
-            // })
         } catch (e) {
             console.log(e)
         }
@@ -185,7 +165,7 @@ export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError
             thunkAPI.dispatch(setUser(null))
             thunkAPI.dispatch(setUserConnection(false))
             await connection.stop()
-            await connection.off("ReceiveMessage")
+            connection.off("ReceiveMessage")
             thunkAPI.dispatch(closeSignalRConnection(null))
             //Delete token from Local Storage
             await LocalStorage.remove({

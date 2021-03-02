@@ -25,8 +25,9 @@ const lang_en = {
     welcome:"Welcome",
     welcome_name_message:"Welcome %{name}",
     something_went_wrong:"Something Went Wrong Try Again",
-    user_not_exists_message:"User Not Exists Please Sign Up",
-    password_is_not_correct_message:"Password Is Not Correct"
+    UserNotExists:"User Not Exists Please Sign Up",
+    PasswordIsNotCorrect:"Password Is Not Correct",
+    this_username_already_taken_by_another_user:"This Username already taken by Another User!!!Please Try Again With Another Username"
 }
 
 const lang_tr = {
@@ -46,8 +47,9 @@ const lang_tr = {
     welcome:"Hoşgeldiniz",
     welcome_name_message:"Hoşgeldin %{name}",
     something_went_wrong:"Bir Şeyler Yanlış Gitti , Lütfen Tekrar Deneyiniz",
-    user_not_exists_message:"Böyle bir kullanıcı bulunmuyor, Lütfen Kayıt Olunuz",
-    password_is_not_correct_message:"Şifre Doğru Değil"
+    UserNotExists:"Böyle bir kullanıcı bulunmuyor, Lütfen Kayıt Olunuz",
+    PasswordIsNotCorrect:"Şifre Doğru Değil",
+    this_username_already_taken_by_another_user:"Bu Kullanıcı Ismi Başka Bir Kullanıcı Tarafından Alındı!!!Lütfen Başka Bir Kullanıcı Adı Ile Tekrar Deneyiniz"
 }
 
 export const initI18n = (selectedLanguage: string): void => {

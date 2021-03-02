@@ -34,7 +34,6 @@ export const fetchAllFriendsFromDb = createAsyncThunk(
         try {
             const friendsFromDb = await sqliteDatabase.getAllFriend()
             thunkAPI.dispatch(setAllFriends(friendsFromDb))
-            // checkFriendsToPushReduxState(friendsFromDb, thunkAPI)
         } catch (err) {
             console.warn(err.message)
         }
@@ -46,7 +45,7 @@ export const fetchAllFriendsFromRemote = createAsyncThunk(
         try {
             const fetchedAllFriendsResult = await fetchUserFriends()
             if (fetchedAllFriendsResult.status === 200) {
-                
+
 
                 console.log(fetchedAllFriendsResult.data)
                 // checkFriendsToPushReduxState(fetchedAllFriendsResult.data,thunkAPI)
@@ -68,7 +67,7 @@ export const fetchAllChats = createAsyncThunk(
     'user/getAllChats',
     async (_: any,thunkAPI:any)=>{
         try {
-            
+
             const allChats = await sqliteDatabase.getAllChat()
             thunkAPI.dispatch(setAllChats(allChats))
 
