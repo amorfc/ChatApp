@@ -17,14 +17,9 @@ import {AuthStateType} from "../redux/features/auth/auth-types";
 import {RootStateType} from "../redux/root-reducers";
 import {ChatStateType} from "../redux/features/chat/chat-types";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect, useState} from "react";
-import store from "../redux/configure-store";
-import {initI18n} from "../config/i18n-polyglot";
+import {useEffect} from "react";
 import FriendsScreen from "./friends/friends";
-import {refreshFriends, setUserConnection} from "../redux/features/user/user-reducer";
 import {doConnection} from "../redux/features/chat/chat-reducer";
-import {GlobalConstants} from "../config/global-constans";
-import ChatSplashScreen from "./ChatSplashScreen";
 import ActiveChatScreen from "./chats/active_chat";
 
 const MainStack = createStackNavigator()
@@ -76,8 +71,9 @@ export default function RootNavigationContainer(props: any): JSX.Element {
 
     useEffect(() => {
         if(authState.user) {
-            dispatch(setUserConnection(true))
-            !chatState.isConnected ? dispatch(doConnection(null)): null
+            !chatState.isConnected ?
+                dispatch(doConnection(null)):null
+
         }
     }, [authState.user])
 

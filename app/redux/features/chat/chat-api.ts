@@ -1,4 +1,4 @@
-import {signalRConnection} from "../../../services/signalR-service";
+import {signalRConnection} from "../../../services/MessageServices";
 import {HubConnection} from "@microsoft/signalr";
 
 let hubConnection:HubConnection

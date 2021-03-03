@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
-import React, {useEffect, useState} from 'react';
-import {ImageBackground, StyleSheet,View} from 'react-native';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
+import {Text, StyleSheet,View} from 'react-native';
 
 //Import store
 import {navigate} from "../navigation/navigation";
@@ -11,12 +11,10 @@ import {RootStateType} from "../redux/root-reducers";
 
 export default function ChatSplashScreen(): JSX.Element {
 
-    const authState:AuthStateType = useSelector((state:RootStateType)=>state.auth)
-
 
     return (
         <View style={styles.container}>
-
+            <Text>Splash Screen</Text>
         </View>
     );
 }

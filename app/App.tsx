@@ -1,19 +1,20 @@
 import "react-native-gesture-handler";
-import React, { useEffect, useState } from 'react';
-import { Provider, useDispatch } from "react-redux";
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native";
-import { SafeAreaProvider } from "react-native-safe-area-context"
+import React, {useEffect, useState} from 'react';
+import {Provider, useDispatch} from "react-redux";
+import {StyleSheet, Text, View} from 'react-native';
+import {NavigationContainer} from "@react-navigation/native";
+import {SafeAreaProvider} from "react-native-safe-area-context"
 import AppNavigationContainer from "./containers"
 
 //Import store
 import store from "./redux/configure-store";
-import { navigationRef } from "./navigation/navigation";
+import {navigationRef} from "./navigation/navigation";
 import FlashMessage from "react-native-flash-message";
-import { initI18n } from "./config/i18n-polyglot";
-import { initAuth } from "./redux/features/auth/auth-reducer";
+import {initI18n} from "./config/i18n-polyglot";
+import {initAuth} from "./redux/features/auth/auth-reducer";
 
-import { MenuProvider } from "react-native-popup-menu";
+import {MenuProvider} from "react-native-popup-menu";
+import ChatSplashScreen from "./containers/ChatSplashScreen";
 
 export default function App(): JSX.Element {
     const [isAppInitiated, setIsAppInitiated] = useState(false)
@@ -22,12 +23,16 @@ export default function App(): JSX.Element {
     useEffect(() => {
         initI18n("tr")
         store.dispatch(initAuth(null))
-        setIsAppInitiated(true)
+        setTimeout(()=>{
+            setIsAppInitiated(true)
+        },500)
     }, [])
 
 
     if (!isAppInitiated) {
-        return <></>
+        return (
+            <ChatSplashScreen/>
+        )
     }
 
     return (
@@ -35,10 +40,10 @@ export default function App(): JSX.Element {
             <MenuProvider>
                 <SafeAreaProvider>
                     <NavigationContainer ref={navigationRef}>
-                        <AppNavigationContainer />
+                        <AppNavigationContainer/>
                     </NavigationContainer>
                 </SafeAreaProvider>
-                <FlashMessage position={"top"} />
+                <FlashMessage position={"top"}/>
             </MenuProvider>
         </Provider>
     );

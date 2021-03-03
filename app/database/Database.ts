@@ -96,6 +96,7 @@ async function getAllFriend(): Promise<Friend[]> {
             if (results === undefined) {
                 return []
             }
+            console.log(results)
             const count = results.rows.length
             const friendLists: Friend[] = []
             for (let i = 0; i < count; i++) {

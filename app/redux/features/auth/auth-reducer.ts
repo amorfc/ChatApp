@@ -9,8 +9,8 @@ import {showMessage} from "react-native-flash-message";
 import LocalStorage from "../../../config/storage"
 import {GlobalConstants} from "../../../config/global-constans";
 import I18nContext from "../../../config/i18n-polyglot";
-import { setUserConnection } from "../user/user-reducer";
 import {closeSignalRConnection, connection} from "../chat/chat-reducer";
+import { setUserConnection } from "../user/user-reducer";
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {

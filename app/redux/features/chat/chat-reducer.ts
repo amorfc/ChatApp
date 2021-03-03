@@ -1,16 +1,13 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ChatStateType, SenderMessageType} from "./chat-types";
 import * as signalR from "@microsoft/signalr";
-import {chat_api_connection} from "./chat-api";
 import {GlobalConstants} from "../../../config/global-constans";
-import {useDispatch} from "react-redux";
 import {temp_env_backend_url} from "../auth/auth-api";
-import {MessageModel} from "../../../models/message-model";
 import {Friend} from "../../../types/Friend";
 import {sqliteDatabase} from "../../../database/Database";
 import {Chat} from "../../../types/Chat";
 import {Message} from "../../../types/Message";
-import {refreshChats} from "../user/user-reducer";
+import {refreshChats, setUserConnection} from "../user/user-reducer";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -22,12 +19,14 @@ export const connection = new signalR.HubConnectionBuilder()
     .withAutomaticReconnect()
     .build();
 
-async function start() {
+async function start(resultHandler: { (result: boolean): void; (arg0: boolean): void; }) {
     try {
         await connection.start();
         console.log("SignalR Connected.");
+        resultHandler(true)
     } catch (err) {
         console.log(err);
+        resultHandler(false)
     }
 }
 
@@ -71,17 +70,27 @@ export const doConnection = createAsyncThunk(
     'chat/doConnection',
     async (_: any, thunkAPI: any) => {
 
+        const resultHandler = (result:boolean)=>{
+            if(result){
+
+            thunkAPI.dispatch(setUserConnection(true))
+            thunkAPI.dispatch(setSignalRConnectionSuccess(null))
+                return
+            }
+
+            thunkAPI.dispatch(setSignalRConnectionFailure(null))
+
+        }
+
         // const connection: HubConnection = chat_api_connection()
         try {
-            await start();
-            connection.on("ReceiveMessage", (Message) => {
-                thunkAPI.dispatch(addMessageToDb(Message))
-                thunkAPI.dispatch(setReceiveMessage(Message))
-            })
-            thunkAPI.dispatch(setSignalRConnectionSuccess(null))
+            const connectionResult = await start(resultHandler);
+            // connection.on("ReceiveMessage", (Message) => {
+            //     thunkAPI.dispatch(addMessageToDb(Message))
+            //     thunkAPI.dispatch(setReceiveMessage(Message))
+            // })
         } catch (e) {
             console.log(e)
-            thunkAPI.dispatch(setSignalRConnectionFailure(null))
         }
     }
 )

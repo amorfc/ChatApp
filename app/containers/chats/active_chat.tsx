@@ -35,7 +35,7 @@ const ActiveChatScreen = (props: any) => {
     useEffect(() => {
 
         console.log(chatState.activeChat.chat_id)
-        dispatch(getChatMessagesFromDb(null))
+        // dispatch(getChatMessagesFromDb(null))
 
         // Return the function to unsubscribe from the event so it gets removed on unmount
         return ()=>{
