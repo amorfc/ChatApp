@@ -50,7 +50,7 @@ export class DatabaseInitialization {
     if (dropAllTables) {
       transaction.executeSql("DROP TABLE IF EXISTS Friend;");
       transaction.executeSql("DROP TABLE IF EXISTS Chat;");
-      transaction.executeSql("DROP TABLE IF EXISTS Message;");
+      transaction.executeSql("DROP TABLE IF EXISTS MessageType;");
       transaction.executeSql("DROP TABLE IF EXISTS Version;");
     }
 
@@ -97,7 +97,7 @@ export class DatabaseInitialization {
        version INTEGER
      );
    `);
-   
+
   }
 
   // Get the version of the database, as specified in the Version table
@@ -135,7 +135,7 @@ export class DatabaseInitialization {
     // This function should be called when the version of the db is < 2
     private preVersion2Inserts(transaction: SQLite.Transaction) {
         console.log("Running pre-version 2 DB inserts");
-        
+
         // Make schema changes
         transaction.executeSql("ALTER TABLE ...");
 

@@ -2,12 +2,12 @@ import {UserModel} from "../../../models/auth-model";
 import {MessageModel} from "../../../models/message-model";
 import { Chat } from "../../../types/Chat";
 import { Friend } from "../../../types/Friend";
-import { Message } from "../../../types/Message";
+import { MessageType } from "../../../types/MessageType";
 
 export type ChatStateType = {
     isConnected:boolean,
     message:string,
-    allMessagesForSelectedChat:Message[],
+    allMessagesForSelectedChat:MessageType[],
     chatType:string,
     activeChatFriend:Friend,
     activeChat:Chat

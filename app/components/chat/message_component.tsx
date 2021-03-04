@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 
 
 const MessageComponent = (props:any) => {
-    console.log("Message Component Rendering")
+    console.log("MessageType Component Rendering")
     const {message} = props
 
     const userState:UserStateType = useSelector((state: RootStateType) => state.user)

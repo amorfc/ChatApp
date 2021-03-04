@@ -19,7 +19,7 @@ import {ChatStateType} from "../redux/features/chat/chat-types";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import FriendsScreen from "./friends/friends";
-import {doConnection} from "../redux/features/chat/chat-reducer";
+import {doMessageServiceConnectionAT} from "../redux/features/chat/chat-reducer";
 import ActiveChatScreen from "./chats/active_chat";
 
 const MainStack = createStackNavigator()
@@ -72,7 +72,7 @@ export default function RootNavigationContainer(props: any): JSX.Element {
     useEffect(() => {
         if(authState.user) {
             !chatState.isConnected ?
-                dispatch(doConnection(null)):null
+                dispatch(doMessageServiceConnectionAT(null)):null
 
         }
     }, [authState.user])

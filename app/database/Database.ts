@@ -4,17 +4,17 @@ import { Friend } from "../types/Friend"
 import { Chat } from '../types/Chat'
 import { AppState, AppStateStatus } from 'react-native';
 import { DatabaseInitialization } from './DatabaseInitialization';
-import { Message } from '../types/Message';
+import { MessageType } from '../types/MessageType';
 
 export interface Database {
     //create
     createFriend(friend: Friend): Promise<void>;
     createChat(newChat: Chat): Promise<void>;
-    createMessage(message: Message): Promise<void>;
+    createMessage(message: MessageType): Promise<void>;
 
     //Read
     getAllFriend(): Promise<Friend[]>;
-    getAllMessages(chat: Chat): Promise<Message[]>;
+    getAllMessages(chat: Chat): Promise<MessageType[]>;
     getSingleChatWithFriendId(friend_id: number): Promise<Chat>;
     getSingleFriendWithFriendId(friend_id: number): Promise<Friend>;
     getAllChat(): Promise<Chat[]>;
@@ -46,7 +46,7 @@ async function createChat(newChat: Chat): Promise<void> {
         })
 }
 
-async function createMessage(message: Message): Promise<void> {
+async function createMessage(message: MessageType): Promise<void> {
     const { chat_id, content, senderUsername, receiverUsername, timeToSend, id } = message
 
     return getDatabase()
@@ -116,7 +116,7 @@ async function getAllFriend(): Promise<Friend[]> {
         })
 }
 
-async function getAllMessages(chat: Chat): Promise<Message[]> {
+async function getAllMessages(chat: Chat): Promise<MessageType[]> {
     return getDatabase()
         .then((db) => db.executeSql("SELECT * FROM Message WHERE chat_id = ? ORDER BY timeToSend DESC;", [chat.chat_id]))
         .then(([results]) => {
@@ -124,11 +124,11 @@ async function getAllMessages(chat: Chat): Promise<Message[]> {
                 return []
             }
             const count = results.rows.length
-            const messageList: Message[] = []
+            const messageList: MessageType[] = []
             for (let i = 0; i < count; i++) {
                 const row = results.rows.item(i);
                 const { message_id, chat_id, content, senderUsername, receiverUsername, timeToSend, id } = row
-                const message: Message = {
+                const message: MessageType = {
                     message_id,
                     chat_id, content,
                     senderUsername,

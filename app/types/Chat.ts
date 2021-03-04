@@ -1,4 +1,4 @@
-import { Message } from "./Message";
+import { MessageType } from "./MessageType";
 
 export interface Chat {
     chat_id:number,

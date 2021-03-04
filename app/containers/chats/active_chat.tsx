@@ -19,7 +19,7 @@ import {MessageModel} from "../../models/message-model";
 import {SenderMessageType} from "../../redux/features/chat/chat-types";
 import {createRef, MutableRefObject, useEffect, useRef, useState} from "react";
 import {navigate} from "../../navigation/navigation";
-import {Message} from "../../types/Message";
+import {MessageType} from "../../types/MessageType";
 import MessageList from "../../components/chat/message_list";
 import MessageTextInput from "../../components/chat/message_text_input_comp";
 

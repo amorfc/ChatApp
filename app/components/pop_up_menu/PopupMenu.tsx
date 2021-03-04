@@ -9,7 +9,7 @@ import {
 } from "react-native-popup-menu"
 import {useDispatch} from 'react-redux'
 import {navigate} from '../../navigation/navigation'
-import {chatProcess, initChat, setActiveChatFriend} from '../../redux/features/chat/chat-reducer'
+import {chatProcess} from '../../redux/features/chat/chat-reducer'
 import {Friend} from '../../types/Friend'
 import PopUpMenuOption from './pop_up_menu_option'
 
