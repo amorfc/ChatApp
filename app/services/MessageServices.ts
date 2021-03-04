@@ -4,46 +4,57 @@ import {HttpTransportType, HubConnection, HubConnectionBuilder} from "@microsoft
 import {Message} from "react-native-flash-message";
 import {MessageServiceConstants} from "../database/Constants";
 
-
-interface MessageService {
-    sendPrivateMessage(message: Message,sendPrivateMessageCallback:Function): void;
-
-    sendGroupMessage(message: Message,sendGroupMessageCallback:Function): void;
-
-}
+const RECEIVE_MESSAGE_EVENT_NAME = "ReceiveMessage"
 
 let signalRConnectionInstance: undefined | HubConnection = undefined;
 
+interface MessageService {
+    sendPrivateMessage(message: Message,sendPrivateMessageCallback:Function| null): void;
 
-const sendPrivateMessage = async (message: Message,sendPrivateMessageCallback:Function) => {
+    sendGroupMessage(message: Message,sendGroupMessageCallback:Function | null): void;
+    setReceiveMessageHandler(receiveMessageHandler:Function):void;
+
+}
+
+const sendPrivateMessage = async (message: Message,sendPrivateMessageCallback:Function | null) => {
     try {
 
-        const connection = await getConnection()
+        const connection = await getMessageServiceConnection()
 
         const res = await connection.invoke("SendPrivateMessage", message)
         console.log(`Message Send  --- ${res}`)
-        sendPrivateMessageCallback()
+
+        if(sendPrivateMessageCallback) sendPrivateMessageCallback()
 
     } catch (e) {
         console.log(`Message Could Not Send ${e}`)
     }
 }
 
-const sendGroupMessage = async (message: Message,sendGroupMessageCallback:Function) => {
+const sendGroupMessage = async (message: Message,sendGroupMessageCallback:Function | null) => {
     try {
 
-        const connection = await getConnection()
+        const connection = await getMessageServiceConnection()
         const res = await connection.invoke("SendGroupMessage", message)
         console.log(`Message Send  --- ${res}`)
-        sendGroupMessageCallback()
-
+        if(sendGroupMessageCallback) sendGroupMessageCallback()
     } catch (e) {
         console.log(`Message Could Not Send ${e}`)
     }
 }
 
+const setReceiveMessageHandler = async (receiveMessageHandler:Function) =>{
+    try{
+        //If there is a already set same event remove it
+        const connection = await getMessageServiceConnection()
+        connection.off(RECEIVE_MESSAGE_EVENT_NAME)
+        connection.on(RECEIVE_MESSAGE_EVENT_NAME,(Message)=>receiveMessageHandler(Message))
+    }catch (e) {
+        console.log(`Message Receive but error occurred -> Error: ${e}`)
+    }
+}
 
-const getConnection = async (): Promise<HubConnection> => {
+const getMessageServiceConnection = async (): Promise<HubConnection> => {
 
     if (signalRConnectionInstance) return Promise.resolve(signalRConnectionInstance)
 
@@ -80,5 +91,6 @@ const signalRConnectionBuilder = (): HubConnection => {
 
 export const signalRService: MessageService = {
     sendPrivateMessage,
-    sendGroupMessage
+    sendGroupMessage,
+    setReceiveMessageHandler
 }

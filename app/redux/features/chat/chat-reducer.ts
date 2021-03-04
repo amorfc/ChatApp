@@ -6,8 +6,10 @@ import {temp_env_backend_url} from "../auth/auth-api";
 import {Friend} from "../../../types/Friend";
 import {sqliteDatabase} from "../../../database/Database";
 import {Chat} from "../../../types/Chat";
-import {Message} from "../../../types/Message";
+import {MessageType} from "../../../types/MessageType";
 import {refreshChats, setUserConnection} from "../user/user-reducer";
+import {RootStateType} from "../../root-reducers";
+import {signalRService} from "../../../services/MessageServices";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -42,13 +44,13 @@ export const addMessageToDb = createAsyncThunk(
         try {
 
             targetFriend = message.receiverUsername !== userUsername ?
-                    await sqliteDatabase.getSingleFriendWithUsername(receiverUsername)
+                await sqliteDatabase.getSingleFriendWithUsername(receiverUsername)
                 :
-                    await sqliteDatabase.getSingleFriendWithUsername(senderUsername)
+                await sqliteDatabase.getSingleFriendWithUsername(senderUsername)
 
             const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend.friend_id)
 
-            const newMessage: Message = {
+            const newMessage: MessageType = {
                 message_id: 0,
                 content,
                 chat_id: targetChat.chat_id,
@@ -66,43 +68,36 @@ export const addMessageToDb = createAsyncThunk(
     }
 )
 
-export const doConnection = createAsyncThunk(
+const receiveMessageHandler = async(message:MessageType)=>{
+    try{
+
+        await sqliteDatabase.createMessage(message)
+
+    }catch (e) {
+        console.warn(`Message Receive But Error Occured -> Error ${e}`)
+    }
+}
+
+
+export const doMessageServiceConnectionAT = createAsyncThunk(
     'chat/doConnection',
     async (_: any, thunkAPI: any) => {
 
-        const resultHandler = (result:boolean)=>{
-            if(result){
+        const globalState: RootStateType = thunkAPI.getState()
 
-            thunkAPI.dispatch(setUserConnection(true))
-            thunkAPI.dispatch(setSignalRConnectionSuccess(null))
-                return
+        const isUserAuthenticated = globalState.auth.user
+
+        try {
+            if (isUserAuthenticated) {
+
+                await signalRService.setReceiveMessageHandler(receiveMessageHandler)
+                thunkAPI.dispatch(setUserConnection(true))
+                thunkAPI.dispatch(setSignalRConnectionSuccess(null))
+
             }
 
-            thunkAPI.dispatch(setSignalRConnectionFailure(null))
-
-        }
-
-        // const connection: HubConnection = chat_api_connection()
-        try {
-            const connectionResult = await start(resultHandler);
-            // connection.on("ReceiveMessage", (Message) => {
-            //     thunkAPI.dispatch(addMessageToDb(Message))
-            //     thunkAPI.dispatch(setReceiveMessage(Message))
-            // })
         } catch (e) {
-            console.log(e)
-        }
-    }
-)
-
-export const initChat = createAsyncThunk(
-    'chat/createChat',
-    async (friend: Friend, thunkAPI: any) => {
-        try {
-
-
-        } catch (error) {
-
+            thunkAPI.dispatch(setSignalRConnectionFailure(null))
         }
     }
 )
@@ -241,7 +236,7 @@ export const chatSlice = createSlice({
         setActiveChat(state, {payload}: PayloadAction<Chat>) {
             state.activeChat = payload
         },
-        setAllMessages(state, {payload}: PayloadAction<Message[]>) {
+        setAllMessages(state, {payload}: PayloadAction<MessageType[]>) {
             state.allMessagesForSelectedChat = payload
         }
     },
