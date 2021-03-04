@@ -92,12 +92,12 @@ export const doMessageServiceConnectionAT = createAsyncThunk(
 
                 await signalRService.setReceiveMessageHandler(receiveMessageHandler)
                 thunkAPI.dispatch(setUserConnection(true))
-                thunkAPI.dispatch(setSignalRConnectionSuccess(null))
+                thunkAPI.dispatch(setMessageServiceConnection(true))
 
             }
 
         } catch (e) {
-            thunkAPI.dispatch(setSignalRConnectionFailure(null))
+            thunkAPI.dispatch(setMessageServiceConnection(false))
         }
     }
 )
@@ -212,11 +212,8 @@ export const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
-        setSignalRConnectionSuccess(state, {payload}: PayloadAction<any>) {
-            state.isConnected = true
-        },
-        setSignalRConnectionFailure(state, {payload}: PayloadAction<any>) {
-            state.isConnected = false
+        setMessageServiceConnection(state, {payload}: PayloadAction<boolean>) {
+            state.isConnected = payload
         },
         changeMessage(state, {payload}: PayloadAction<string>) {
             state.message = payload
@@ -244,8 +241,7 @@ export const chatSlice = createSlice({
 
 
 export const {
-    setSignalRConnectionFailure,
-    setSignalRConnectionSuccess,
+    setMessageServiceConnection,
     changeMessage,
     clearMessage,
     setReceiveMessage,
