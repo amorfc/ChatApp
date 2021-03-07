@@ -15,17 +15,25 @@ import {initAuth} from "./redux/features/auth/auth-reducer";
 
 import {MenuProvider} from "react-native-popup-menu";
 import ChatSplashScreen from "./containers/ChatSplashScreen";
+import {makePost, makeRequest} from "./services/http-service";
+import {HttpMethod} from "./models/http-method";
+import {RequestModel} from "./models/request-model";
 
 export default function App(): JSX.Element {
     const [isAppInitiated, setIsAppInitiated] = useState(false)
 
     //One time check if auth data available
     useEffect(() => {
-        initI18n("tr")
+        initI18n("en")
         store.dispatch(initAuth(null))
         setTimeout(()=>{
             setIsAppInitiated(true)
         },500)
+
+
+        return ()=>{
+
+        }
     }, [])
 
 

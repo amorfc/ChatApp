@@ -8,6 +8,8 @@ interface MessageServiceConstantsType {
     signalRHubUrl:string
 }
 
+export const SEND_PRIVATE_MESSAGE_NAME:string = "SendPrivateMessage"
+
 export const MessageServiceBaseUrl:string = "http://192.168.31.62:8038"
 
 export const MessageServiceConstants: MessageServiceConstantsType = {

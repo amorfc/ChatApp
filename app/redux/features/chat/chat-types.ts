@@ -14,7 +14,6 @@ export type ChatStateType = {
 }
 
 export type SenderMessageType = {
-    content:string,
-    messageType:string,
-    receiverName:string
+    Message:string,
+    ReceiverUser:string
 }

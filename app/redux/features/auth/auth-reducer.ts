@@ -1,7 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit"
-import {AuthError, AuthStateType, NewUser, User, UserCredentials} from "./auth-types";
-import {AxiosResponse} from "axios";
-import {auth_api_login, auth_api_signUp} from "./auth-api";
+import {AuthError, AuthStateType, NewUser, UserCredentials} from "./auth-types";
+import {auth_api_signUp} from "./auth-api";
 import {AuthResponseDataType, UserModel} from "../../../models/auth-model";
 import {showMessage} from "react-native-flash-message";
 
@@ -10,7 +9,12 @@ import LocalStorage from "../../../config/storage"
 import {GlobalConstants} from "../../../config/global-constans";
 import I18nContext from "../../../config/i18n-polyglot";
 import {closeSignalRConnection, connection} from "../chat/chat-reducer";
-import { setUserConnection } from "../user/user-reducer";
+import {setUserConnection} from "../user/user-reducer";
+import {makeRequest} from "../../../services/http-service";
+import {RequestModel} from "../../../models/request-model";
+import {HttpMethod} from "../../../models/http-method";
+import {LoginRequest} from "../../../models/LoginRequest";
+import {LoginResponse} from "../../../models/LoginResponse";
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {
@@ -70,7 +74,7 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
 
         // -------------
 
-        const loginReqBody = {
+        const loginReqBody:LoginRequest = {
             Username: username,
             Password: password
         }
@@ -78,46 +82,61 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
         try {
             thunkAPI.dispatch(setIsAuthStatusLoading(true))
             //Login Request
-            const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
-            //Check If Login Status 200
-            console.log(loginResult)
+            // const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
 
-            if(loginResult.data.isAuthenticated){
-                //User Authenticated
-                //User information must be added on this Object
-                //There is a lot of work to be done
-                loginResult.data.user = {
-                    username: username,
-                    password:password
+            const requestModel:RequestModel = {
+                    method:HttpMethod.post,
+                    endpoint:"/Auth/Login",
+                    data:loginReqBody
                 }
-                //Add updated Token to local storage
-                await LocalStorage.save({
-                    key: "authData",
-                    data: loginResult.data
-                })
+            const testRes2 = await makeRequest<LoginResponse>({
+                method:HttpMethod.get,
+                endpoint:`/`
+            },"http://www.google.com")
 
-                //Add user to Redux Global State
-                thunkAPI.dispatch(setUser(loginResult.data.user))
-                thunkAPI.dispatch(setAuthToken(loginResult.data.token))
-                showMessage({
-                    message: "Welcome",
-                    description: I18nContext.polyglot?.t("welcome_name_message", {name: username}),
-                    type: "success"
-                })
-            }else if(loginResult.status === 200){
-                showMessage({
-                    message: "Oops!!!",
-                    description: I18nContext.polyglot?.t(loginResult.data.message),
-                    type: "danger"
-                })
-            }else{
-                //Test Purpose
-                showMessage({
-                    message:"Error",
-                    description:`${loginResult.data.message}`
-                })
-                console.log(loginResult)
-            }
+            const testRes = await makeRequest<LoginResponse>(requestModel)
+
+            console.log(`Bizim response -> ${JSON.stringify(testRes)}`)
+            console.log(`Google Res  -> ${JSON.stringify(testRes2.data)}` )
+
+            //Check If Login Status 200
+
+            // if(loginResult.data.isAuthenticated){
+            //     //User Authenticated
+            //     //User information must be added on this Object
+            //     //There is a lot of work to be done
+            //     loginResult.data.user = {
+            //         username: username,
+            //         password:password
+            //     }
+            //     //Add updated Token to local storage
+            //     await LocalStorage.save({
+            //         key: "authData",
+            //         data: loginResult.data
+            //     })
+            //
+            //     //Add user to Redux Global State
+            //     thunkAPI.dispatch(setUser(loginResult.data.user))
+            //     thunkAPI.dispatch(setAuthToken(loginResult.data.token))
+            //     showMessage({
+            //         message: "Welcome",
+            //         description: I18nContext.polyglot?.t("welcome_name_message", {name: username}),
+            //         type: "success"
+            //     })
+            // }else if(loginResult.status === 200){
+            //     showMessage({
+            //         message: "Oops!!!",
+            //         description: I18nContext.polyglot?.t(loginResult.data.message),
+            //         type: "danger"
+            //     })
+            // }else{
+            //     //Test Purpose
+            //     showMessage({
+            //         message:"Error",
+            //         description:`${loginResult.data.message}`
+            //     })
+            //     console.log(loginResult)
+            // }
         } catch (e) {
             showMessage({
                 message: "Oops!",

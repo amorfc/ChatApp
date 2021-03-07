@@ -9,7 +9,11 @@ import {Chat} from "../../../types/Chat";
 import {MessageType} from "../../../types/MessageType";
 import {refreshChats, setUserConnection} from "../user/user-reducer";
 import {RootStateType} from "../../root-reducers";
-import {signalRService} from "../../../services/MessageServices";
+import {signalRMessageService} from "../../../services/MessageServices";
+import {SEND_PRIVATE_MESSAGE_NAME} from "../../../database/Constants";
+import store from "../../configure-store";
+import active_chat from "../../../containers/chats/active_chat";
+import {MessageDomainType} from "../../../types/MessageDomainType";
 
 export const connection = new signalR.HubConnectionBuilder()
     .withUrl(`http://${temp_env_backend_url}:8038/messagehub`, {
@@ -50,7 +54,7 @@ export const addMessageToDb = createAsyncThunk(
 
             const targetChat: Chat = await sqliteDatabase.getSingleChatWithFriendId(targetFriend.friend_id)
 
-            const newMessage: MessageType = {
+            const newMessage: MessageDomainType = {
                 message_id: 0,
                 content,
                 chat_id: targetChat.chat_id,
@@ -71,7 +75,8 @@ export const addMessageToDb = createAsyncThunk(
 const receiveMessageHandler = async(message:MessageType)=>{
     try{
 
-        await sqliteDatabase.createMessage(message)
+
+
 
     }catch (e) {
         console.warn(`Message Receive But Error Occured -> Error ${e}`)
@@ -90,7 +95,7 @@ export const doMessageServiceConnectionAT = createAsyncThunk(
         try {
             if (isUserAuthenticated) {
 
-                await signalRService.setReceiveMessageHandler(receiveMessageHandler)
+                signalRMessageService.setReceiveMessageHandler(receiveMessageHandler)
                 thunkAPI.dispatch(setUserConnection(true))
                 thunkAPI.dispatch(setMessageServiceConnection(true))
 
@@ -178,11 +183,25 @@ export const getChatMessagesFromDb = createAsyncThunk(
 
 export const doSendMessage = createAsyncThunk(
     'chat/doSendMessage',
-    async (Message: SenderMessageType, thunkAPI: any) => {
-        await connection.invoke(Message.messageType, {
-            Message: Message.content,
-            ReceiverUser: Message.receiverName,
-        })
+    async (senderMessage: SenderMessageType, thunkAPI: any) => {
+
+        const state: RootStateType = thunkAPI.getState()
+
+        try{
+
+            switch (state.chat.chatType){
+                case SEND_PRIVATE_MESSAGE_NAME:{
+                    signalRMessageService.sendPrivateMessage(senderMessage,null)
+                    break
+                }
+                default:{
+
+                }
+            }
+
+        }catch (e) {
+            console.warn(`Message Could not Send Occurred Erro -> ${e}`)
+        }
         thunkAPI.dispatch(clearMessage(null))
     }
 )
@@ -221,7 +240,7 @@ export const chatSlice = createSlice({
         clearMessage(state, {payload}: PayloadAction<null>) {
             state.message = ""
         },
-        setReceiveMessage(state, {payload}: PayloadAction<any>) {
+        addActiveChatReceiveMessage(state, {payload}: PayloadAction<any>) {
             state.allMessagesForSelectedChat.unshift(payload)
         },
         closeSignalRConnection(state, {payload}: PayloadAction<null>) {
@@ -244,7 +263,7 @@ export const {
     setMessageServiceConnection,
     changeMessage,
     clearMessage,
-    setReceiveMessage,
+    addActiveChatReceiveMessage,
     closeSignalRConnection,
     setActiveChatFriend,
     setActiveChat,

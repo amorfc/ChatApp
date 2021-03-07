@@ -8,7 +8,7 @@ import { Friend } from "../../../types/Friend";
 import { sqliteDatabase } from "../../../database/Database";
 import { RootStateType } from "../../root-reducers";
 import { Chat } from "../../../types/Chat";
-import {signalRService} from "../../../services/MessageServices";
+import {signalRMessageService} from "../../../services/MessageServices";
 
 
 export const addFriend = createAsyncThunk(

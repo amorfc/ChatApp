@@ -5,6 +5,7 @@ import { Chat } from '../types/Chat'
 import { AppState, AppStateStatus } from 'react-native';
 import { DatabaseInitialization } from './DatabaseInitialization';
 import { MessageType } from '../types/MessageType';
+import {MessageDomainType} from "../types/MessageDomainType";
 
 export interface Database {
     //create
@@ -46,9 +47,8 @@ async function createChat(newChat: Chat): Promise<void> {
         })
 }
 
-async function createMessage(message: MessageType): Promise<void> {
+async function createMessage(message: MessageDomainType): Promise<void> {
     const { chat_id, content, senderUsername, receiverUsername, timeToSend, id } = message
-
     return getDatabase()
         .then(db => db.executeSql("INSERT INTO Message (chat_id, content, senderUsername, receiverUsername, timeToSend, id) VALUES(?,?,?,?,?,?);", [chat_id, content, senderUsername, receiverUsername, timeToSend, id]))
         .then(([results]) => {
@@ -96,7 +96,6 @@ async function getAllFriend(): Promise<Friend[]> {
             if (results === undefined) {
                 return []
             }
-            console.log(results)
             const count = results.rows.length
             const friendLists: Friend[] = []
             for (let i = 0; i < count; i++) {
@@ -128,7 +127,7 @@ async function getAllMessages(chat: Chat): Promise<MessageType[]> {
             for (let i = 0; i < count; i++) {
                 const row = results.rows.item(i);
                 const { message_id, chat_id, content, senderUsername, receiverUsername, timeToSend, id } = row
-                const message: MessageType = {
+                const message: MessageDomainType = {
                     message_id,
                     chat_id, content,
                     senderUsername,
@@ -191,6 +190,15 @@ async function getSingleChatWithFriendId(friend_id: number): Promise<Chat> {
 }
 
 async function getSingleFriendWithUsername(username: string): Promise<Friend> {
+    try{
+
+        const db = await getDatabase()
+        const queryResult = await db.executeSql("SELECT * FROM Friend WHERE username = ?;",[username])
+        console.log(queryResult)
+
+    }catch (e) {
+       return Promise.reject(e)
+    }
     return getDatabase()
         .then((db) => db.executeSql("SELECT * FROM Friend WHERE username = ?;", [username])
             .then(([results]) => {

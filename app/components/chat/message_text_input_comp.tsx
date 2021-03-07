@@ -6,21 +6,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/root-reducers";
 import {
     changeMessage,
-    chatProcess,
     doSendMessage,
-    fetchActiveChat,
-    getChatMessagesFromDb,
-    setReceiveMessage,
 } from "../../redux/features/chat/chat-reducer";
-import IconTextInput from "../../components/text_inputs/icon_text_input";
-import PrimaryBtn from "../../components/buttons/primary_btn";
-import {FlatList} from "react-native-gesture-handler";
-import {MessageModel} from "../../models/message-model";
 import {SenderMessageType} from "../../redux/features/chat/chat-types";
-import {createRef, MutableRefObject, useEffect, useRef, useState} from "react";
-import {navigate} from "../../navigation/navigation";
-import {MessageType} from "../../types/MessageType";
-import MessageList from "../../components/chat/message_list";
 import IconButton from "../buttons/icon_button";
 
 
@@ -33,12 +21,11 @@ const MessageTextInput = (props: any) => {
     const sendMessage = (message: string) => {
         if (message.length > 0) {
 
-            const Message: SenderMessageType = {
-                content: message,
-                messageType: chatState.chatType,
-                receiverName: chatState.activeChatFriend.username
+            const senderMessage: SenderMessageType = {
+                Message: message,
+                ReceiverUser: chatState.activeChatFriend.username
             }
-            dispatch(doSendMessage(Message))
+            dispatch(doSendMessage(senderMessage))
         }
     }
 

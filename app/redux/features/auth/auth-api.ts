@@ -3,7 +3,7 @@ import {AuthResponseDataType} from "../../../models/auth-model";
 import {makePost} from "../../../services/http-service";
 import {UserCredentials} from "./auth-types";
 
-export const temp_env_backend_url = "192.168.31.62"
+export const temp_env_backend_url = "192.168.43.53"
 
 export const auth_api_signUp = async (signUpRequestBody: any): Promise<AxiosResponse<AuthResponseDataType>> => {
     //Local host causes an error for android
