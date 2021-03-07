@@ -13,8 +13,8 @@ import {setUserConnection} from "../user/user-reducer";
 import {makeRequest} from "../../../services/http-service";
 import {RequestModel} from "../../../models/request-model";
 import {HttpMethod} from "../../../models/http-method";
-import {LoginRequest} from "../../../models/LoginRequest";
-import {LoginResponse} from "../../../models/LoginResponse";
+import {LoginRequest} from "../../../models/LoginModels/LoginRequest";
+import {LoginResponse} from "../../../models/LoginModels/LoginResponse";
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {

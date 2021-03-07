@@ -59,10 +59,7 @@ const setReceiveMessageHandler = async (receiveMessageHandler: Function) => {
 const getMessageServiceConnection = async (): Promise<HubConnection> => {
 
     if (signalRConnectionInstance) return Promise.resolve(signalRConnectionInstance)
-
-
     try {
-
         signalRConnectionInstance = signalRConnectionBuilder()
         await signalRConnectionInstance.start()
 
