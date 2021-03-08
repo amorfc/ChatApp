@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit"
-import {AuthError, AuthStateType, NewUser, UserCredentials} from "./auth-types";
+import {AuthError, AuthStateType, NewUser, User, UserCredentials} from "./auth-types";
 import {auth_api_signUp} from "./auth-api";
 import {AuthResponseDataType, UserModel} from "../../../models/auth-model";
 import {showMessage} from "react-native-flash-message";
@@ -15,6 +15,10 @@ import {RequestModel} from "../../../models/request-model";
 import {HttpMethod} from "../../../models/http-method";
 import {LoginRequest} from "../../../models/LoginModels/LoginRequest";
 import {LoginResponse} from "../../../models/LoginModels/LoginResponse";
+import {ResponseModel} from "../../../models/response-model";
+
+
+const LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY = "user_credentials"
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {
@@ -68,38 +72,35 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
 export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
     'auth/loginProcess',
     async (userCredentials: UserCredentials, thunkAPI: any) => {
-        const {username, password} = userCredentials
-        // -------------
-        //Validation Could Happen Here
 
-        // -------------
+        const {username, password} = userCredentials
+
+        thunkAPI.dispatch(setIsAuthStatusLoading(true))
 
         const loginReqBody:LoginRequest = {
             Username: username,
             Password: password
         }
-
         try {
-            thunkAPI.dispatch(setIsAuthStatusLoading(true))
-            //Login Request
-            // const loginResult: AxiosResponse<AuthResponseDataType> = await auth_api_login(loginReqBody)
-
             const requestModel:RequestModel = {
                     method:HttpMethod.post,
                     endpoint:"/Auth/Login",
                     data:loginReqBody
                 }
-            const testRes2 = await makeRequest<LoginResponse>({
-                method:HttpMethod.get,
-                endpoint:`/`
-            },"http://www.google.com")
+            //Login Request
+            const loginResult:ResponseModel<LoginResponse> = await makeRequest<LoginResponse>(requestModel)
+            //Check If Login Success
+            if(loginResult.isSuccessful && loginResult.data !== undefined){
+                const loginResponse:LoginResponse = loginResult.data
+                const currentUser:UserModel = {
+                    username:loginReqBody.Username
+                }
+                thunkAPI.dispatch(setAuthenticatedUser(currentUser))
+                thunkAPI.dispatch(setAuthToken(loginResponse.token))
+                await setUserCredentialsToLocalStorage(userCredentials)
+            }
 
-            const testRes = await makeRequest<LoginResponse>(requestModel)
 
-            console.log(`Bizim response -> ${JSON.stringify(testRes)}`)
-            console.log(`Google Res  -> ${JSON.stringify(testRes2.data)}` )
-
-            //Check If Login Status 200
 
             // if(loginResult.data.isAuthenticated){
             //     //User Authenticated
@@ -147,7 +148,27 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
         thunkAPI.dispatch(setIsAuthStatusLoading(false))
     }
 )
+const setUserCredentialsToLocalStorage = async (userCredentials:UserCredentials)=>{
 
+    try{
+        await LocalStorage.save({
+            key:LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY,
+            data:userCredentials
+        })
+    }catch (e) {
+        console.warn(`Error occurred when User Credentials saving to Local Storage ${e}`)
+    }
+}
+const getUserCredentialsFromLocalStorage = async ():Promise<UserCredentials | undefined> => {
+
+    let userCredentials:UserCredentials| undefined = undefined
+    try{
+        userCredentials = await LocalStorage.load({key:LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY})
+    }catch (e) {
+        console.warn(`Error occurred when User Credentials From to Local Storage ${e} `)
+    }
+    return userCredentials
+}
 
 export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
     'auth/initAuth',
@@ -215,7 +236,7 @@ const initialState: AuthStateType= {
     //Loader Information
     isAuthStatusLoading: false,
     //Result Information
-    user: null
+    user: undefined
 }
 export const authSlice = createSlice({
     name: "auth",
@@ -242,7 +263,7 @@ export const authSlice = createSlice({
         setAuthToken(state, {payload}: PayloadAction<string>) {
             GlobalConstants.authToken = payload
         },
-        setUser(state, {payload}: PayloadAction<UserModel | null>) {
+        setAuthenticatedUser(state, {payload}: PayloadAction<UserModel>) {
             state.user = payload
         },
         changeFirstName(state, {payload}: PayloadAction<string>) {
@@ -264,7 +285,7 @@ export const authSlice = createSlice({
 })
 
 export const {
-    setUser,
+    setAuthenticatedUser,
     setSignupSuccess,
     setAuthToken,
     setIsAuthStatusLoading,

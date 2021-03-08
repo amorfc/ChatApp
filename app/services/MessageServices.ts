@@ -15,6 +15,7 @@ interface MessageService {
     sendGroupMessage(message: Message, sendGroupMessageCallback: Function | null): void;
 
     setReceiveMessageHandler(receiveMessageHandler: Function): void;
+    setMessageServiceConnectionLostHandler(messageServiceConnectionLostHandler:Function):void;
 
 }
 
@@ -56,6 +57,22 @@ const setReceiveMessageHandler = async (receiveMessageHandler: Function) => {
     }
 }
 
+const setMessageServiceConnectionLostHandler = async (messageServiceConnectionLostHandler:Function) =>{
+
+    try{
+
+        const messageServiceConnection = await getMessageServiceConnection()
+        messageServiceConnection.onclose((error =>{
+            console.log(error)
+            messageServiceConnectionLostHandler()
+        }))
+
+    }catch (e) {
+
+    }
+
+}
+
 const getMessageServiceConnection = async (): Promise<HubConnection> => {
 
     if (signalRConnectionInstance) return Promise.resolve(signalRConnectionInstance)
@@ -91,5 +108,6 @@ const signalRConnectionBuilder = (): HubConnection => {
 export const signalRMessageService: MessageService = {
     sendPrivateMessage,
     sendGroupMessage,
-    setReceiveMessageHandler
+    setReceiveMessageHandler,
+    setMessageServiceConnectionLostHandler
 }

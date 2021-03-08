@@ -7,6 +7,6 @@ import axios from "axios";
 // It also ensures that whether you load the app in the Expo client or in a native build,
 // the environment is set up appropriately
 
-axios.defaults.baseURL = "http://192.168.43.53:8038/api"
+axios.defaults.baseURL = "http://192.168.31.62:8038/api"
 
 registerRootComponent(App);

@@ -5,7 +5,8 @@ import { Friend } from "../../../types/Friend";
 import { MessageType } from "../../../types/MessageType";
 
 export type ChatStateType = {
-    isConnected:boolean,
+    isMessageServiceConnectionLoading:boolean
+    isMessageServiceConnected:boolean,
     message:string,
     allMessagesForSelectedChat:MessageType[],
     chatType:string,

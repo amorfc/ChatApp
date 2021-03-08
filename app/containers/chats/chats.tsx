@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {RootStateType} from "../../redux/root-reducers";
 import {useEffect} from "react";
-import { refreshChats } from "../../redux/features/user/user-reducer";
+import { refreshChatsAT } from "../../redux/features/user/user-reducer";
 import ChatList from "../../components/chat/chats_list";
 
 export default function ChatsScreen(props:any) {
@@ -15,7 +15,7 @@ export default function ChatsScreen(props:any) {
 
     useEffect(() =>{
         console.log("Chats Resfreshing")
-        dispatch(refreshChats(null))
+        dispatch(refreshChatsAT(null))
     },[])
 
     console.log("Chat Screen Rendering")

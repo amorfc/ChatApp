@@ -28,10 +28,8 @@ export type AuthStateType = {
     signupHasError: boolean,
     signupErrorMessage: string | undefined,
     signupSuccess: boolean,
-
     loginHasError: boolean,
     loginErrorMessage: string | undefined,
-
-    isAuthStatusLoading:boolean
-    user:UserModel | null,
+    isAuthStatusLoading:boolean,
+    user?:UserModel,
 }

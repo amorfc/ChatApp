@@ -8,7 +8,7 @@ import {RootStateType} from "../../redux/root-reducers";
 //Components
 import FriendsList from "../../components/friends/friends_list";
 import {useEffect} from "react";
-import {fetchAllFriendsFromRemote, refreshFriends} from "../../redux/features/user/user-reducer";
+import {fetchAllFriendsFromRemote, refreshFriendsAT} from "../../redux/features/user/user-reducer";
 import Loader from "../../components/loader/Loader";
 
 
@@ -42,7 +42,7 @@ export default function FriendsScreen(props:any) {
     const userState = useSelector((state:RootStateType) => state.user)
     useEffect(() =>{
 
-        dispatch(refreshFriends(null))
+        dispatch(refreshFriendsAT(null))
 
     },[])
     console.log("Friends Screen Rendering")

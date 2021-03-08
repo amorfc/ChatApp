@@ -5,7 +5,7 @@ import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 import SingleFriend from "./friend"
 import { UserModel } from "../../models/auth-model";
 import { useEffect } from "react";
-import { addFriend, refreshFriends } from "../../redux/features/user/user-reducer";
+import { addFriendAT, refreshFriendsAT } from "../../redux/features/user/user-reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootStateType } from "../../redux/root-reducers";
 import { useState } from "react";
@@ -36,7 +36,7 @@ const FriendsListHeaderComponent = (): JSX.Element => {
 
     const addFriendPressed = () =>{
         if(friend.length > 3){
-            dispatch(addFriend({
+            dispatch(addFriendAT({
                 friend_id: 0,
                 has_active_chat: 0,
                 firstName: "Soap",
@@ -80,7 +80,7 @@ const FriendsList = (props: any): JSX.Element => {
 
 
     const onRefreshFriends = () => {
-        dispatch(refreshFriends(null))
+        dispatch(refreshFriendsAT(null))
     }
     console.log("friendsList Rendering")
 

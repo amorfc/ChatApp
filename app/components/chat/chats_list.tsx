@@ -3,7 +3,7 @@ import { FlatList } from 'react-native'
 import { View, Text, StyleSheet } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ChatStateType } from '../../redux/features/chat/chat-types'
-import { refreshChats } from '../../redux/features/user/user-reducer'
+import { refreshChatsAT } from '../../redux/features/user/user-reducer'
 import { UserStateType } from '../../redux/features/user/user-types'
 import { RootStateType } from '../../redux/root-reducers'
 import SingleChat from './single_chat'
@@ -14,7 +14,7 @@ const ChatList = (props:any) => {
     const userState:UserStateType = useSelector((state:RootStateType)=>state.user)
 
     const onRefreshChats = ()=>{
-        dispatch(refreshChats(null))
+        dispatch(refreshChatsAT(null))
     }
 
     console.log("Chat List Rendering")

@@ -21,7 +21,7 @@ const storage = new Storage({
     // the corresponding sync method will be invoked returning
     // the latest data.
     sync: {
-        // we'll talk about the details later.
+
     }
 })
 

@@ -11,7 +11,7 @@ import { Chat } from "../../../types/Chat";
 import {signalRMessageService} from "../../../services/MessageServices";
 
 
-export const addFriend = createAsyncThunk(
+export const addFriendAT = createAsyncThunk(
     "user/addFriend",
     async (newFriend: Friend, thunkAPI: any) => {
         try {
@@ -23,13 +23,13 @@ export const addFriend = createAsyncThunk(
                 username: newFriend.username,
                 has_active_chat: 0
             })
-            thunkAPI.dispatch(refreshFriends(null))
+            thunkAPI.dispatch(refreshFriendsAT(null))
         } catch (err: any) {
             console.warn(err.message)
         }
     }
 )
-export const fetchAllFriendsFromDb = createAsyncThunk(
+export const fetchAllFriendsFromDbAT = createAsyncThunk(
     "user/fetchAllFriendsFromDb",
     async (_: any, thunkAPI: any) => {
         try {
@@ -64,7 +64,7 @@ export const fetchAllFriendsFromRemote = createAsyncThunk(
     }
 )
 
-export const fetchAllChats = createAsyncThunk(
+export const fetchAllChatsFromDbAT = createAsyncThunk(
     'user/getAllChats',
     async (_: any,thunkAPI:any)=>{
         try {
@@ -77,14 +77,14 @@ export const fetchAllChats = createAsyncThunk(
         }
     }
 )
-export const refreshChats = createAsyncThunk(
+export const refreshChatsAT = createAsyncThunk(
     'user/refreshChats',
     async (_:any, thunkAPI:any )=>{
 
         thunkAPI.dispatch(setChatsStatusLoading(true))
 
         try {
-            thunkAPI.dispatch(fetchAllChats(null))
+            thunkAPI.dispatch(fetchAllChatsFromDbAT(null))
         } catch (error) {
             console.warn(error)
         }
@@ -94,12 +94,12 @@ export const refreshChats = createAsyncThunk(
     }
 )
 
-export const refreshFriends = createAsyncThunk(
+export const refreshFriendsAT = createAsyncThunk(
     'user/refreshFriends',
     async (_: any, thunkAPI: any) => {
         thunkAPI.dispatch(setFriendsStatusLoading(true))
         try {
-            thunkAPI.dispatch(fetchAllFriendsFromDb(null))
+            thunkAPI.dispatch(fetchAllFriendsFromDbAT(null))
             // thunkAPI.dispatch(fetchAllFriendsFromRemote(null))
         } catch (err) {
             console.warn(err)

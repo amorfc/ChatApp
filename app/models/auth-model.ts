@@ -1,9 +1,8 @@
 export type UserModel = {
-    firstName:string | null,
-    lastName:string | null,
-    email:string | null,
-    username:string | null
-    password:string | null
+    firstName?:string,
+    lastName?:string,
+    email?:string,
+    username:string
 }
 
 export type AuthResponseData = {

@@ -29,11 +29,6 @@ export default function App(): JSX.Element {
         setTimeout(()=>{
             setIsAppInitiated(true)
         },500)
-
-
-        return ()=>{
-
-        }
     }, [])
 
 

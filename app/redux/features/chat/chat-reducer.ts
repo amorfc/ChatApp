@@ -7,7 +7,7 @@ import {Friend} from "../../../types/Friend";
 import {sqliteDatabase} from "../../../database/Database";
 import {Chat} from "../../../types/Chat";
 import {MessageType} from "../../../types/MessageType";
-import {refreshChats, setUserConnection} from "../user/user-reducer";
+import {refreshChatsAT, setUserConnection} from "../user/user-reducer";
 import {RootStateType} from "../../root-reducers";
 import {signalRMessageService} from "../../../services/MessageServices";
 import {SEND_PRIVATE_MESSAGE_NAME} from "../../../database/Constants";
@@ -25,16 +25,6 @@ export const connection = new signalR.HubConnectionBuilder()
     .withAutomaticReconnect()
     .build();
 
-async function start(resultHandler: { (result: boolean): void; (arg0: boolean): void; }) {
-    try {
-        await connection.start();
-        console.log("SignalR Connected.");
-        resultHandler(true)
-    } catch (err) {
-        console.log(err);
-        resultHandler(false)
-    }
-}
 
 // Start the connection.
 
@@ -83,27 +73,28 @@ const receiveMessageHandler = async(message:MessageType)=>{
     }
 }
 
+const checkIfGroupMessage = () => {
+
+    return
+}
 
 export const doMessageServiceConnectionAT = createAsyncThunk(
-    'chat/doConnection',
+    'chat/doMessageServiceConnectionAT',
     async (_: any, thunkAPI: any) => {
-
-        const globalState: RootStateType = thunkAPI.getState()
-
-        const isUserAuthenticated = globalState.auth.user
+        thunkAPI.dispatch(setMessageServiceConnectionLoading(true))
+        const {auth:AuthState} = thunkAPI.getState()
+        const isUserAuthenticated = AuthState.user
 
         try {
             if (isUserAuthenticated) {
-
                 signalRMessageService.setReceiveMessageHandler(receiveMessageHandler)
                 thunkAPI.dispatch(setUserConnection(true))
                 thunkAPI.dispatch(setMessageServiceConnection(true))
-
             }
-
         } catch (e) {
             thunkAPI.dispatch(setMessageServiceConnection(false))
         }
+        thunkAPI.dispatch(setMessageServiceConnectionLoading(false))
     }
 )
 
@@ -146,7 +137,7 @@ export const chatProcess = createAsyncThunk(
 
                 const friendRes: Friend = await sqliteDatabase.getSingleFriendWithFriendId(friend_id)
                 thunkAPI.dispatch(setActiveChatFriend(friendRes))
-                thunkAPI.dispatch(refreshChats(null))
+                thunkAPI.dispatch(refreshChatsAT(null))
             } else {
                 //Fetch Db Chat
                 const friendRes: Friend = await sqliteDatabase.getSingleFriendWithFriendId(friend_id)
@@ -208,7 +199,8 @@ export const doSendMessage = createAsyncThunk(
 
 
 const initialState: ChatStateType = {
-    isConnected: false,
+    isMessageServiceConnectionLoading:false,
+    isMessageServiceConnected: false,
     activeChatFriend: {
         friend_id: 0,
         has_active_chat: 0,
@@ -231,8 +223,11 @@ export const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
+        setMessageServiceConnectionLoading(state,{payload}:PayloadAction<boolean>){
+           state.isMessageServiceConnected = payload
+        },
         setMessageServiceConnection(state, {payload}: PayloadAction<boolean>) {
-            state.isConnected = payload
+            state.isMessageServiceConnected = payload
         },
         changeMessage(state, {payload}: PayloadAction<string>) {
             state.message = payload
@@ -244,7 +239,7 @@ export const chatSlice = createSlice({
             state.allMessagesForSelectedChat.unshift(payload)
         },
         closeSignalRConnection(state, {payload}: PayloadAction<null>) {
-            state.isConnected = false
+            state.isMessageServiceConnected = false
         },
         setActiveChatFriend(state, {payload}: PayloadAction<Friend>) {
             state.activeChatFriend = payload;
@@ -260,6 +255,7 @@ export const chatSlice = createSlice({
 
 
 export const {
+    setMessageServiceConnectionLoading,
     setMessageServiceConnection,
     changeMessage,
     clearMessage,

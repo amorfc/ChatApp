@@ -71,7 +71,7 @@ export default function RootNavigationContainer(props: any): JSX.Element {
 
     useEffect(() => {
         if(authState.user) {
-            !chatState.isConnected ?
+            !chatState.isMessageServiceConnected ?
                 dispatch(doMessageServiceConnectionAT(null)):null
 
         }
