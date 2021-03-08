@@ -13,66 +13,41 @@ import {BackendClient} from "../../../services/BackendClient";
 import {
     showErrorOccurredMessage,
     showLoggedUserMessage,
-    showLogginUserUnsuccessfullMessage
+    showLoginUserUnsuccessfulMessage, showSignUpSuccessMessage, showSignUpUnSuccessfulMessage
 } from "../../../services/DialogMessageService";
+import {SignUpResponse} from "../../../models/SingUpModels/SignUpResponse";
 
 
 const LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY = "user-credentials"
 
-export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
-    'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {
-        //Delete All signUpErrors purpose of trying again
-        // -------------
-        thunkAPI.dispatch(clearSignUpError(null))
+export const signUpProcess = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
+    'auth/signUpProcess', async (newUserCredentials: UserCredentials, thunkAPI: any): Promise<void> => {
         //Loading State
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
-
-        const {username, password} = newUser
-        //Validation Could Happen Here
-
-        // -------------
-
+        const {username} = newUserCredentials
         try {
-            //Server Request Time
 
-            //Async functions and try here
-            //Do request and get response Anf Check response
+            const signUpResult: SignUpResponse = await BackendClient.signUp(newUserCredentials)
 
-            const signUpRequestBody = {
-                "Username": username,
-                "Password": password
+            if (signUpResult.isSignUpSuccessful) {
+                showSignUpSuccessMessage(username)
+                return
             }
 
-            const signUpResult = await auth_api_signUp(signUpRequestBody)
-            if (signUpResult.status === 200) {
-                thunkAPI.dispatch(setSignupSuccess(true))
-                showMessage({
-                    message: "Welcome",
-                    description: I18nContext.polyglot?.t("sign_up_success_message"),
-                    type: "success"
-                })
-            } else {
-                //Api response status not 200
-                //Error message will handle
-                showMessage({
-                    message: "Oops!!",
-                    description: I18nContext.polyglot?.t("this_username_already_taken_by_another_user"),
-                    type: "warning",
-                    duration: 5000
-                })
-            }
+            showSignUpUnSuccessfulMessage()
+
         } catch (e) {
             console.log(e)
+            showErrorOccurredMessage()
         }
         thunkAPI.dispatch(setIsAuthStatusLoading(false))
-
     })
 
 export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
     'auth/loginProcess',
     async (userCredentials: UserCredentials, thunkAPI: any) => {
 
-        const {username, password} = userCredentials
+        const {username} = userCredentials
 
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
 
@@ -91,15 +66,15 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
                 return
             }
 
-                showLogginUserUnsuccessfullMessage(loginResult.message)
+            showLoginUserUnsuccessfulMessage(loginResult.message)
 
-            } catch (e) {
-                console.log(`Error Occurred when user Loggin ${e} `)
-                showErrorOccurredMessage()
-            }
-            thunkAPI.dispatch(setIsAuthStatusLoading(false))
+        } catch (e) {
+            console.log(`Error Occurred when user Loggin ${e} `)
+            showErrorOccurredMessage()
         }
-    )
+        thunkAPI.dispatch(setIsAuthStatusLoading(false))
+    }
+)
 const setUserCredentialsToLocalStorage = async (userCredentials: UserCredentials) => {
 
     try {

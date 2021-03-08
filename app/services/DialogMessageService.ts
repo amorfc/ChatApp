@@ -10,7 +10,7 @@ export const showLoggedUserMessage = (user:UserModel)=>{
     })
 }
 
-export const showLogginUserUnsuccessfullMessage = (messageKey:string)=>{
+export const showLoginUserUnsuccessfulMessage = (messageKey:string)=>{
     showMessage({
         message: "Oops!!!",
         description: I18nContext.polyglot?.t(messageKey),
@@ -24,10 +24,17 @@ export const showErrorOccurredMessage = ()=>{
         type: "danger"
     })
 }
-// export const showLoggedUserMessage = (user:UserModel)=>{
-//     showMessage({
-//         message: I18nContext.polyglot?.t("welcome") || "Default Welcome",
-//         description: I18nContext.polyglot?.t("welcome_name_message", {name: user.username}),
-//         type: "success"
-//     })
-// }
+export const showSignUpSuccessMessage = (username:string) => {
+    showMessage({
+        message: "Welcome",
+        description: I18nContext.polyglot?.t("sign_up_success_message",{name:username}),
+        type: "success"
+    })
+}
+export const showSignUpUnSuccessfulMessage = () => {
+    showMessage({
+        message: "Welcome",
+        description: I18nContext.polyglot?.t("this_username_already_taken_by_another_user"),
+        type: "warning"
+    })
+}
