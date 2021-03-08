@@ -3,7 +3,7 @@ import {View, StyleSheet, Text, Image} from "react-native";
 import PrimaryBtn from "../../components/buttons/primary_btn";
 import I18nContext from "../../config/i18n-polyglot";
 import {useDispatch} from "react-redux";
-import {loginProcess, logoutProcess} from "../../redux/features/auth/auth-reducer";
+import {loginAT, logoutAT} from "../../redux/features/auth/auth-reducer";
 // import { I18nContext } from "../../config/i18n";
 
 const styles = StyleSheet.create({
@@ -43,7 +43,7 @@ export default function SettingsScreen() {
             <PrimaryBtn
                 text={I18nContext.polyglot?.t("log_out")}
                 onPress={() => {
-                    dispatch(logoutProcess(null))
+                    dispatch(logoutAT(null))
                 }} />
         </View>
     );

@@ -11,7 +11,7 @@ import store from "./redux/configure-store";
 import {navigationRef} from "./navigation/navigation";
 import FlashMessage from "react-native-flash-message";
 import {initI18n} from "./config/i18n-polyglot";
-import {initAuth} from "./redux/features/auth/auth-reducer";
+import {initAuthAT} from "./redux/features/auth/auth-reducer";
 
 import {MenuProvider} from "react-native-popup-menu";
 import ChatSplashScreen from "./containers/ChatSplashScreen";
@@ -25,7 +25,7 @@ export default function App(): JSX.Element {
     //One time check if auth data available
     useEffect(() => {
         initI18n("en")
-        store.dispatch(initAuth(null))
+        store.dispatch(initAuthAT(null))
         setTimeout(()=>{
             setIsAppInitiated(true)
         },500)

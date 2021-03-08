@@ -11,7 +11,7 @@ import {Ionicons} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {AuthStateType} from "../../redux/features/auth/auth-types";
 import {RootStateType} from "../../redux/root-reducers";
-import {changeEmail, changePassword, changeUsername, clearSignUpForm, loginProcess} from "../../redux/features/auth/auth-reducer";
+import {changeEmail, changePassword, changeUsername, clearSignUpForm, loginAT} from "../../redux/features/auth/auth-reducer";
 import {useEffect} from "react";
 import {navigate} from "../../navigation/navigation";
 import Loader from "../../components/loader/Loader";
@@ -86,7 +86,7 @@ export default function LoginScreen() {
                     <PrimaryButton
                         text={I18nContext.polyglot?.t("log_in")}
                         onPress={() => {
-                            dispatch(loginProcess(authState))
+                            dispatch(loginAT({username:authState.username,password:authState.password}))
                         }}
                     />
                 </View>

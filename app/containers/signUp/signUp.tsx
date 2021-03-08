@@ -10,7 +10,7 @@ import {
     changePassword,
     changeUsername,
     clearSignUpForm,
-    signUpProcess
+    signUpAT
 } from "../../redux/features/auth/auth-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/root-reducers";
@@ -95,7 +95,7 @@ const signUpFormScreen = (authState: AuthStateType) => {
                     <PrimaryBtn
                         text={I18nContext.polyglot?.t("sign_up")}
                         onPress={() => {
-                            dispatch(signUpProcess(authState));
+                            dispatch(signUpAT(authState));
                         }}/>
                 </View>
             </View></>

@@ -1,13 +1,10 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit"
-import {AuthError, AuthStateType, NewUser, User, UserCredentials} from "./auth-types";
-import {auth_api_signUp} from "./auth-api";
-import {AuthResponseDataType, UserModel} from "../../../models/auth-model";
-import {showMessage} from "react-native-flash-message";
+import {AuthError, AuthStateType, UserCredentials} from "./auth-types";
+import {UserModel} from "../../../models/auth-model";
 
 //Storage import (AsyncStorage)
 import LocalStorage from "../../../config/storage"
 import {GlobalConstants} from "../../../config/global-constans";
-import I18nContext from "../../../config/i18n-polyglot";
 import {LoginResponse} from "../../../models/LoginModels/LoginResponse";
 import {BackendClient} from "../../../services/BackendClient";
 import {
@@ -16,14 +13,13 @@ import {
     showLoginUserUnsuccessfulMessage, showLogoutMessage, showSignUpSuccessMessage, showSignUpUnSuccessfulMessage
 } from "../../../services/DialogMessageService";
 import {SignUpResponse} from "../../../models/SingUpModels/SignUpResponse";
-import {UserStateType} from "../user/user-types";
-import {connection, setMessageServiceConnection} from "../chat/chat-reducer";
+import { setMessageServiceConnection} from "../chat/chat-reducer";
 
 
 const LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY = "user-credentials"
 
-export const signUpProcess = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
-    'auth/signUpProcess', async (newUserCredentials: UserCredentials, thunkAPI: any): Promise<void> => {
+export const signUpAT = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
+    'auth/signUpAT', async (newUserCredentials: UserCredentials, thunkAPI: any): Promise<void> => {
         //Loading State
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
         try {
@@ -41,8 +37,8 @@ export const signUpProcess = createAsyncThunk<any, UserCredentials, { rejectValu
         thunkAPI.dispatch(setIsAuthStatusLoading(false))
     })
 
-export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
-    'auth/loginProcess',
+export const loginAT = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
+    'auth/loginAT',
     async (userCredentials: UserCredentials, thunkAPI: any) => {
 
         const {username} = userCredentials
@@ -105,23 +101,24 @@ const deleteUserCredentialsFromLocalStorage = async ()=>{
     }
 }
 
-export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
-    'auth/initAuth',
+export const initAuthAT = createAsyncThunk<any, any, { rejectValue: AuthError }>(
+    'auth/initAuthAT',
     async (_: any, thunkAPI: any) => {
         //Check if any auth data in async storage if Token Not expired set User and Do Auth
 
         try {
             //Get auth data if not expired
             const storedUserCredentials:UserCredentials | undefined = await getUserCredentialsFromLocalStorage()
-            storedUserCredentials ? loginProcess(storedUserCredentials):null
+            console.log(storedUserCredentials)
+            storedUserCredentials ? thunkAPI.dispatch(loginAT(storedUserCredentials)):null
 
         } catch (e) {
             console.log(e)
         }
     })
 
-export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError }>(
-    "auth/logoutProcess",
+export const logoutAT = createAsyncThunk<any, any, { rejectValue: AuthError }>(
+    "auth/logoutAT",
     async (_: any, thunkAPI: any) => {
 
         try{
