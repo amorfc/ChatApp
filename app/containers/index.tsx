@@ -69,17 +69,16 @@ export default function RootNavigationContainer(props: any): JSX.Element {
     const authState: AuthStateType = useSelector((state: RootStateType) => state.auth)
     const chatState: ChatStateType = useSelector((state: RootStateType) => state.chat)
 
-    useEffect(() => {
-        if(authState.user) {
-            !chatState.isMessageServiceConnected ?
-                dispatch(doMessageServiceConnectionAT(null)):null
-
-        }
-    }, [authState.user])
+    // useEffect(() => {
+    //     if(authState.user) {
+    //         !chatState.isMessageServiceConnected ?
+    //             dispatch(doMessageServiceConnectionAT(null)):null
+    //     }
+    // }, [authState.user])
 
     return (
         <MainStack.Navigator>
-            {authState.user ? (
+            {authState.user !== undefined ? (
                     <MainStack.Screen name="HomeScreen" component={HomeScreen} options={{headerShown: false}}/>
                 ) :
                 (<>

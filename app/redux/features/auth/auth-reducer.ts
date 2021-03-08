@@ -8,17 +8,16 @@ import {showMessage} from "react-native-flash-message";
 import LocalStorage from "../../../config/storage"
 import {GlobalConstants} from "../../../config/global-constans";
 import I18nContext from "../../../config/i18n-polyglot";
-import {closeSignalRConnection, connection} from "../chat/chat-reducer";
-import {setUserConnection} from "../user/user-reducer";
-import {makeRequest} from "../../../services/http-service";
-import {RequestModel} from "../../../models/request-model";
-import {HttpMethod} from "../../../models/http-method";
-import {LoginRequest} from "../../../models/LoginModels/LoginRequest";
 import {LoginResponse} from "../../../models/LoginModels/LoginResponse";
-import {ResponseModel} from "../../../models/response-model";
+import {BackendClient} from "../../../services/BackendClient";
+import {
+    showErrorOccurredMessage,
+    showLoggedUserMessage,
+    showLogginUserUnsuccessfullMessage
+} from "../../../services/DialogMessageService";
 
 
-const LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY = "user_credentials"
+const LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY = "user-credentials"
 
 export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthError }>(
     'auth/signUpProcess', async (newUser: NewUser, thunkAPI: any): Promise<void> => {
@@ -59,7 +58,7 @@ export const signUpProcess = createAsyncThunk<any, NewUser, { rejectValue: AuthE
                     message: "Oops!!",
                     description: I18nContext.polyglot?.t("this_username_already_taken_by_another_user"),
                     type: "warning",
-                    duration:5000
+                    duration: 5000
                 })
             }
         } catch (e) {
@@ -77,94 +76,47 @@ export const loginProcess = createAsyncThunk<any, UserCredentials, { rejectValue
 
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
 
-        const loginReqBody:LoginRequest = {
-            Username: username,
-            Password: password
-        }
         try {
-            const requestModel:RequestModel = {
-                    method:HttpMethod.post,
-                    endpoint:"/Auth/Login",
-                    data:loginReqBody
-                }
             //Login Request
-            const loginResult:ResponseModel<LoginResponse> = await makeRequest<LoginResponse>(requestModel)
+            const loginResult: LoginResponse = await BackendClient.login(userCredentials)
             //Check If Login Success
-            if(loginResult.isSuccessful && loginResult.data !== undefined){
-                const loginResponse:LoginResponse = loginResult.data
-                const currentUser:UserModel = {
-                    username:loginReqBody.Username
+            if (loginResult.isAuthenticated) {
+                const currentUser: UserModel = {
+                    username
                 }
                 thunkAPI.dispatch(setAuthenticatedUser(currentUser))
-                thunkAPI.dispatch(setAuthToken(loginResponse.token))
+                thunkAPI.dispatch(setAuthToken(loginResult.token))
                 await setUserCredentialsToLocalStorage(userCredentials)
+                showLoggedUserMessage(currentUser)
+                return
             }
 
+                showLogginUserUnsuccessfullMessage(loginResult.message)
 
-
-            // if(loginResult.data.isAuthenticated){
-            //     //User Authenticated
-            //     //User information must be added on this Object
-            //     //There is a lot of work to be done
-            //     loginResult.data.user = {
-            //         username: username,
-            //         password:password
-            //     }
-            //     //Add updated Token to local storage
-            //     await LocalStorage.save({
-            //         key: "authData",
-            //         data: loginResult.data
-            //     })
-            //
-            //     //Add user to Redux Global State
-            //     thunkAPI.dispatch(setUser(loginResult.data.user))
-            //     thunkAPI.dispatch(setAuthToken(loginResult.data.token))
-            //     showMessage({
-            //         message: "Welcome",
-            //         description: I18nContext.polyglot?.t("welcome_name_message", {name: username}),
-            //         type: "success"
-            //     })
-            // }else if(loginResult.status === 200){
-            //     showMessage({
-            //         message: "Oops!!!",
-            //         description: I18nContext.polyglot?.t(loginResult.data.message),
-            //         type: "danger"
-            //     })
-            // }else{
-            //     //Test Purpose
-            //     showMessage({
-            //         message:"Error",
-            //         description:`${loginResult.data.message}`
-            //     })
-            //     console.log(loginResult)
-            // }
-        } catch (e) {
-            showMessage({
-                message: "Oops!",
-                description: I18nContext.polyglot?.t("something_went_wrong"),
-                type: "danger"
-            })
+            } catch (e) {
+                console.log(`Error Occurred when user Loggin ${e} `)
+                showErrorOccurredMessage()
+            }
+            thunkAPI.dispatch(setIsAuthStatusLoading(false))
         }
-        thunkAPI.dispatch(setIsAuthStatusLoading(false))
-    }
-)
-const setUserCredentialsToLocalStorage = async (userCredentials:UserCredentials)=>{
+    )
+const setUserCredentialsToLocalStorage = async (userCredentials: UserCredentials) => {
 
-    try{
+    try {
         await LocalStorage.save({
-            key:LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY,
-            data:userCredentials
+            key: LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY,
+            data: userCredentials
         })
-    }catch (e) {
+    } catch (e) {
         console.warn(`Error occurred when User Credentials saving to Local Storage ${e}`)
     }
 }
-const getUserCredentialsFromLocalStorage = async ():Promise<UserCredentials | undefined> => {
+const getUserCredentialsFromLocalStorage = async (): Promise<UserCredentials | undefined> => {
 
-    let userCredentials:UserCredentials| undefined = undefined
-    try{
-        userCredentials = await LocalStorage.load({key:LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY})
-    }catch (e) {
+    let userCredentials: UserCredentials | undefined = undefined
+    try {
+        userCredentials = await LocalStorage.load({key: LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY})
+    } catch (e) {
         console.warn(`Error occurred when User Credentials From to Local Storage ${e} `)
     }
     return userCredentials
@@ -181,7 +133,7 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
                 key: "authData"
             })
 
-            if(authData){
+            if (authData) {
                 thunkAPI.dispatch(loginProcess(authData.user))
             }
         } catch (e) {
@@ -189,42 +141,42 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
         }
     })
 
-export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError }>(
-    "auth/logoutProcess",
-    async (_: any, thunkAPI: any) => {
+// export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError }>(
+//     "auth/logoutProcess",
+//     async (_: any, thunkAPI: any) => {
+//
+//         try{
+//             const state = thunkAPI.getState()
+//
+//             showMessage({
+//                 message:"Oops!!!",
+//                 description:I18nContext.polyglot?.t("log_out_message",{name:state.auth.user.username}),
+//                 type:"warning"
+//             })
+//             //Delete user from Global Redux State
+//             thunkAPI.dispatch(setUser(null))
+//             thunkAPI.dispatch(setUserConnection(false))
+//             await connection.stop()
+//             connection.off("ReceiveMessage")
+//             thunkAPI.dispatch(closeSignalRConnection(null))
+//             //Delete token from Local Storage
+//             await LocalStorage.remove({
+//                 key: "authData"
+//             })
+//
+//         }catch (e) {
+//             console.log(e)
+//         }
+//
+//     }
+// )
 
-        try{
-            const state = thunkAPI.getState()
-
-            showMessage({
-                message:"Oops!!!",
-                description:I18nContext.polyglot?.t("log_out_message",{name:state.auth.user.username}),
-                type:"warning"
-            })
-            //Delete user from Global Redux State
-            thunkAPI.dispatch(setUser(null))
-            thunkAPI.dispatch(setUserConnection(false))
-            await connection.stop()
-            connection.off("ReceiveMessage")
-            thunkAPI.dispatch(closeSignalRConnection(null))
-            //Delete token from Local Storage
-            await LocalStorage.remove({
-                key: "authData"
-            })
-
-        }catch (e) {
-            console.log(e)
-        }
-
-    }
-)
-
-const initialState: AuthStateType= {
+const initialState: AuthStateType = {
     //Form State
     firstname: "",
     lastname: "",
     email: "",
-    username:"",
+    username: "",
     password: "",
     //signUp Information
     signupHasError: false,
