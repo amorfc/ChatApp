@@ -43,22 +43,23 @@ async function login(userCredentials: UserCredentials): Promise<LoginResponse> {
 }
 
 async function signUp(userCredentials:UserCredentials): Promise<SignUpResponse>{
-    let signUpResponse:SignUpResponse = {
+    let signUpResult:SignUpResponse = {
         isSignUpSuccessful:false
     }
     const signUpRequestModel: RequestModel = {
         method:HttpMethod.post,
-        endpoint:"/Auth/SignUp"
+        endpoint:"/Auth/SignUp",
+        data:userCredentials
     }
     try {
         const signUpResponse:ResponseModel<SignUpResponse> = await makeRequest<SignUpResponse>(signUpRequestModel)
         if(signUpResponse.isSuccessful){
-            signUpResponse.isSuccessful = true
+            signUpResult.isSignUpSuccessful = true
         }
     }catch (e) {
         console.log(`Error Occured When User Signing Up ${e}`)
     }
-    return signUpResponse
+    return signUpResult
 }
 
 export const BackendClient:BackendClient = {

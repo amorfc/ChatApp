@@ -25,6 +25,7 @@ import Loader from "../../components/loader/Loader";
 import {navigate} from "../../navigation/navigation";
 //Polyglot Language Context
 import I18nContext from "../../config/i18n-polyglot";
+import {useEffect} from "react";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -70,26 +71,6 @@ const signUpFormScreen = (authState: AuthStateType) => {
 
     return (
         <>
-            {/*<View style={styles.inputContainer}>*/}
-            {/*    <IconTextInput*/}
-            {/*        iconName={"person"}*/}
-            {/*        iconSize={24}*/}
-            {/*        iconColor={"darkgray"}*/}
-            {/*        placeholder={I18nContext.polyglot?.t("first_name")}*/}
-            {/*        placeholderTextColor={"darkgray"}*/}
-            {/*        value={authState.firstname}*/}
-            {/*        onChangeText={(text: string) => dispatch(changeFirstName(text))}/>*/}
-            {/*</View>*/}
-            {/*<View style={styles.inputContainer}>*/}
-            {/*    <IconTextInput*/}
-            {/*        iconName={"person"}*/}
-            {/*        iconSize={24}*/}
-            {/*        iconColor={"darkgray"}*/}
-            {/*        placeholder={I18nContext.polyglot?.t("last_name")}*/}
-            {/*        placeholderTextColor={"darkgray"}*/}
-            {/*        value={authState.lastname}*/}
-            {/*        onChangeText={(text: string) => dispatch(changeLastName(text))}/>*/}
-            {/*</View>*/}
             <View style={styles.inputContainer}>
                 <IconTextInput
                     iconName={"at-circle-sharp"}
@@ -144,7 +125,11 @@ export default function SignUpScreen(): JSX.Element {
 
     const dispatch = useDispatch()
     const authState: AuthStateType = useSelector((state: RootStateType) => state.auth)
-
+    useEffect(()=>{
+        return ()=>{
+            console.log("SignUpScreenUnMount")
+        }
+    },[])
     return (
         <View style={styles.mainContainer}>
             <Loader loading={authState.isAuthStatusLoading}/>

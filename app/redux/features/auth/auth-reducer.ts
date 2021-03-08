@@ -13,9 +13,11 @@ import {BackendClient} from "../../../services/BackendClient";
 import {
     showErrorOccurredMessage,
     showLoggedUserMessage,
-    showLoginUserUnsuccessfulMessage, showSignUpSuccessMessage, showSignUpUnSuccessfulMessage
+    showLoginUserUnsuccessfulMessage, showLogoutMessage, showSignUpSuccessMessage, showSignUpUnSuccessfulMessage
 } from "../../../services/DialogMessageService";
 import {SignUpResponse} from "../../../models/SingUpModels/SignUpResponse";
+import {UserStateType} from "../user/user-types";
+import {connection, setMessageServiceConnection} from "../chat/chat-reducer";
 
 
 const LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY = "user-credentials"
@@ -24,18 +26,14 @@ export const signUpProcess = createAsyncThunk<any, UserCredentials, { rejectValu
     'auth/signUpProcess', async (newUserCredentials: UserCredentials, thunkAPI: any): Promise<void> => {
         //Loading State
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
-        const {username} = newUserCredentials
         try {
 
             const signUpResult: SignUpResponse = await BackendClient.signUp(newUserCredentials)
-
+            console.log(signUpResult)
             if (signUpResult.isSignUpSuccessful) {
-                showSignUpSuccessMessage(username)
-                return
-            }
-
-            showSignUpUnSuccessfulMessage()
-
+                showSignUpSuccessMessage()
+                thunkAPI.dispatch(setSignupSuccess(true))
+            }else{showSignUpUnSuccessfulMessage()}
         } catch (e) {
             console.log(e)
             showErrorOccurredMessage()
@@ -97,6 +95,16 @@ const getUserCredentialsFromLocalStorage = async (): Promise<UserCredentials | u
     return userCredentials
 }
 
+const deleteUserCredentialsFromLocalStorage = async ()=>{
+    try{
+        await LocalStorage.remove({
+            key: LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY
+        })
+    }catch (e) {
+        console.log("e")
+    }
+}
+
 export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
     'auth/initAuth',
     async (_: any, thunkAPI: any) => {
@@ -104,47 +112,34 @@ export const initAuth = createAsyncThunk<any, any, { rejectValue: AuthError }>(
 
         try {
             //Get auth data if not expired
-            const authData: AuthResponseDataType = await LocalStorage.load({
-                key: "authData"
-            })
+            const storedUserCredentials:UserCredentials | undefined = await getUserCredentialsFromLocalStorage()
+            storedUserCredentials ? loginProcess(storedUserCredentials):null
 
-            if (authData) {
-                thunkAPI.dispatch(loginProcess(authData.user))
-            }
         } catch (e) {
             console.log(e)
         }
     })
 
-// export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError }>(
-//     "auth/logoutProcess",
-//     async (_: any, thunkAPI: any) => {
-//
-//         try{
-//             const state = thunkAPI.getState()
-//
-//             showMessage({
-//                 message:"Oops!!!",
-//                 description:I18nContext.polyglot?.t("log_out_message",{name:state.auth.user.username}),
-//                 type:"warning"
-//             })
-//             //Delete user from Global Redux State
-//             thunkAPI.dispatch(setUser(null))
-//             thunkAPI.dispatch(setUserConnection(false))
-//             await connection.stop()
-//             connection.off("ReceiveMessage")
-//             thunkAPI.dispatch(closeSignalRConnection(null))
-//             //Delete token from Local Storage
-//             await LocalStorage.remove({
-//                 key: "authData"
-//             })
-//
-//         }catch (e) {
-//             console.log(e)
-//         }
-//
-//     }
-// )
+export const logoutProcess = createAsyncThunk<any, any, { rejectValue: AuthError }>(
+    "auth/logoutProcess",
+    async (_: any, thunkAPI: any) => {
+
+        try{
+            const {auth}:{auth:AuthStateType} = thunkAPI.getState()
+            auth?.user ? showLogoutMessage(auth.user.username):null
+            //Delete user from Global Redux State
+            thunkAPI.dispatch(setAuthenticatedUser(undefined))
+            thunkAPI.dispatch(setMessageServiceConnection(false))
+            // await connection.stop()
+            //Delete token from Local Storage
+            await deleteUserCredentialsFromLocalStorage()
+
+        }catch (e) {
+            console.log(e)
+        }
+
+    }
+)
 
 const initialState: AuthStateType = {
     //Form State
@@ -190,7 +185,7 @@ export const authSlice = createSlice({
         setAuthToken(state, {payload}: PayloadAction<string>) {
             GlobalConstants.authToken = payload
         },
-        setAuthenticatedUser(state, {payload}: PayloadAction<UserModel>) {
+        setAuthenticatedUser(state, {payload}: PayloadAction<UserModel | undefined>) {
             state.user = payload
         },
         changeFirstName(state, {payload}: PayloadAction<string>) {

@@ -24,10 +24,10 @@ export const showErrorOccurredMessage = ()=>{
         type: "danger"
     })
 }
-export const showSignUpSuccessMessage = (username:string) => {
+export const showSignUpSuccessMessage = () => {
     showMessage({
         message: "Welcome",
-        description: I18nContext.polyglot?.t("sign_up_success_message",{name:username}),
+        description: I18nContext.polyglot?.t("sign_up_success_message"),
         type: "success"
     })
 }
@@ -36,5 +36,12 @@ export const showSignUpUnSuccessfulMessage = () => {
         message: "Welcome",
         description: I18nContext.polyglot?.t("this_username_already_taken_by_another_user"),
         type: "warning"
+    })
+}
+export const showLogoutMessage = (username:string) =>{
+    showMessage({
+        message:"Oops!!!",
+        description:I18nContext.polyglot?.t("log_out_message",{name:username}),
+        type:"warning"
     })
 }
