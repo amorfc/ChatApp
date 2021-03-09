@@ -42,6 +42,7 @@ const IconTextInput = (props: any): JSX.Element => {
                 style={styles.textInput}
                 secureTextEntry={secureTextEntry}
                 placeholder={placeholder}
+                clearButtonMode={"while-editing"}
                 placeholderTextColor={"gray"}
                 value={value}
                 onChangeText={onChangeText}

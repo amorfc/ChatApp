@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
         borderRadius: 18,
         borderColor: "gray",
         alignItems: "center",
+        justifyContent:"center"
     },
     textInput: {
         padding: 5,
@@ -23,7 +24,6 @@ const styles = StyleSheet.create({
     icon: {
         position: "relative",
         top: 5,
-
     },
     text: {
         color: "black"

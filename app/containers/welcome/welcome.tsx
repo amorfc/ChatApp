@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 
 export default function WelcomeScreen() {
 
-    function signInBtnPressed() {
+    function loginBtnPressed() {
         navigate("LoginScreen", null)
     }
 
@@ -47,7 +47,7 @@ export default function WelcomeScreen() {
                 <View style={{paddingBottom:20}}>
                     <PrimaryBtn
                         text={I18nContext.polyglot?.t("log_in")}
-                        onPress={signInBtnPressed}
+                        onPress={loginBtnPressed}
                     />
                 </View>
                 <View style={{paddingBottom:20}} >

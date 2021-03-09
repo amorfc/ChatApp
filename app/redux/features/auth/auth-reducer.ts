@@ -13,7 +13,7 @@ import {
     showLoginUserUnsuccessfulMessage, showLogoutMessage, showSignUpSuccessMessage, showSignUpUnSuccessfulMessage
 } from "../../../services/DialogMessageService";
 import {SignUpResponse} from "../../../models/SingUpModels/SignUpResponse";
-import { setMessageServiceConnection} from "../chat/chat-reducer";
+import {setMessageServiceConnection} from "../chat/chat-reducer";
 
 
 const LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY = "user-credentials"
@@ -29,7 +29,9 @@ export const signUpAT = createAsyncThunk<any, UserCredentials, { rejectValue: Au
             if (signUpResult.isSignUpSuccessful) {
                 showSignUpSuccessMessage()
                 thunkAPI.dispatch(setSignupSuccess(true))
-            }else{showSignUpUnSuccessfulMessage()}
+            } else {
+                showSignUpUnSuccessfulMessage()
+            }
         } catch (e) {
             console.log(e)
             showErrorOccurredMessage()
@@ -57,10 +59,10 @@ export const loginAT = createAsyncThunk<any, UserCredentials, { rejectValue: Aut
                 thunkAPI.dispatch(setAuthToken(loginResult.token))
                 await setUserCredentialsToLocalStorage(userCredentials)
                 showLoggedUserMessage(currentUser)
-                return
-            }
+            } else {
+                showLoginUserUnsuccessfulMessage(loginResult.message)
 
-            showLoginUserUnsuccessfulMessage(loginResult.message)
+            }
 
         } catch (e) {
             console.log(`Error Occurred when user Loggin ${e} `)
@@ -91,12 +93,12 @@ const getUserCredentialsFromLocalStorage = async (): Promise<UserCredentials | u
     return userCredentials
 }
 
-const deleteUserCredentialsFromLocalStorage = async ()=>{
-    try{
+const deleteUserCredentialsFromLocalStorage = async () => {
+    try {
         await LocalStorage.remove({
             key: LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY
         })
-    }catch (e) {
+    } catch (e) {
         console.log("e")
     }
 }
@@ -108,9 +110,9 @@ export const initAuthAT = createAsyncThunk<any, any, { rejectValue: AuthError }>
 
         try {
             //Get auth data if not expired
-            const storedUserCredentials:UserCredentials | undefined = await getUserCredentialsFromLocalStorage()
+            const storedUserCredentials: UserCredentials | undefined = await getUserCredentialsFromLocalStorage()
             console.log(storedUserCredentials)
-            storedUserCredentials ? thunkAPI.dispatch(loginAT(storedUserCredentials)):null
+            storedUserCredentials ? thunkAPI.dispatch(loginAT(storedUserCredentials)) : null
 
         } catch (e) {
             console.log(e)
@@ -121,9 +123,9 @@ export const logoutAT = createAsyncThunk<any, any, { rejectValue: AuthError }>(
     "auth/logoutAT",
     async (_: any, thunkAPI: any) => {
 
-        try{
-            const {auth}:{auth:AuthStateType} = thunkAPI.getState()
-            auth?.user ? showLogoutMessage(auth.user.username):null
+        try {
+            const {auth}: { auth: AuthStateType } = thunkAPI.getState()
+            auth?.user ? showLogoutMessage(auth.user.username) : null
             //Delete user from Global Redux State
             thunkAPI.dispatch(setAuthenticatedUser(undefined))
             thunkAPI.dispatch(setMessageServiceConnection(false))
@@ -131,7 +133,7 @@ export const logoutAT = createAsyncThunk<any, any, { rejectValue: AuthError }>(
             //Delete token from Local Storage
             await deleteUserCredentialsFromLocalStorage()
 
-        }catch (e) {
+        } catch (e) {
             console.log(e)
         }
 
