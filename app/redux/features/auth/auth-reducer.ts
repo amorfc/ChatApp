@@ -10,7 +10,11 @@ import {BackendClient} from "../../../services/BackendClient";
 import {
     showErrorOccurredMessage,
     showLoggedUserMessage,
-    showLoginUserUnsuccessfulMessage, showLogoutMessage, showSignUpSuccessMessage, showSignUpUnSuccessfulMessage
+    showLoginUserUnsuccessfulMessage,
+    showLogoutMessage,
+    showNetworkErrorMessage,
+    showSignUpSuccessMessage,
+    showSignUpUnSuccessfulMessage
 } from "../../../services/DialogMessageService";
 import {SignUpResponse} from "../../../models/SingUpModels/SignUpResponse";
 import {setMessageServiceConnection} from "../chat/chat-reducer";
@@ -29,7 +33,10 @@ export const signUpAT = createAsyncThunk<any, UserCredentials, { rejectValue: Au
             if (signUpResult.isSignUpSuccessful) {
                 showSignUpSuccessMessage()
                 thunkAPI.dispatch(setSignupSuccess(true))
-            } else {
+            }else if(signUpResult.message == "Error: Network Error"){
+                showNetworkErrorMessage()
+            }
+            else {
                 showSignUpUnSuccessfulMessage()
             }
         } catch (e) {
@@ -61,7 +68,6 @@ export const loginAT = createAsyncThunk<any, UserCredentials, { rejectValue: Aut
                 showLoggedUserMessage(currentUser)
             } else {
                 showLoginUserUnsuccessfulMessage(loginResult.message)
-
             }
 
         } catch (e) {

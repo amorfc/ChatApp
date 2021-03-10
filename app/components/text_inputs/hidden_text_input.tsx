@@ -3,23 +3,23 @@ import {TextInput, StyleSheet, View} from "react-native";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons"
 import {useState} from "react";
 import PropTypes from "prop-types"
+import StyleGuide from "../../style/StyleGuide";
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        borderWidth: 1,
         borderRadius: 18,
         borderColor: "gray",
         alignItems: "center",
-        justifyContent:"center"
     },
     textInput: {
         padding: 5,
         flex: 1,
         paddingVertical: 8,
-        borderRadius: 5,
         marginHorizontal: 8,
-        backgroundColor: "#FFFFFF",
+        borderRadius:10,
+        color:"white",
+        backgroundColor: StyleGuide.SecondaryBGColor,
     },
     icon: {
         position: "relative",
@@ -49,6 +49,7 @@ const PasswordInputText = (props: any): JSX.Element => {
                 name={iconName}
                 size={iconSize}
                 color={iconColor}
+                style={{paddingLeft: 5}}
             />
             <TextInput
                 {...props}
@@ -56,14 +57,17 @@ const PasswordInputText = (props: any): JSX.Element => {
                 secureTextEntry={isPassword}
                 value={initialFocus ? value : "Password"}
                 onFocus={() => setInitialFocus(true)}
-            />
-            <MaterialIcons
-                style={styles.icon}
-                name={eyeIcon}
-                size={iconSize}
-                color={iconColor}
-                onPress={changePwdType}
-            />
+                placeholderTextColor={"white"}
+                selectionColor={"white"}
+            >
+                {/*<MaterialIcons*/}
+                {/*    style={styles.icon}*/}
+                {/*    name={eyeIcon}*/}
+                {/*    size={iconSize}*/}
+                {/*    color={iconColor}*/}
+                {/*    onPress={changePwdType}*/}
+                {/*/>*/}
+            </TextInput>
         </View>
     );
 };

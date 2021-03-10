@@ -23,6 +23,9 @@ import {RootStateType} from "../../redux/root-reducers";
 import {changePassword, changeUsername, loginAT} from "../../redux/features/auth/auth-reducer";
 import Loader from "../../components/loader/Loader";
 import I18nContext from "../../config/i18n-polyglot";
+import {SafeAreaConsumer} from "react-native-safe-area-context";
+import LoginForm from "../../components/forms/login_form";
+import StyleGuide from "../../style/StyleGuide";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -36,22 +39,19 @@ const styles = StyleSheet.create({
     mainContainer: {
         height: Dimensions.get("window").height,
         width: Dimensions.get("window").width,
-        // backgroundColor: "white",
-        backgroundColor: "yellow"
+        backgroundColor: StyleGuide.PrimaryBGColor,
     },
     topContainer: {
         height: Dimensions.get("window").height / 4,
         width: Dimensions.get("window").width,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: 'blue'
     },
     bottomContainer: {
         height: Dimensions.get("window").height / 4 * 3,
         width: Dimensions.get("window").width,
         paddingTop: 40,
         paddingHorizontal: 32,
-        backgroundColor: "red"
     },
     input: {
         padding: 5,
@@ -75,40 +75,8 @@ export default function LoginScreen() {
                     <Text>LoginScreen</Text>
                 </View>
                 <View style={styles.bottomContainer}>
+                    <LoginForm />
                     <View style={{paddingBottom: 15}}>
-                        <IconTextInput
-                            iconName={"at-circle-sharp"}
-                            iconSize={24}
-                            iconColor={"darkgray"}
-                            placeholder={"Username"}
-                            placeholderTextColor={"darkgray"}
-                            value={authState.username}
-                            onChangeText={(text: string) => dispatch(changeUsername(text))}
-                        />
-                    </View>
-                    <View style={{paddingBottom: 30}}>
-                        <HiddenIconTextInput
-                            iconName={"lock-closed"}
-                            iconSize={22}
-                            iconColor={"grey"}
-                            placeholder={I18nContext.polyglot?.t("password")}
-                            secureTextEntry={true}
-                            value={authState.password}
-                            onChangeText={(text: string) => dispatch(changePassword(text))}
-                        />
-                    </View>
-                    <View style={{paddingBottom: 20}}>
-                        <PrimaryButton
-                            text={I18nContext.polyglot?.t("log_in")}
-                            onPress={() => {
-                                dispatch(loginAT({username: authState.username, password: authState.password}))
-                            }}
-                        />
-                    </View>
-                    <View style={{marginHorizontal: 8}}>
-                        <Text style={{color: "darkgray"}}>
-                            {I18nContext.polyglot?.t("forgot_password")}
-                        </Text>
                     </View>
                 </View>
             </View>

@@ -27,7 +27,8 @@ const lang_en = {
     something_went_wrong:"Something Went Wrong Try Again",
     UserNotExists:"User Not Exists Please Sign Up",
     PasswordIsNotCorrect:"Password Is Not Correct",
-    this_username_already_taken_by_another_user:"This Username already taken by Another User!!!Please Try Again With Another Username"
+    this_username_already_taken_by_another_user:"This Username already taken by Another User!!!Please Try Again With Another Username",
+    network_error_message:"Check Your Internet Connection"
 }
 
 const lang_tr = {
@@ -49,7 +50,8 @@ const lang_tr = {
     something_went_wrong:"Bir Şeyler Yanlış Gitti , Lütfen Tekrar Deneyiniz",
     UserNotExists:"Böyle bir kullanıcı bulunmuyor, Lütfen Kayıt Olunuz",
     PasswordIsNotCorrect:"Şifre Doğru Değil",
-    this_username_already_taken_by_another_user:"Bu Kullanıcı Ismi Başka Bir Kullanıcı Tarafından Alındı!!!Lütfen Başka Bir Kullanıcı Adı Ile Tekrar Deneyiniz"
+    this_username_already_taken_by_another_user:"Bu Kullanıcı Ismi Başka Bir Kullanıcı Tarafından Alındı!!!Lütfen Başka Bir Kullanıcı Adı Ile Tekrar Deneyiniz",
+    network_error_message:"Internet Bağlantınızı Kontrol Ediniz"
 }
 
 export const initI18n = (selectedLanguage: string): void => {

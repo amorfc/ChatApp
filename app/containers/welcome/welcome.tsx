@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, Image, Button} from "react-native";
 import {navigate} from "../../navigation/navigation";
 import PrimaryBtn from "../../components/buttons/primary_btn";
 import I18nContext from "../../config/i18n-polyglot";
+import StyleGuide from "../../style/StyleGuide";
 // import { I18nContext } from "../../config/i18n";
 
 const styles = StyleSheet.create({
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
     },
     mainContainer: {
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: StyleGuide.PrimaryBGColor,
     },
     topContainer: {
         height: 320,

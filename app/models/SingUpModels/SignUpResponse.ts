@@ -1,3 +1,4 @@
 export type SignUpResponse = {
-    isSignUpSuccessful:boolean
+    isSignUpSuccessful:boolean,
+    message:string
 }

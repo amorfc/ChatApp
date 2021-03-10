@@ -44,7 +44,8 @@ async function login(userCredentials: UserCredentials): Promise<LoginResponse> {
 
 async function signUp(userCredentials:UserCredentials): Promise<SignUpResponse>{
     let signUpResult:SignUpResponse = {
-        isSignUpSuccessful:false
+        isSignUpSuccessful:false,
+        message:''
     }
     const signUpRequestModel: RequestModel = {
         method:HttpMethod.post,
@@ -55,6 +56,8 @@ async function signUp(userCredentials:UserCredentials): Promise<SignUpResponse>{
         const signUpResponse:ResponseModel<SignUpResponse> = await makeRequest<SignUpResponse>(signUpRequestModel)
         if(signUpResponse.isSuccessful){
             signUpResult.isSignUpSuccessful = true
+        }else{
+            signUpResult.message = signUpResponse.message
         }
     }catch (e) {
         console.log(`Error Occured When User Signing Up ${e}`)

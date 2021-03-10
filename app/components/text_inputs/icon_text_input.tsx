@@ -1,33 +1,33 @@
 import * as React from "react";
 import {TextInput, StyleSheet, View} from "react-native";
-import {Ionicons} from "@expo/vector-icons"
+import {Ionicons, MaterialIcons} from "@expo/vector-icons"
 import PropTypes from "prop-types"
+import StyleGuide from "../../style/StyleGuide";
 
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        borderWidth: 1,
         borderRadius: 18,
         borderColor: "gray",
-        alignItems: "center"
+        alignItems: "center",
     },
     textInput: {
         padding: 5,
         flex: 1,
+        marginBottom:10,
         paddingVertical: 8,
-        borderRadius: 5,
         marginHorizontal: 8,
-        backgroundColor: "#FFFFFF",
-    },
-    text: {
-        color: "black"
+        borderRadius: 10,
+        color: "white",
+        backgroundColor: StyleGuide.SecondaryBGColor,
     }
 })
 
 const IconTextInput = (props: any): JSX.Element => {
 
-    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText,value} = props
+    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value} = props
+
 
     return (
         <View style={styles.container}>
@@ -43,7 +43,8 @@ const IconTextInput = (props: any): JSX.Element => {
                 secureTextEntry={secureTextEntry}
                 placeholder={placeholder}
                 clearButtonMode={"while-editing"}
-                placeholderTextColor={"gray"}
+                placeholderTextColor={"white"}
+                selectionColor={"white"}
                 value={value}
                 onChangeText={onChangeText}
             />

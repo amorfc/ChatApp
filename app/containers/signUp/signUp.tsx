@@ -26,6 +26,7 @@ import {navigate} from "../../navigation/navigation";
 //Polyglot Language Context
 import I18nContext from "../../config/i18n-polyglot";
 import {useEffect} from "react";
+import StyleGuide from "../../style/StyleGuide";
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     },
     mainContainer: {
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: StyleGuide.PrimaryBGColor,
     },
     topContainer: {
         height: 120,

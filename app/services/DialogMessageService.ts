@@ -38,6 +38,13 @@ export const showSignUpUnSuccessfulMessage = () => {
         type: "warning"
     })
 }
+export const showNetworkErrorMessage = () => {
+    showMessage({
+        message: "",
+        description: I18nContext.polyglot?.t("network_error_message"),
+        type: "warning"
+    })
+}
 export const showLogoutMessage = (username:string) =>{
     showMessage({
         message:"Oops!!!",
