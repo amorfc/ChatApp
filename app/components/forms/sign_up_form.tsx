@@ -27,9 +27,9 @@ const initialValues = {
 
 export const SignUpForm = (props: any) => {
 
-    const authState:AuthStateType = useSelector((state:RootStateType)=>state.auth)
     const dispatch = useDispatch()
 
+    const {isAuthStatusLoading} = props
 
     const {
         handleSubmit,
@@ -76,7 +76,7 @@ export const SignUpForm = (props: any) => {
             <View  >
                 <PrimaryBtn
                     text={I18nContext.polyglot?.t("sign_up")}
-                    isLoading={authState.isAuthStatusLoading}
+                    isLoading={isAuthStatusLoading}
                     onPress={handleSubmit}/>
             </View>
         </View>
