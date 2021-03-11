@@ -1,5 +1,5 @@
-export type LoginResponse = {
-    isAuthenticated:boolean,
-    message:string,
-    token:string,
+export interface LoginResponse {
+    isAuthenticated: boolean,
+    message: string,
+    token: string,
 }

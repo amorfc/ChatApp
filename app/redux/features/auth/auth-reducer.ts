@@ -6,7 +6,7 @@ import {UserModel} from "../../../models/auth-model";
 import LocalStorage from "../../../config/storage"
 import {GlobalConstants} from "../../../config/global-constans";
 import {LoginResponse} from "../../../models/Response/LoginResponse";
-import {BackendClient} from "../../../services/BackendClient";
+import {BackendClient} from "../../../services/MessagingServiceClient";
 import {
     showErrorOccurredMessage,
     showLoggedUserMessage,

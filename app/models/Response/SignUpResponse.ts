@@ -1,4 +1,3 @@
-export type SignUpResponse = {
-    isSignUpSuccessful:boolean,
-    message:string
-}
+import { ProcessResult } from "../ProcessResult";
+
+export interface SignUpResponse extends ProcessResult { }
