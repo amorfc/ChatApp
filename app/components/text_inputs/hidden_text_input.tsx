@@ -15,18 +15,18 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 5,
         flex: 1,
+        marginBottom:10,
         paddingVertical: 8,
         marginHorizontal: 8,
-        borderRadius:10,
-        color:"white",
+        borderRadius: 10,
+        color: "white",
         backgroundColor: StyleGuide.SecondaryBGColor,
     },
-    icon: {
-        position: "relative",
-        top: 5,
+    secureMaterialIconContainer:{
+      justifyContent:"center",
+      alignItems:"center"
     },
-    text: {
-        color: "black"
+    icon:{
     }
 })
 
@@ -45,29 +45,30 @@ const PasswordInputText = (props: any): JSX.Element => {
 
     return (
         <View style={styles.container}>
-            <Ionicons
-                name={iconName}
-                size={iconSize}
-                color={iconColor}
-                style={{paddingLeft: 5}}
-            />
-            <TextInput
-                {...props}
-                style={styles.textInput}
-                secureTextEntry={isPassword}
-                value={initialFocus ? value : "Password"}
-                onFocus={() => setInitialFocus(true)}
-                placeholderTextColor={"white"}
-                selectionColor={"white"}
-            >
-                {/*<MaterialIcons*/}
-                {/*    style={styles.icon}*/}
-                {/*    name={eyeIcon}*/}
-                {/*    size={iconSize}*/}
-                {/*    color={iconColor}*/}
-                {/*    onPress={changePwdType}*/}
-                {/*/>*/}
-            </TextInput>
+                <Ionicons
+                    name={iconName}
+                    size={iconSize}
+                    color={iconColor}
+                    style={{paddingLeft: 5}}
+                />
+                <TextInput
+                    {...props}
+                    style={styles.textInput}
+                    secureTextEntry={isPassword}
+                    value={initialFocus ? value : "Password"}
+                    onFocus={() => setInitialFocus(true)}
+                    placeholderTextColor={"white"}
+                    selectionColor={"white"}
+                />
+                <View style={styles.secureMaterialIconContainer} >
+                <MaterialIcons
+                    style={styles.icon}
+                    name={eyeIcon}
+                    size={iconSize}
+                    color={StyleGuide.IconColor}
+                    onPress={changePwdType}
+                />
+                </View>
         </View>
     );
 };

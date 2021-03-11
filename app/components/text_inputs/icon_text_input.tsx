@@ -1,12 +1,16 @@
 import * as React from "react";
-import {TextInput, StyleSheet, View} from "react-native";
+import {TextInput, StyleSheet, View, Text} from "react-native";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons"
 import PropTypes from "prop-types"
 import StyleGuide from "../../style/StyleGuide";
+import {useState} from "react";
+import HiddenIconTextInput from "./hidden_text_input";
 
 
 const styles = StyleSheet.create({
     container: {
+    },
+    textInputContainer:{
         flexDirection: "row",
         borderRadius: 18,
         borderColor: "gray",
@@ -26,11 +30,13 @@ const styles = StyleSheet.create({
 
 const IconTextInput = (props: any): JSX.Element => {
 
-    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value} = props
+    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value, error, touched} = props
 
+    console.log(error)
 
     return (
         <View style={styles.container}>
+            <View style={styles.textInputContainer} >
             <Ionicons
                 name={iconName}
                 size={iconSize}
@@ -48,6 +54,8 @@ const IconTextInput = (props: any): JSX.Element => {
                 value={value}
                 onChangeText={onChangeText}
             />
+            </View>
+            <Text></Text>
         </View>
     )
 }

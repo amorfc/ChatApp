@@ -76,7 +76,7 @@ const signUpFormScreen = (authState: AuthStateType) => {
                 <IconTextInput
                     iconName={"at-circle-sharp"}
                     iconSize={24}
-                    iconColor={"darkgray"}
+                    iconColor={StyleGuide.PrimaryBtnColor}
                     placeholder={I18nContext.polyglot?.t("user_name")}
                     placeholderTextColor={"darkgray"}
                     value={authState.username}
@@ -86,7 +86,7 @@ const signUpFormScreen = (authState: AuthStateType) => {
                 <HiddenIconTextInput
                     iconName={"lock-closed"}
                     iconSize={24}
-                    iconColor={"darkgray"}
+                    iconColor={StyleGuide.PrimaryBtnColor}
                     placeholder={I18nContext.polyglot?.t("password")}
                     value={authState.password}
                     onChangeText={(text: string) => dispatch(changePassword(text))}/>
