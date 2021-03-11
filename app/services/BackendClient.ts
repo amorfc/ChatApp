@@ -21,7 +21,7 @@ async function login(userCredentials: UserCredentials): Promise<LoginResponse> {
     let loginResult:LoginResponse = {
         isAuthenticated:false,
         token:"",
-        message:''
+        message:'default_message'
     }
 
     const loginRequestModel: RequestModel = {

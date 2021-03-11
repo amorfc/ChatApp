@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
 const IconTextInput = (props: any): JSX.Element => {
 
-    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value, error, touched} = props
+    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, onBlur, value, error, touched} = props
 
     const setInputErrorBorder = ():object=>{
         if(touched && error){
@@ -59,7 +59,6 @@ const IconTextInput = (props: any): JSX.Element => {
                     style={{paddingLeft: 5}}
                 />
                 <TextInput
-                    {...props}
                     autoCapitalize={"none"}
                     value={value}
                     style={[styles.textInput,setInputErrorBorder()]}
@@ -69,6 +68,7 @@ const IconTextInput = (props: any): JSX.Element => {
                     placeholderTextColor={"white"}
                     selectionColor={"white"}
                     onChangeText={onChangeText}
+                    onBlur={onBlur}
                 />
             </View>
             <View style={styles.errorContainer} >
@@ -86,7 +86,10 @@ IconTextInput.propTypes = {
     placeholder: PropTypes.string,
     placeholderTextColor: PropTypes.string,
     value: PropTypes.string,
-    onChangeText: PropTypes.func
+    onChangeText: PropTypes.func,
+    onBlur: PropTypes.func,
+    error:PropTypes.string,
+    touched:PropTypes.bool,
 }
 
 export default IconTextInput

@@ -28,7 +28,8 @@ const lang_en = {
     UserNotExists:"User Not Exists Please Sign Up",
     PasswordIsNotCorrect:"Password Is Not Correct",
     this_username_already_taken_by_another_user:"This Username already taken by Another User!!!Please Try Again With Another Username",
-    network_error_message:"Check Your Internet Connection"
+    network_error_message:"Check Your Internet Connection",
+    default_message:"We are sorry!There is a Problem"
 }
 
 const lang_tr = {
@@ -51,7 +52,8 @@ const lang_tr = {
     UserNotExists:"Böyle bir kullanıcı bulunmuyor, Lütfen Kayıt Olunuz",
     PasswordIsNotCorrect:"Şifre Doğru Değil",
     this_username_already_taken_by_another_user:"Bu Kullanıcı Ismi Başka Bir Kullanıcı Tarafından Alındı!!!Lütfen Başka Bir Kullanıcı Adı Ile Tekrar Deneyiniz",
-    network_error_message:"Internet Bağlantınızı Kontrol Ediniz"
+    network_error_message:"Internet Bağlantınızı Kontrol Ediniz",
+    default_message:"Bir Problem Meydana Geldi Daha Sonra Tekrar Deneyiniz Üzgünüz:("
 }
 
 export const initI18n = (selectedLanguage: string): void => {

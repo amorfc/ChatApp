@@ -39,9 +39,9 @@ const styles = StyleSheet.create({
     }
 })
 
-const PasswordInputText = (props: any): JSX.Element => {
+const HiddenIconTextInput = (props: any): JSX.Element => {
 
-    const {iconName, iconSize, iconColor, value, error, touched} = props
+    const {iconName, iconSize, iconColor, value, error, touched, onChangeText, onBlur, placeholderTextColor} = props
 
     const [initialFocus, setInitialFocus] = useState(false);
     const [eyeIcon, setEyeIcon] = useState("visibility-off");
@@ -70,12 +70,14 @@ const PasswordInputText = (props: any): JSX.Element => {
                     style={{paddingLeft: 5}}
                 />
                 <TextInput
-                    {...props}
+                    onBlur={onBlur}
+                    onChangeText={onChangeText}
                     style={[styles.textInput,setInputErrorBorder()]}
                     secureTextEntry={isPassword}
+                    autoCorrect={false}
                     value={initialFocus ? value : "Password"}
                     onFocus={() => setInitialFocus(true)}
-                    placeholderTextColor={"white"}
+                    placeholderTextColor={placeholderTextColor}
                     clearButtonMode={"while-editing"}
                     selectionColor={"white"}
                 />
@@ -84,7 +86,7 @@ const PasswordInputText = (props: any): JSX.Element => {
                         // style={styles.icon}
                         name={eyeIcon}
                         size={iconSize}
-                        color={StyleGuide.IconColor}
+                        color={StyleGuide.PrimaryIconColor}
                         onPress={changePwdType}
                     />
                 </View>
@@ -96,22 +98,25 @@ const PasswordInputText = (props: any): JSX.Element => {
     );
 };
 
-PasswordInputText.defaultProps = {
+HiddenIconTextInput.defaultProps = {
     iconSize: 25,
     placeholder: "Password",
     iconColor: "#222222",
     iconName: "lock-closed",
 };
 
-PasswordInputText.propTypes = {
+HiddenIconTextInput.propTypes = {
     iconSize: PropTypes.number,
     value: PropTypes.string,
     iconColor: PropTypes.string,
     iconName: PropTypes.string,
     onChangeText: PropTypes.func,
+    placeholderTextColor: PropTypes.string,
     secureTextEntry: PropTypes.bool,
-
+    onBlur:PropTypes.func,
+    error:PropTypes.string,
+    touched:PropTypes.bool
 };
 
-export default PasswordInputText;
+export default HiddenIconTextInput;
 

@@ -67,6 +67,7 @@ export const loginAT = createAsyncThunk<any, UserCredentials, { rejectValue: Aut
                 await setUserCredentialsToLocalStorage(userCredentials)
                 showLoggedUserMessage(currentUser)
             } else {
+                console.log(JSON.stringify(loginResult))
                 showLoginUserUnsuccessfulMessage(loginResult.message)
             }
 
@@ -105,7 +106,7 @@ const deleteUserCredentialsFromLocalStorage = async () => {
             key: LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY
         })
     } catch (e) {
-        console.log("e")
+        console.log(`Somtehing Went Wrong Wehen Deleting User Credentials From Local Storage ${e} `)
     }
 }
 
@@ -117,7 +118,7 @@ export const initAuthAT = createAsyncThunk<any, any, { rejectValue: AuthError }>
         try {
             //Get auth data if not expired
             const storedUserCredentials: UserCredentials | undefined = await getUserCredentialsFromLocalStorage()
-            console.log(storedUserCredentials)
+            console.log("Stored User Credential " + storedUserCredentials)
             storedUserCredentials ? thunkAPI.dispatch(loginAT(storedUserCredentials)) : null
 
         } catch (e) {
