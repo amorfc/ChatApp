@@ -1,16 +1,16 @@
 import * as React from "react";
 import {TextInput, StyleSheet, View, Text} from "react-native";
-import {Ionicons, MaterialIcons} from "@expo/vector-icons"
+import {Ionicons} from "@expo/vector-icons"
 import PropTypes from "prop-types"
 import StyleGuide from "../../style/StyleGuide";
-import {useState} from "react";
-import HiddenIconTextInput from "./hidden_text_input";
 
 
 const styles = StyleSheet.create({
     container: {
+       flexDirection:"column",
+        alignItems:"center"
     },
-    textInputContainer:{
+    inputContainer:{
         flexDirection: "row",
         borderRadius: 18,
         borderColor: "gray",
@@ -19,43 +19,48 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 5,
         flex: 1,
-        marginBottom:10,
         paddingVertical: 8,
         marginHorizontal: 8,
         borderRadius: 10,
         color: "white",
         backgroundColor: StyleGuide.SecondaryBGColor,
+    },
+    errorContainer:{
+        marginVertical:5
+    },
+    errorTextStyle:{
+        color:StyleGuide.FormErrorTextColor
     }
 })
 
 const IconTextInput = (props: any): JSX.Element => {
 
-    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value, error, touched} = props
-
-    console.log(error)
-
+    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value, error} = props
     return (
         <View style={styles.container}>
-            <View style={styles.textInputContainer} >
-            <Ionicons
-                name={iconName}
-                size={iconSize}
-                color={iconColor}
-                style={{paddingLeft: 5}}
-            />
-            <TextInput
-                autoCapitalize={"none"}
-                style={styles.textInput}
-                secureTextEntry={secureTextEntry}
-                placeholder={placeholder}
-                clearButtonMode={"while-editing"}
-                placeholderTextColor={"white"}
-                selectionColor={"white"}
-                value={value}
-                onChangeText={onChangeText}
-            />
+            <View  style={styles.inputContainer}>
+                <Ionicons
+                    name={iconName}
+                    size={iconSize}
+                    color={iconColor}
+                    style={{paddingLeft: 5}}
+                />
+                <TextInput
+                    {...props}
+                    autoCapitalize={"none"}
+                    value={value}
+                    style={styles.textInput}
+                    secureTextEntry={secureTextEntry}
+                    placeholder={placeholder}
+                    clearButtonMode={"while-editing"}
+                    placeholderTextColor={"white"}
+                    selectionColor={"white"}
+                    onChangeText={onChangeText}
+                />
             </View>
-            <Text></Text>
+            <View style={styles.errorContainer} >
+                <Text style={styles.errorTextStyle} >{error}</Text>
+            </View>
         </View>
     )
 }

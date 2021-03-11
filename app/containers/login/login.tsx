@@ -70,14 +70,11 @@ export default function LoginScreen() {
 
     return (
             <View style={styles.mainContainer}>
-                <Loader loading={authState.isAuthStatusLoading}/>
                 <View style={styles.topContainer}>
                     <Text>LoginScreen</Text>
                 </View>
                 <View style={styles.bottomContainer}>
                     <LoginForm />
-                    <View style={{paddingBottom: 15}}>
-                    </View>
                 </View>
             </View>
     );

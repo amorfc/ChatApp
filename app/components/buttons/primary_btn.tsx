@@ -1,21 +1,24 @@
 import * as React from "react"
-import {Pressable, StyleSheet, Text} from "react-native";
+import {ActivityIndicator, Pressable, StyleSheet, Text} from "react-native";
 import PropTypes from "prop-types"
 import StyleGuide from "../../style/StyleGuide";
 
 const PrimaryBtn = (props: any) => {
 
-    const {text, onPress, disabled} = props
+    const {text, onPress, disabled, isLoading} = props
 
     return (
         <Pressable
             style={[styles.primary_btn]}
             onPress={onPress}
             disabled={disabled}
-            >
-            <Text>
-                {text}
-            </Text>
+        >
+            {isLoading ?
+                <ActivityIndicator size={"small"} color={StyleGuide.PrimaryBGColor}/> :
+                <Text>
+                    {text}
+                </Text>
+            }
         </Pressable>
 
     )
@@ -25,7 +28,7 @@ const styles = StyleSheet.create({
     primary_btn: {
         height: 35,
         padding: 5,
-        marginVertical:5,
+        marginVertical: 5,
         borderRadius: 8,
         marginHorizontal: 8,
         backgroundColor: StyleGuide.PrimaryBtnColor,
@@ -39,6 +42,7 @@ PrimaryBtn.propTypes = {
     text: PropTypes.string,
     onPress: PropTypes.func,
     disabled: PropTypes.bool,
+    isLoading: PropTypes.bool
 }
 
 
