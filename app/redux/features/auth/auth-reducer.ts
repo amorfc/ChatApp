@@ -1,11 +1,11 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit"
-import {AuthError, AuthStateType, UserCredentials} from "./auth-types";
+import {AuthError, AuthStateType, LoginUserCredentials} from "./auth-types";
 import {UserModel} from "../../../models/auth-model";
 
 //Storage import (AsyncStorage)
 import LocalStorage from "../../../config/storage"
 import {GlobalConstants} from "../../../config/global-constans";
-import {LoginResponse} from "../../../models/LoginModels/LoginResponse";
+import {LoginResponse} from "../../../models/Response/LoginResponse";
 import {BackendClient} from "../../../services/BackendClient";
 import {
     showErrorOccurredMessage,
@@ -16,14 +16,14 @@ import {
     showSignUpSuccessMessage,
     showSignUpUnSuccessfulMessage
 } from "../../../services/DialogMessageService";
-import {SignUpResponse} from "../../../models/SingUpModels/SignUpResponse";
+import {SignUpResponse} from "../../../models/Response/SignUpResponse";
 import {setMessageServiceConnection} from "../chat/chat-reducer";
 
 
 const LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY = "user-credentials"
 
-export const signUpAT = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
-    'auth/signUpAT', async (newUserCredentials: UserCredentials, thunkAPI: any): Promise<void> => {
+export const signUpAT = createAsyncThunk<any, LoginUserCredentials, { rejectValue: AuthError }>(
+    'auth/signUpAT', async (newUserCredentials: LoginUserCredentials, thunkAPI: any): Promise<void> => {
         //Loading State
         thunkAPI.dispatch(setIsAuthStatusLoading(true))
         try {
@@ -46,9 +46,9 @@ export const signUpAT = createAsyncThunk<any, UserCredentials, { rejectValue: Au
         thunkAPI.dispatch(setIsAuthStatusLoading(false))
     })
 
-export const loginAT = createAsyncThunk<any, UserCredentials, { rejectValue: AuthError }>(
+export const loginAT = createAsyncThunk<any, LoginUserCredentials, { rejectValue: AuthError }>(
     'auth/loginAT',
-    async (userCredentials: UserCredentials, thunkAPI: any) => {
+    async (userCredentials: LoginUserCredentials, thunkAPI: any) => {
 
         const {username} = userCredentials
 
@@ -78,7 +78,7 @@ export const loginAT = createAsyncThunk<any, UserCredentials, { rejectValue: Aut
         thunkAPI.dispatch(setIsAuthStatusLoading(false))
     }
 )
-const setUserCredentialsToLocalStorage = async (userCredentials: UserCredentials) => {
+const setUserCredentialsToLocalStorage = async (userCredentials: LoginUserCredentials) => {
 
     try {
         await LocalStorage.save({
@@ -89,9 +89,9 @@ const setUserCredentialsToLocalStorage = async (userCredentials: UserCredentials
         console.warn(`Error occurred when User Credentials saving to Local Storage ${e}`)
     }
 }
-const getUserCredentialsFromLocalStorage = async (): Promise<UserCredentials | undefined> => {
+const getUserCredentialsFromLocalStorage = async (): Promise<LoginUserCredentials | undefined> => {
 
-    let userCredentials: UserCredentials | undefined = undefined
+    let userCredentials: LoginUserCredentials | undefined = undefined
     try {
         userCredentials = await LocalStorage.load({key: LOCAL_STORAGE_USER_CREDENTIALS_INFO_KEY})
     } catch (e) {
@@ -117,13 +117,14 @@ export const initAuthAT = createAsyncThunk<any, any, { rejectValue: AuthError }>
 
         try {
             //Get auth data if not expired
-            const storedUserCredentials: UserCredentials | undefined = await getUserCredentialsFromLocalStorage()
+            const storedUserCredentials: LoginUserCredentials | undefined = await getUserCredentialsFromLocalStorage()
             console.log("Stored User Credential " + storedUserCredentials)
             storedUserCredentials ? thunkAPI.dispatch(loginAT(storedUserCredentials)) : null
 
         } catch (e) {
             console.log(e)
         }
+        thunkAPI.dispatch(setAppInitLoading(false))
     })
 
 export const logoutAT = createAsyncThunk<any, any, { rejectValue: AuthError }>(
@@ -135,6 +136,7 @@ export const logoutAT = createAsyncThunk<any, any, { rejectValue: AuthError }>(
             auth?.user ? showLogoutMessage(auth.user.username) : null
             //Delete user from Global Redux State
             thunkAPI.dispatch(setAuthenticatedUser(undefined))
+            thunkAPI.dispatch(setAuthToken(null))
             thunkAPI.dispatch(setMessageServiceConnection(false))
             // await connection.stop()
             //Delete token from Local Storage
@@ -148,6 +150,8 @@ export const logoutAT = createAsyncThunk<any, any, { rejectValue: AuthError }>(
 )
 
 const initialState: AuthStateType = {
+    authToken : null,
+    isAppInitLoading:true,
     //signUp Information
     signupHasError: false,
     signupErrorMessage: undefined,
@@ -167,6 +171,9 @@ export const authSlice = createSlice({
         setIsAuthStatusLoading(state, {payload}: PayloadAction<boolean>) {
             state.isAuthStatusLoading = payload
         },
+        setAppInitLoading(state,{payload}:PayloadAction<boolean>){
+            state.isAppInitLoading = payload
+        },
         clearSignUpForm(state, {payload}: PayloadAction<any>) {
             state.signupSuccess = false
         }
@@ -178,13 +185,14 @@ export const authSlice = createSlice({
         setSignupSuccess(state, {payload}: PayloadAction<boolean>) {
             state.signupSuccess = payload
         },
-        setAuthToken(state, {payload}: PayloadAction<string>) {
+        setAuthToken(state, {payload}: PayloadAction<any>) {
+            state.authToken = payload
             GlobalConstants.authToken = payload
         },
         setAuthenticatedUser(state, {payload}: PayloadAction<UserModel | undefined>) {
             state.user = payload
         },
-    }
+    },
 })
 
 export const {
@@ -192,6 +200,7 @@ export const {
     setSignupSuccess,
     setAuthToken,
     setIsAuthStatusLoading,
+    setAppInitLoading,
     clearSignUpError,
     clearSignUpForm,
 } = authSlice.actions

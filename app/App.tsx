@@ -18,6 +18,7 @@ import ChatSplashScreen from "./containers/ChatSplashScreen";
 import {makePost, makeRequest} from "./services/http-service";
 import {HttpMethod} from "./models/http-method";
 import {RequestModel} from "./models/request-model";
+import {AuthStateType} from "./redux/features/auth/auth-types";
 
 export default function App(): JSX.Element {
     const [isAppInitiated, setIsAppInitiated] = useState(false)
@@ -26,17 +27,14 @@ export default function App(): JSX.Element {
     useEffect(() => {
         initI18n("en")
         store.dispatch(initAuthAT(null))
-        setTimeout(()=>{
-            setIsAppInitiated(true)
-        },500)
     }, [])
 
 
-    if (!isAppInitiated) {
-        return (
-            <ChatSplashScreen/>
-        )
-    }
+    // if (!isAppInitiated) {
+    //     return (
+    //         <></>
+    //     )
+    // }
 
     return (
         <Provider store={store}>

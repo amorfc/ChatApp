@@ -21,6 +21,7 @@ import {useEffect} from "react";
 import FriendsScreen from "./friends/friends";
 import {doMessageServiceConnectionAT} from "../redux/features/chat/chat-reducer";
 import ActiveChatScreen from "./chats/active_chat";
+import ChatSplashScreen from "./ChatSplashScreen";
 
 const MainStack = createStackNavigator()
 const ChatsStack = createStackNavigator()
@@ -75,13 +76,14 @@ export default function RootNavigationContainer(props: any): JSX.Element {
     //             dispatch(doMessageServiceConnectionAT(null)):null
     //     }
     // }, [authState.user])
+    if(authState.isAppInitLoading){
+        return <ChatSplashScreen/>
+    }
 
     return (
         <MainStack.Navigator>
-            {authState.user !== undefined ? (
-                    <MainStack.Screen name="HomeScreen" component={HomeScreen} options={{headerShown: false}}/>
-                ) :
-                (<>
+            {authState.authToken == null ? (
+                    <>
                         <MainStack.Screen name="WelcomeScreen" component={WelcomeScreen}
                                           options={{headerShown: false}}/>
                         <MainStack.Screen name="LoginScreen" component={LoginScreen}
@@ -89,6 +91,9 @@ export default function RootNavigationContainer(props: any): JSX.Element {
                         <MainStack.Screen name="SignUpScreen" component={SignUpScreen}
                                           options={{headerShown: false}}/>
                     </>
+                ) :
+                (
+                    <MainStack.Screen name="HomeScreen" component={HomeScreen} options={{headerShown: false}}/>
                 )}
 
 

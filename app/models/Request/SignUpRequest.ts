@@ -1,4 +1,4 @@
-export type SingUpRequest = {
+export type SignUpRequest = {
     Username:string,
     Password:string
 }

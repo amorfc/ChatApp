@@ -9,7 +9,7 @@ import StyleGuide from "../../style/StyleGuide";
 import PrimaryBtn from "../buttons/primary_btn";
 import {loginAT, signUpAT} from "../../redux/features/auth/auth-reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AuthStateType, UserCredentials} from "../../redux/features/auth/auth-types";
+import {AuthStateType, LoginUserCredentials} from "../../redux/features/auth/auth-types";
 import {RootStateType} from "../../redux/root-reducers";
 
 const USERNAME_FIELD_NAME = "username"
@@ -38,7 +38,7 @@ const LoginForm = (props: any) => {
         initialValues,
         validationSchema: LoginSchema,
         onSubmit: (values) => {
-            const userCredentials:UserCredentials = values
+            const userCredentials:LoginUserCredentials = values
             dispatch(loginAT(userCredentials))
         }
     })

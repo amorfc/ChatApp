@@ -1,7 +1,7 @@
 import {AxiosResponse} from "axios";
 import {AuthResponseDataType} from "../../../models/auth-model";
 import {makePost} from "../../../services/http-service";
-import {UserCredentials} from "./auth-types";
+import {LoginUserCredentials} from "./auth-types";
 
 export const temp_env_backend_url = "192.168.43.53"
 

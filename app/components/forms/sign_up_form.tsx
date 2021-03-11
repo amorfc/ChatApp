@@ -7,7 +7,7 @@ import I18nContext from "../../config/i18n-polyglot";
 import StyleGuide from "../../style/StyleGuide";
 import HiddenIconTextInput from "../text_inputs/hidden_text_input";
 import PrimaryBtn from "../buttons/primary_btn";
-import {AuthStateType, UserCredentials} from "../../redux/features/auth/auth-types";
+import {AuthStateType, LoginUserCredentials} from "../../redux/features/auth/auth-types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/root-reducers";
 import {signUpAT} from "../../redux/features/auth/auth-reducer";
@@ -42,7 +42,7 @@ export const SignUpForm = (props: any) => {
         initialValues,
         validationSchema: SignUpFormSchema,
         onSubmit: (values) => {
-            const newUserCredentials:UserCredentials = {...values}
+            const newUserCredentials:LoginUserCredentials = {...values}
             dispatch(signUpAT(newUserCredentials))
         }
     })

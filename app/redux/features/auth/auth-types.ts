@@ -1,16 +1,19 @@
 import {UserModel} from "../../../models/auth-model";
 
-export type UserCredentials = {
+export type LoginUserCredentials = {
     username: string
     password: string
+}
+
+export type SignUpUserCredentials ={
+    username:string,
+    password:string
 }
 
 export type User = {
     firstname: string
     lastname: string
 }
-
-export type NewUser = User & UserCredentials
 
 export type AuthError = {
     code:string,
@@ -19,6 +22,8 @@ export type AuthError = {
 }
 
 export type AuthStateType = {
+    authToken:string | null | undefined
+    isAppInitLoading:boolean,
     signupHasError: boolean,
     signupErrorMessage: string | undefined,
     signupSuccess: boolean,

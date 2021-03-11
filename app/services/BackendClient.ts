@@ -1,39 +1,31 @@
-import {LoginResponse} from "../models/LoginModels/LoginResponse";
+import {LoginResponse} from "../models/Response/LoginResponse";
 import {makeRequest} from "./http-service";
 import {RequestModel} from "../models/request-model";
 import {HttpMethod} from "../models/http-method";
 import {ResponseModel} from "../models/response-model";
-import {UserCredentials} from "../redux/features/auth/auth-types";
-import {SignUpResponse} from "../models/SingUpModels/SignUpResponse";
+import {LoginUserCredentials, SignUpUserCredentials} from "../redux/features/auth/auth-types";
+import {SignUpResponse} from "../models/Response/SignUpResponse";
+import {LoginRequest} from "../models/Request/LoginRequest";
+import {SignUpRequest} from "../models/Request/SignUpRequest";
 
 
-interface BackendClient {
-    // SignUp = (signUpModel:SignUpModel)=>{
-    //
-    // }
-    login(userCredentials: UserCredentials): Promise<LoginResponse>
-    signUp(userCredentials: UserCredentials): Promise<SignUpResponse>
+interface IMessagingServiceClient {
+    login(request: LoginRequest): Promise<LoginResponse>
+
+    signUp(request: SignUpRequest): Promise<SignUpResponse>
 }
 
 
-async function login(userCredentials: UserCredentials): Promise<LoginResponse> {
+async function login(request: LoginRequest): Promise<LoginResponse> {
 
-    let loginResult:LoginResponse = {
-        isAuthenticated:false,
-        token:"",
-        message:'default_message'
-    }
+    let loginResult: LoginResponse = createDefaultLoginResponse()
 
-    const loginRequestModel: RequestModel = {
-        method: HttpMethod.post,
-        endpoint: "/Auth/Login",
-        data: userCredentials
-    }
+    const loginRequestModel: RequestModel = createLoginRequestModel(request)
 
     try {
-        const loginResponse:ResponseModel<LoginResponse> = await makeRequest<LoginResponse>(loginRequestModel)
+        const loginResponse: ResponseModel<LoginResponse> = await makeRequest<LoginResponse>(loginRequestModel)
 
-        if(loginResponse.isSuccessful && loginResponse.data !== undefined){
+        if (loginResponse.isSuccessful && loginResponse.data !== undefined) {
             loginResult = loginResponse.data
         }
     } catch (e) {
@@ -42,30 +34,46 @@ async function login(userCredentials: UserCredentials): Promise<LoginResponse> {
     return loginResult
 }
 
-async function signUp(userCredentials:UserCredentials): Promise<SignUpResponse>{
-    let signUpResult:SignUpResponse = {
-        isSignUpSuccessful:false,
-        message:''
+
+const createDefaultLoginResponse = (): LoginResponse => {
+    return {
+        isAuthenticated: false,
+        token: "",
+        message: 'default_message'
+    }
+}
+const createLoginRequestModel = (requestBody: LoginRequest): RequestModel => {
+    return {
+        method: HttpMethod.post,
+        endpoint: "/Auth/Login",
+        data: requestBody
+    }
+}
+
+async function signUp(request: SignUpRequest): Promise<SignUpResponse> {
+    let signUpResult: SignUpResponse = {
+        isSignUpSuccessful: false,
+        message: ''
     }
     const signUpRequestModel: RequestModel = {
-        method:HttpMethod.post,
-        endpoint:"/Auth/SignUp",
-        data:userCredentials
+        method: HttpMethod.post,
+        endpoint: "/Auth/SignUp",
+        data: userCredentials
     }
     try {
-        const signUpResponse:ResponseModel<SignUpResponse> = await makeRequest<SignUpResponse>(signUpRequestModel)
-        if(signUpResponse.isSuccessful){
+        const signUpResponse: ResponseModel<SignUpResponse> = await makeRequest<SignUpResponse>(signUpRequestModel)
+        if (signUpResponse.isSuccessful) {
             signUpResult.isSignUpSuccessful = true
-        }else{
+        } else {
             signUpResult.message = signUpResponse.message
         }
-    }catch (e) {
+    } catch (e) {
         console.log(`Error Occured When User Signing Up ${e}`)
     }
     return signUpResult
 }
 
-export const BackendClient:BackendClient = {
+export const BackendClient: IMessagingServiceClient = {
     login,
     signUp
 }

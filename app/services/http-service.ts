@@ -51,9 +51,3 @@ function axiosResponseModelMapToResponseModel<T>(responseModel:ResponseModel<T>,
 
     return responseModel
 }
-
-// export const makeRequest T: ResponseModel = (requestModel:RequestModel<TRequest>) <TRequest,TResponse> :Promise<ResponseModel<TResponse>>=>{
-//
-//
-//
-// }
