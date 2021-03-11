@@ -19,6 +19,8 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 5,
         flex: 1,
+        borderWidth:StyleGuide.InputFormBorderWidth,
+        borderColor:StyleGuide.DefaultInputErrorBorderColor,
         paddingVertical: 8,
         marginHorizontal: 8,
         borderRadius: 10,
@@ -49,6 +51,15 @@ const PasswordInputText = (props: any): JSX.Element => {
         setEyeIcon(isPassword ? "visibility" : "visibility-off");
         setIsPassword(prevState => !prevState);
     };
+    const setInputErrorBorder = ():object=>{
+        if(touched && error){
+            return {
+                borderWidth:StyleGuide.InputFormBorderWidth,
+                borderColor: StyleGuide.InputErrorBorderColor
+            }
+        }
+        return {}
+    }
     return (
         <View style={styles.container}>
             <View style={styles.textInputContainer} >
@@ -60,11 +71,12 @@ const PasswordInputText = (props: any): JSX.Element => {
                 />
                 <TextInput
                     {...props}
-                    style={styles.textInput}
+                    style={[styles.textInput,setInputErrorBorder()]}
                     secureTextEntry={isPassword}
                     value={initialFocus ? value : "Password"}
                     onFocus={() => setInitialFocus(true)}
                     placeholderTextColor={"white"}
+                    clearButtonMode={"while-editing"}
                     selectionColor={"white"}
                 />
                 <View style={styles.secureMaterialIconContainer}>

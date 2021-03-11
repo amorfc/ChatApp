@@ -4,22 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 // import { I18nContext } from "../../config/i18n";
 
 import {RootStateType} from "../../redux/root-reducers";
-import {
-    changeMessage,
-    chatProcess,
-    doSendMessage,
-    fetchActiveChat,
-    getChatMessagesFromDb,
-    setReceiveMessage,
-} from "../../redux/features/chat/chat-reducer";
-import IconTextInput from "../../components/text_inputs/icon_text_input";
-import PrimaryBtn from "../../components/buttons/primary_btn";
-import {FlatList} from "react-native-gesture-handler";
-import {MessageModel} from "../../models/message-model";
-import {SenderMessageType} from "../../redux/features/chat/chat-types";
-import {createRef, MutableRefObject, useEffect, useRef, useState} from "react";
-import {navigate} from "../../navigation/navigation";
-import {MessageType} from "../../types/MessageType";
+import { useEffect} from "react";
 import MessageList from "../../components/chat/message_list";
 import MessageTextInput from "../../components/chat/message_text_input_comp";
 

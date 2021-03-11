@@ -19,6 +19,8 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 5,
         flex: 1,
+        borderWidth:StyleGuide.InputFormBorderWidth,
+        borderColor:StyleGuide.DefaultInputErrorBorderColor,
         paddingVertical: 8,
         marginHorizontal: 8,
         borderRadius: 10,
@@ -35,10 +37,21 @@ const styles = StyleSheet.create({
 
 const IconTextInput = (props: any): JSX.Element => {
 
-    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value, error} = props
+    const {iconName, iconSize, iconColor, secureTextEntry, placeholder, onChangeText, value, error, touched} = props
+
+    const setInputErrorBorder = ():object=>{
+        if(touched && error){
+            return {
+                borderWidth:StyleGuide.InputFormBorderWidth,
+                borderColor: StyleGuide.InputErrorBorderColor
+            }
+        }
+        return {}
+    }
+
     return (
         <View style={styles.container}>
-            <View  style={styles.inputContainer}>
+            <View  style={[styles.inputContainer]}>
                 <Ionicons
                     name={iconName}
                     size={iconSize}
@@ -49,7 +62,7 @@ const IconTextInput = (props: any): JSX.Element => {
                     {...props}
                     autoCapitalize={"none"}
                     value={value}
-                    style={styles.textInput}
+                    style={[styles.textInput,setInputErrorBorder()]}
                     secureTextEntry={secureTextEntry}
                     placeholder={placeholder}
                     clearButtonMode={"while-editing"}
