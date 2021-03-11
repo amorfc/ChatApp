@@ -19,12 +19,6 @@ export type AuthError = {
 }
 
 export type AuthStateType = {
-    firstname:string,
-    lastname:string,
-    email:string,
-    username:string,
-    password:string,
-
     signupHasError: boolean,
     signupErrorMessage: string | undefined,
     signupSuccess: boolean,

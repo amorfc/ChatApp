@@ -148,12 +148,6 @@ export const logoutAT = createAsyncThunk<any, any, { rejectValue: AuthError }>(
 )
 
 const initialState: AuthStateType = {
-    //Form State
-    firstname: "",
-    lastname: "",
-    email: "",
-    username: "",
-    password: "",
     //signUp Information
     signupHasError: false,
     signupErrorMessage: undefined,
@@ -174,10 +168,6 @@ export const authSlice = createSlice({
             state.isAuthStatusLoading = payload
         },
         clearSignUpForm(state, {payload}: PayloadAction<any>) {
-            state.firstname = ""
-            state.lastname = ""
-            state.email = ""
-            state.password = ""
             state.signupSuccess = false
         }
         ,
@@ -194,21 +184,6 @@ export const authSlice = createSlice({
         setAuthenticatedUser(state, {payload}: PayloadAction<UserModel | undefined>) {
             state.user = payload
         },
-        changeFirstName(state, {payload}: PayloadAction<string>) {
-            state.firstname = payload
-        },
-        changeLastName(state, {payload}: PayloadAction<string>) {
-            state.lastname = payload
-        },
-        changeEmail(state, {payload}: PayloadAction<string>) {
-            state.email = payload
-        },
-        changePassword(state, {payload}: PayloadAction<string>) {
-            state.password = payload
-        },
-        changeUsername(state, {payload}: PayloadAction<string>) {
-            state.username = payload
-        },
     }
 })
 
@@ -217,11 +192,6 @@ export const {
     setSignupSuccess,
     setAuthToken,
     setIsAuthStatusLoading,
-    changeFirstName,
-    changeLastName,
-    changePassword,
-    changeEmail,
-    changeUsername,
     clearSignUpError,
     clearSignUpForm,
 } = authSlice.actions
